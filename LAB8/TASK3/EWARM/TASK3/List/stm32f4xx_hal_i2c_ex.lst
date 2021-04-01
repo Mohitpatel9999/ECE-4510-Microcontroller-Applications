@@ -1,0 +1,320 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         07/Mar/2020  11:46:55
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\TASK3\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2c_ex.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EW715.tmp
+#        ("C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\TASK3\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2c_ex.c"
+#        -D USE_HAL_DRIVER -D STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\TASK3\EWARM\TASK3\List" -o
+#        "C:\Users\mohit\Desktop\Microapps projects\LAB8\TASK3\EWARM\TASK3\Obj"
+#        --debug --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.4\arm\inc\c\DLib_Config_Full.h" -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\TASK3\EWARM/../Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\TASK3\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\TASK3\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\TASK3\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\TASK3\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\TASK3\EWARM\TASK3\List\stm32f4xx_hal_i2c_ex.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\TASK3\EWARM\TASK3\Obj\stm32f4xx_hal_i2c_ex.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\LAB8\TASK3\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2c_ex.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    stm32f4xx_hal_i2c_ex.c
+      4            * @author  MCD Application Team
+      5            * @brief   I2C Extension HAL module driver.
+      6            *          This file provides firmware functions to manage the following
+      7            *          functionalities of I2C extension peripheral:
+      8            *           + Extension features functions
+      9            *
+     10            @verbatim
+     11            ==============================================================================
+     12                         ##### I2C peripheral extension features  #####
+     13            ==============================================================================
+     14          
+     15            [..] Comparing to other previous devices, the I2C interface for STM32F427xx/437xx/
+     16                 429xx/439xx devices contains the following additional features :
+     17          
+     18                 (+) Possibility to disable or enable Analog Noise Filter
+     19                 (+) Use of a configured Digital Noise Filter
+     20          
+     21                               ##### How to use this driver #####
+     22            ==============================================================================
+     23            [..] This driver provides functions to configure Noise Filter
+     24              (#) Configure I2C Analog noise filter using the function HAL_I2C_AnalogFilter_Config()
+     25              (#) Configure I2C Digital noise filter using the function HAL_I2C_DigitalFilter_Config()
+     26          
+     27            @endverbatim
+     28            ******************************************************************************
+     29            * @attention
+     30            *
+     31            * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
+     32            * All rights reserved.</center></h2>
+     33            *
+     34            * This software component is licensed by ST under BSD 3-Clause license,
+     35            * the "License"; You may not use this file except in compliance with the
+     36            * License. You may obtain a copy of the License at:
+     37            *                        opensource.org/licenses/BSD-3-Clause
+     38            *
+     39            ******************************************************************************
+     40            */
+     41          
+     42          /* Includes ------------------------------------------------------------------*/
+     43          #include "stm32f4xx_hal.h"
+     44          
+     45          /** @addtogroup STM32F4xx_HAL_Driver
+     46            * @{
+     47            */
+     48          
+     49          /** @defgroup I2CEx I2CEx
+     50            * @brief I2C HAL module driver
+     51            * @{
+     52            */
+     53          
+     54          #ifdef HAL_I2C_MODULE_ENABLED
+     55          
+     56          #if  defined(I2C_FLTR_ANOFF)&&defined(I2C_FLTR_DNF)
+     57          /* Private typedef -----------------------------------------------------------*/
+     58          /* Private define ------------------------------------------------------------*/
+     59          /* Private macro -------------------------------------------------------------*/
+     60          /* Private variables ---------------------------------------------------------*/
+     61          /* Private function prototypes -----------------------------------------------*/
+     62          /* Exported functions --------------------------------------------------------*/
+     63          /** @defgroup I2CEx_Exported_Functions I2C Exported Functions
+     64            * @{
+     65            */
+     66          
+     67          
+     68          /** @defgroup I2CEx_Exported_Functions_Group1 Extension features functions
+     69           *  @brief   Extension features functions
+     70           *
+     71          @verbatim
+     72           ===============================================================================
+     73                                ##### Extension features functions #####
+     74           ===============================================================================
+     75              [..] This section provides functions allowing to:
+     76                (+) Configure Noise Filters
+     77          
+     78          @endverbatim
+     79            * @{
+     80            */
+     81          
+     82          /**
+     83            * @brief  Configures I2C Analog noise filter.
+     84            * @param  hi2c pointer to a I2C_HandleTypeDef structure that contains
+     85            *                the configuration information for the specified I2Cx peripheral.
+     86            * @param  AnalogFilter new state of the Analog filter.
+     87            * @retval HAL status
+     88            */
+
+   \                                 In section .text, align 2, keep-with-next
+     89          HAL_StatusTypeDef HAL_I2CEx_ConfigAnalogFilter(I2C_HandleTypeDef *hi2c, uint32_t AnalogFilter)
+     90          {
+   \                     HAL_I2CEx_ConfigAnalogFilter: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+     91            /* Check the parameters */
+     92            assert_param(IS_I2C_ALL_INSTANCE(hi2c->Instance));
+     93            assert_param(IS_I2C_ANALOG_FILTER(AnalogFilter));
+     94          
+     95            if (hi2c->State == HAL_I2C_STATE_READY)
+   \        0x2   0xF890 0x203D      LDRB     R2,[R0, #+61]
+   \        0x6   0x2A20             CMP      R2,#+32
+   \        0x8   0xD110             BNE.N    ??HAL_I2CEx_ConfigAnalogFilter_0
+     96            {
+     97              hi2c->State = HAL_I2C_STATE_BUSY;
+   \        0xA   0x....'....        BL       ?Subroutine1
+     98          
+     99              /* Disable the selected I2C peripheral */
+    100              __HAL_I2C_DISABLE(hi2c);
+    101          
+    102              /* Reset I2Cx ANOFF bit */
+    103              hi2c->Instance->FLTR &= ~(I2C_FLTR_ANOFF);
+   \                     ??CrossCallReturnLabel_0: (+1)
+   \        0xE   0x6802             LDR      R2,[R0, #+0]
+   \       0x10   0x6A53             LDR      R3,[R2, #+36]
+   \       0x12   0xF023 0x0310      BIC      R3,R3,#0x10
+   \       0x16   0x6253             STR      R3,[R2, #+36]
+    104          
+    105              /* Disable the analog filter */
+    106              hi2c->Instance->FLTR |= AnalogFilter;
+   \       0x18   0x6802             LDR      R2,[R0, #+0]
+   \       0x1A   0x6A53             LDR      R3,[R2, #+36]
+   \       0x1C   0x4319             ORRS     R1,R1,R3
+   \       0x1E   0x6251             STR      R1,[R2, #+36]
+    107          
+    108              __HAL_I2C_ENABLE(hi2c);
+   \       0x20   0x6801             LDR      R1,[R0, #+0]
+   \       0x22   0x680A             LDR      R2,[R1, #+0]
+   \       0x24   0xF042 0x0201      ORR      R2,R2,#0x1
+   \       0x28   0x600A             STR      R2,[R1, #+0]
+    109          
+    110              hi2c->State = HAL_I2C_STATE_READY;
+   \       0x2A   0x....             B.N      ?Subroutine0
+    111          
+    112              return HAL_OK;
+    113            }
+    114            else
+    115            {
+    116              return HAL_BUSY;
+   \                     ??HAL_I2CEx_ConfigAnalogFilter_0: (+1)
+   \       0x2C   0x2002             MOVS     R0,#+2
+   \       0x2E   0xBD10             POP      {R4,PC}          ;; return
+    117            }
+    118          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine1: (+1)
+   \        0x0   0x2324             MOVS     R3,#+36
+   \        0x2   0xF880 0x303D      STRB     R3,[R0, #+61]
+   \        0x6   0x6802             LDR      R2,[R0, #+0]
+   \        0x8   0x6814             LDR      R4,[R2, #+0]
+   \        0xA   0x0864             LSRS     R4,R4,#+1
+   \        0xC   0x0064             LSLS     R4,R4,#+1
+   \        0xE   0x6014             STR      R4,[R2, #+0]
+   \       0x10   0x4770             BX       LR
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine0: (+1)
+   \        0x0   0x2120             MOVS     R1,#+32
+   \        0x2   0xF880 0x103D      STRB     R1,[R0, #+61]
+   \        0x6   0x2000             MOVS     R0,#+0
+   \        0x8   0xBD10             POP      {R4,PC}
+    119          
+    120          /**
+    121            * @brief  Configures I2C Digital noise filter.
+    122            * @param  hi2c pointer to a I2C_HandleTypeDef structure that contains
+    123            *                the configuration information for the specified I2Cx peripheral.
+    124            * @param  DigitalFilter Coefficient of digital noise filter between 0x00 and 0x0F.
+    125            * @retval HAL status
+    126            */
+
+   \                                 In section .text, align 2, keep-with-next
+    127          HAL_StatusTypeDef HAL_I2CEx_ConfigDigitalFilter(I2C_HandleTypeDef *hi2c, uint32_t DigitalFilter)
+    128          {
+   \                     HAL_I2CEx_ConfigDigitalFilter: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    129            uint16_t tmpreg = 0;
+    130          
+    131            /* Check the parameters */
+    132            assert_param(IS_I2C_ALL_INSTANCE(hi2c->Instance));
+    133            assert_param(IS_I2C_DIGITAL_FILTER(DigitalFilter));
+    134          
+    135            if (hi2c->State == HAL_I2C_STATE_READY)
+   \        0x2   0xF890 0x203D      LDRB     R2,[R0, #+61]
+   \        0x6   0x2A20             CMP      R2,#+32
+   \        0x8   0xD10F             BNE.N    ??HAL_I2CEx_ConfigDigitalFilter_0
+    136            {
+    137              hi2c->State = HAL_I2C_STATE_BUSY;
+   \        0xA   0x....'....        BL       ?Subroutine1
+    138          
+    139              /* Disable the selected I2C peripheral */
+    140              __HAL_I2C_DISABLE(hi2c);
+    141          
+    142              /* Get the old register value */
+    143              tmpreg = hi2c->Instance->FLTR;
+    144          
+    145              /* Reset I2Cx DNF bit [3:0] */
+    146              tmpreg &= ~(I2C_FLTR_DNF);
+    147          
+    148              /* Set I2Cx DNF coefficient */
+    149              tmpreg |= DigitalFilter;
+    150          
+    151              /* Store the new register value */
+    152              hi2c->Instance->FLTR = tmpreg;
+   \                     ??CrossCallReturnLabel_1: (+1)
+   \        0xE   0xF64F 0x72F0      MOVW     R2,#+65520
+   \       0x12   0x6803             LDR      R3,[R0, #+0]
+   \       0x14   0x6A5C             LDR      R4,[R3, #+36]
+   \       0x16   0x4014             ANDS     R4,R2,R4
+   \       0x18   0x4321             ORRS     R1,R1,R4
+   \       0x1A   0xB289             UXTH     R1,R1
+   \       0x1C   0x6259             STR      R1,[R3, #+36]
+    153          
+    154              __HAL_I2C_ENABLE(hi2c);
+   \       0x1E   0x6801             LDR      R1,[R0, #+0]
+   \       0x20   0x680B             LDR      R3,[R1, #+0]
+   \       0x22   0xF043 0x0301      ORR      R3,R3,#0x1
+   \       0x26   0x600B             STR      R3,[R1, #+0]
+    155          
+    156              hi2c->State = HAL_I2C_STATE_READY;
+   \       0x28   0x....             B.N      ?Subroutine0
+    157          
+    158              return HAL_OK;
+    159            }
+    160            else
+    161            {
+    162              return HAL_BUSY;
+   \                     ??HAL_I2CEx_ConfigDigitalFilter_0: (+1)
+   \       0x2A   0x2002             MOVS     R0,#+2
+   \       0x2C   0xBD10             POP      {R4,PC}          ;; return
+    163            }
+    164          }
+    165          
+    166          /**
+    167            * @}
+    168            */
+    169          
+    170          /**
+    171            * @}
+    172            */
+    173          #endif
+    174          
+    175          #endif /* HAL_I2C_MODULE_ENABLED */
+    176          /**
+    177            * @}
+    178            */
+    179          
+    180          /**
+    181            * @}
+    182            */
+    183          
+    184          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   HAL_I2CEx_ConfigAnalogFilter
+       8   HAL_I2CEx_ConfigDigitalFilter
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      10  ?Subroutine0
+      18  ?Subroutine1
+      48  HAL_I2CEx_ConfigAnalogFilter
+      46  HAL_I2CEx_ConfigDigitalFilter
+
+ 
+ 122 bytes in section .text
+ 
+ 122 bytes of CODE memory
+
+Errors: none
+Warnings: none

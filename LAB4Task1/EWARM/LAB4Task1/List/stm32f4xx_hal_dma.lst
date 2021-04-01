@@ -1,0 +1,2288 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         04/Feb/2020  10:25:15
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EW1365.tmp
+#        ("C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma.c"
+#        -D USE_HAL_DRIVER -D STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM\LAB4Task1\List" -o
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM\LAB4Task1\Obj" --debug --endian=little
+#        --cpu=Cortex-M4 -e --fpu=VFPv4_sp --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.4\arm\inc\c\DLib_Config_Full.h"
+#        -I "C:\Users\mohit\Desktop\Microapps projects\LAB4Task1\EWARM/../Inc\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM\LAB4Task1\List\stm32f4xx_hal_dma.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM\LAB4Task1\Obj\stm32f4xx_hal_dma.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\LAB4Task1\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    stm32f4xx_hal_dma.c
+      4            * @author  MCD Application Team
+      5            * @brief   DMA HAL module driver.
+      6            *    
+      7            *          This file provides firmware functions to manage the following 
+      8            *          functionalities of the Direct Memory Access (DMA) peripheral:
+      9            *           + Initialization and de-initialization functions
+     10            *           + IO operation functions
+     11            *           + Peripheral State and errors functions
+     12            @verbatim     
+     13            ==============================================================================
+     14                                  ##### How to use this driver #####
+     15            ==============================================================================
+     16            [..]
+     17             (#) Enable and configure the peripheral to be connected to the DMA Stream
+     18                 (except for internal SRAM/FLASH memories: no initialization is 
+     19                 necessary) please refer to Reference manual for connection between peripherals
+     20                 and DMA requests.
+     21          
+     22             (#) For a given Stream, program the required configuration through the following parameters:
+     23                 Transfer Direction, Source and Destination data formats, 
+     24                 Circular, Normal or peripheral flow control mode, Stream Priority level, 
+     25                 Source and Destination Increment mode, FIFO mode and its Threshold (if needed), 
+     26                 Burst mode for Source and/or Destination (if needed) using HAL_DMA_Init() function.
+     27          
+     28             -@-   Prior to HAL_DMA_Init() the clock must be enabled for DMA through the following macros:
+     29                   __HAL_RCC_DMA1_CLK_ENABLE() or __HAL_RCC_DMA2_CLK_ENABLE().
+     30          
+     31               *** Polling mode IO operation ***
+     32               =================================
+     33              [..]
+     34                    (+) Use HAL_DMA_Start() to start DMA transfer after the configuration of Source 
+     35                        address and destination address and the Length of data to be transferred.
+     36                    (+) Use HAL_DMA_PollForTransfer() to poll for the end of current transfer, in this  
+     37                        case a fixed Timeout can be configured by User depending from his application.
+     38                    (+) Use HAL_DMA_Abort() function to abort the current transfer.
+     39          
+     40               *** Interrupt mode IO operation ***
+     41               ===================================
+     42              [..]
+     43                    (+) Configure the DMA interrupt priority using HAL_NVIC_SetPriority()
+     44                    (+) Enable the DMA IRQ handler using HAL_NVIC_EnableIRQ() 
+     45                    (+) Use HAL_DMA_Start_IT() to start DMA transfer after the configuration of  
+     46                        Source address and destination address and the Length of data to be transferred. In this 
+     47                        case the DMA interrupt is configured 
+     48                    (+) Use HAL_DMA_IRQHandler() called under DMA_IRQHandler() Interrupt subroutine
+     49                    (+) At the end of data transfer HAL_DMA_IRQHandler() function is executed and user can 
+     50                        add his own function by customization of function pointer XferCpltCallback and 
+     51                        XferErrorCallback (i.e a member of DMA handle structure).
+     52              [..]
+     53               (#) Use HAL_DMA_GetState() function to return the DMA state and HAL_DMA_GetError() in case of error 
+     54                   detection.
+     55          
+     56               (#) Use HAL_DMA_Abort_IT() function to abort the current transfer
+     57          
+     58               -@-   In Memory-to-Memory transfer mode, Circular mode is not allowed.
+     59          
+     60               -@-   The FIFO is used mainly to reduce bus usage and to allow data packing/unpacking: it is
+     61                     possible to set different Data Sizes for the Peripheral and the Memory (ie. you can set
+     62                     Half-Word data size for the peripheral to access its data register and set Word data size
+     63                     for the Memory to gain in access time. Each two half words will be packed and written in
+     64                     a single access to a Word in the Memory).
+     65          
+     66               -@-   When FIFO is disabled, it is not allowed to configure different Data Sizes for Source
+     67                     and Destination. In this case the Peripheral Data Size will be applied to both Source
+     68                     and Destination.
+     69          
+     70               *** DMA HAL driver macros list ***
+     71               =============================================
+     72               [..]
+     73                 Below the list of most used macros in DMA HAL driver.
+     74                 
+     75                (+) __HAL_DMA_ENABLE: Enable the specified DMA Stream.
+     76                (+) __HAL_DMA_DISABLE: Disable the specified DMA Stream.
+     77                (+) __HAL_DMA_GET_IT_SOURCE: Check whether the specified DMA Stream interrupt has occurred or not. 
+     78          
+     79               [..]
+     80                (@) You can refer to the DMA HAL driver header file for more useful macros
+     81          
+     82            @endverbatim
+     83            ******************************************************************************
+     84            * @attention
+     85            *
+     86            * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+     87            * All rights reserved.</center></h2>
+     88            *
+     89            * This software component is licensed by ST under BSD 3-Clause license,
+     90            * the "License"; You may not use this file except in compliance with the
+     91            * License. You may obtain a copy of the License at:
+     92            *                        opensource.org/licenses/BSD-3-Clause
+     93            *
+     94            ******************************************************************************
+     95            */ 
+     96          
+     97          /* Includes ------------------------------------------------------------------*/
+     98          #include "stm32f4xx_hal.h"
+     99          
+    100          /** @addtogroup STM32F4xx_HAL_Driver
+    101            * @{
+    102            */
+    103          
+    104          /** @defgroup DMA DMA
+    105            * @brief DMA HAL module driver
+    106            * @{
+    107            */
+    108          
+    109          #ifdef HAL_DMA_MODULE_ENABLED
+    110          
+    111          /* Private types -------------------------------------------------------------*/
+    112          typedef struct
+    113          {
+    114            __IO uint32_t ISR;   /*!< DMA interrupt status register */
+    115            __IO uint32_t Reserved0;
+    116            __IO uint32_t IFCR;  /*!< DMA interrupt flag clear register */
+    117          } DMA_Base_Registers;
+    118          
+    119          /* Private variables ---------------------------------------------------------*/
+    120          /* Private constants ---------------------------------------------------------*/
+    121          /** @addtogroup DMA_Private_Constants
+    122           * @{
+    123           */
+    124           #define HAL_TIMEOUT_DMA_ABORT    5U  /* 5 ms */
+    125          /**
+    126            * @}
+    127            */
+    128          /* Private macros ------------------------------------------------------------*/
+    129          /* Private functions ---------------------------------------------------------*/
+    130          /** @addtogroup DMA_Private_Functions
+    131            * @{
+    132            */
+    133          static void DMA_SetConfig(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength);
+    134          static uint32_t DMA_CalcBaseAndBitshift(DMA_HandleTypeDef *hdma);
+    135          static HAL_StatusTypeDef DMA_CheckFifoParam(DMA_HandleTypeDef *hdma);
+    136          
+    137          /**
+    138            * @}
+    139            */  
+    140          
+    141          /* Exported functions ---------------------------------------------------------*/
+    142          /** @addtogroup DMA_Exported_Functions
+    143            * @{
+    144            */
+    145          
+    146          /** @addtogroup DMA_Exported_Functions_Group1
+    147            *
+    148          @verbatim
+    149           ===============================================================================
+    150                       ##### Initialization and de-initialization functions  #####
+    151           ===============================================================================
+    152              [..]
+    153              This section provides functions allowing to initialize the DMA Stream source
+    154              and destination addresses, incrementation and data sizes, transfer direction, 
+    155              circular/normal mode selection, memory-to-memory mode selection and Stream priority value.
+    156              [..]
+    157              The HAL_DMA_Init() function follows the DMA configuration procedures as described in
+    158              reference manual.
+    159          
+    160          @endverbatim
+    161            * @{
+    162            */
+    163            
+    164          /**
+    165            * @brief  Initialize the DMA according to the specified
+    166            *         parameters in the DMA_InitTypeDef and create the associated handle.
+    167            * @param  hdma Pointer to a DMA_HandleTypeDef structure that contains
+    168            *               the configuration information for the specified DMA Stream.  
+    169            * @retval HAL status
+    170            */
+
+   \                                 In section .text, align 4, keep-with-next
+    171          HAL_StatusTypeDef HAL_DMA_Init(DMA_HandleTypeDef *hdma)
+    172          {
+   \                     HAL_DMA_Init: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x4604             MOV      R4,R0
+    173            uint32_t tmp = 0U;
+    174            uint32_t tickstart = HAL_GetTick();
+   \        0x4   0x....'....        BL       HAL_GetTick
+   \        0x8   0x4606             MOV      R6,R0
+    175            DMA_Base_Registers *regs;
+    176          
+    177            /* Check the DMA peripheral state */
+    178            if(hdma == NULL)
+   \        0xA   0xB90C             CBNZ.N   R4,??HAL_DMA_Init_1
+    179            {
+    180              return HAL_ERROR;
+   \        0xC   0x2001             MOVS     R0,#+1
+   \        0xE   0xBD70             POP      {R4-R6,PC}
+    181            }
+    182          
+    183            /* Check the parameters */
+    184            assert_param(IS_DMA_STREAM_ALL_INSTANCE(hdma->Instance));
+    185            assert_param(IS_DMA_CHANNEL(hdma->Init.Channel));
+    186            assert_param(IS_DMA_DIRECTION(hdma->Init.Direction));
+    187            assert_param(IS_DMA_PERIPHERAL_INC_STATE(hdma->Init.PeriphInc));
+    188            assert_param(IS_DMA_MEMORY_INC_STATE(hdma->Init.MemInc));
+    189            assert_param(IS_DMA_PERIPHERAL_DATA_SIZE(hdma->Init.PeriphDataAlignment));
+    190            assert_param(IS_DMA_MEMORY_DATA_SIZE(hdma->Init.MemDataAlignment));
+    191            assert_param(IS_DMA_MODE(hdma->Init.Mode));
+    192            assert_param(IS_DMA_PRIORITY(hdma->Init.Priority));
+    193            assert_param(IS_DMA_FIFO_MODE_STATE(hdma->Init.FIFOMode));
+    194            /* Check the memory burst, peripheral burst and FIFO threshold parameters only
+    195               when FIFO mode is enabled */
+    196            if(hdma->Init.FIFOMode != DMA_FIFOMODE_DISABLE)
+    197            {
+    198              assert_param(IS_DMA_FIFO_THRESHOLD(hdma->Init.FIFOThreshold));
+    199              assert_param(IS_DMA_MEMORY_BURST(hdma->Init.MemBurst));
+    200              assert_param(IS_DMA_PERIPHERAL_BURST(hdma->Init.PeriphBurst));
+    201            }
+    202            
+    203            /* Allocate lock resource */
+    204            __HAL_UNLOCK(hdma);
+   \                     ??HAL_DMA_Init_1: (+1)
+   \       0x10   0xF104 0x0534      ADD      R5,R4,#+52
+   \       0x14   0x2000             MOVS     R0,#+0
+   \       0x16   0x7028             STRB     R0,[R5, #+0]
+    205          
+    206            /* Change DMA peripheral state */
+    207            hdma->State = HAL_DMA_STATE_BUSY;
+   \       0x18   0x2102             MOVS     R1,#+2
+   \       0x1A   0x7069             STRB     R1,[R5, #+1]
+    208            
+    209            /* Disable the peripheral */
+    210            __HAL_DMA_DISABLE(hdma);
+   \       0x1C   0x6820             LDR      R0,[R4, #+0]
+   \       0x1E   0x6802             LDR      R2,[R0, #+0]
+   \       0x20   0x0852             LSRS     R2,R2,#+1
+   \       0x22   0x0052             LSLS     R2,R2,#+1
+   \       0x24   0x6002             STR      R2,[R0, #+0]
+    211            
+    212            /* Check if the DMA Stream is effectively disabled */
+    213            while((hdma->Instance->CR & DMA_SxCR_EN) != RESET)
+   \                     ??HAL_DMA_Init_2: (+1)
+   \       0x26   0x6822             LDR      R2,[R4, #+0]
+   \       0x28   0x6810             LDR      R0,[R2, #+0]
+   \       0x2A   0x07C1             LSLS     R1,R0,#+31
+   \       0x2C   0xD50A             BPL.N    ??HAL_DMA_Init_3
+    214            {
+    215              /* Check for the Timeout */
+    216              if((HAL_GetTick() - tickstart ) > HAL_TIMEOUT_DMA_ABORT)
+   \       0x2E   0x....'....        BL       HAL_GetTick
+   \       0x32   0x1B80             SUBS     R0,R0,R6
+   \       0x34   0x2806             CMP      R0,#+6
+   \       0x36   0xD3F6             BCC.N    ??HAL_DMA_Init_2
+    217              {
+    218                /* Update error code */
+    219                hdma->ErrorCode = HAL_DMA_ERROR_TIMEOUT;
+   \       0x38   0x2020             MOVS     R0,#+32
+   \       0x3A   0x6228             STR      R0,[R5, #+32]
+    220                
+    221                /* Change the DMA state */
+    222                hdma->State = HAL_DMA_STATE_TIMEOUT;
+   \       0x3C   0x2103             MOVS     R1,#+3
+   \       0x3E   0x7069             STRB     R1,[R5, #+1]
+    223                
+    224                return HAL_TIMEOUT;
+   \       0x40   0x2003             MOVS     R0,#+3
+   \       0x42   0xBD70             POP      {R4-R6,PC}
+    225              }
+    226            }
+    227            
+    228            /* Get the CR register value */
+    229            tmp = hdma->Instance->CR;
+   \                     ??HAL_DMA_Init_3: (+1)
+   \       0x44   0x6813             LDR      R3,[R2, #+0]
+    230          
+    231            /* Clear CHSEL, MBURST, PBURST, PL, MSIZE, PSIZE, MINC, PINC, CIRC, DIR, CT and DBM bits */
+    232            tmp &= ((uint32_t)~(DMA_SxCR_CHSEL | DMA_SxCR_MBURST | DMA_SxCR_PBURST | \
+    233                                DMA_SxCR_PL    | DMA_SxCR_MSIZE  | DMA_SxCR_PSIZE  | \
+    234                                DMA_SxCR_MINC  | DMA_SxCR_PINC   | DMA_SxCR_CIRC   | \
+    235                                DMA_SxCR_DIR   | DMA_SxCR_CT     | DMA_SxCR_DBM));
+    236          
+    237            /* Prepare the DMA Stream configuration */
+    238            tmp |=  hdma->Init.Channel             | hdma->Init.Direction        |
+    239                    hdma->Init.PeriphInc           | hdma->Init.MemInc           |
+    240                    hdma->Init.PeriphDataAlignment | hdma->Init.MemDataAlignment |
+    241                    hdma->Init.Mode                | hdma->Init.Priority;
+   \       0x46   0x....'....        LDR.W    R0,??DataTable2  ;; 0xf010803f
+   \       0x4A   0x6861             LDR      R1,[R4, #+4]
+   \       0x4C   0x4003             ANDS     R3,R0,R3
+   \       0x4E   0x68A0             LDR      R0,[R4, #+8]
+   \       0x50   0x430B             ORRS     R3,R1,R3
+   \       0x52   0x68E1             LDR      R1,[R4, #+12]
+   \       0x54   0x4303             ORRS     R3,R0,R3
+   \       0x56   0x6920             LDR      R0,[R4, #+16]
+   \       0x58   0x430B             ORRS     R3,R1,R3
+   \       0x5A   0x6961             LDR      R1,[R4, #+20]
+   \       0x5C   0x4303             ORRS     R3,R0,R3
+   \       0x5E   0x69A0             LDR      R0,[R4, #+24]
+   \       0x60   0x430B             ORRS     R3,R1,R3
+   \       0x62   0x69E1             LDR      R1,[R4, #+28]
+   \       0x64   0x4303             ORRS     R3,R0,R3
+   \       0x66   0x6A20             LDR      R0,[R4, #+32]
+   \       0x68   0x430B             ORRS     R3,R1,R3
+    242          
+    243            /* the Memory burst and peripheral burst are not used when the FIFO is disabled */
+    244            if(hdma->Init.FIFOMode == DMA_FIFOMODE_ENABLE)
+   \       0x6A   0x6A61             LDR      R1,[R4, #+36]
+   \       0x6C   0x4303             ORRS     R3,R0,R3
+   \       0x6E   0x2904             CMP      R1,#+4
+   \       0x70   0xD103             BNE.N    ??HAL_DMA_Init_4
+    245            {
+    246              /* Get memory burst and peripheral burst */
+    247              tmp |=  hdma->Init.MemBurst | hdma->Init.PeriphBurst;
+   \       0x72   0x6AE1             LDR      R1,[R4, #+44]
+   \       0x74   0x6B20             LDR      R0,[R4, #+48]
+   \       0x76   0x4301             ORRS     R1,R0,R1
+   \       0x78   0x430B             ORRS     R3,R1,R3
+    248            }
+    249            
+    250            /* Write to DMA Stream CR register */
+    251            hdma->Instance->CR = tmp;  
+   \                     ??HAL_DMA_Init_4: (+1)
+   \       0x7A   0x6013             STR      R3,[R2, #+0]
+    252          
+    253            /* Get the FCR register value */
+    254            tmp = hdma->Instance->FCR;
+   \       0x7C   0x6823             LDR      R3,[R4, #+0]
+   \       0x7E   0x695A             LDR      R2,[R3, #+20]
+    255          
+    256            /* Clear Direct mode and FIFO threshold bits */
+    257            tmp &= (uint32_t)~(DMA_SxFCR_DMDIS | DMA_SxFCR_FTH);
+    258          
+    259            /* Prepare the DMA Stream FIFO configuration */
+    260            tmp |= hdma->Init.FIFOMode;
+   \       0x80   0x6A60             LDR      R0,[R4, #+36]
+   \       0x82   0x08D2             LSRS     R2,R2,#+3
+    261          
+    262            /* The FIFO threshold is not used when the FIFO mode is disabled */
+    263            if(hdma->Init.FIFOMode == DMA_FIFOMODE_ENABLE)
+   \       0x84   0x2804             CMP      R0,#+4
+   \       0x86   0xEA40 0x02C2      ORR      R2,R0,R2, LSL #+3
+   \       0x8A   0xD10A             BNE.N    ??HAL_DMA_Init_5
+    264            {
+    265              /* Get the FIFO threshold */
+    266              tmp |= hdma->Init.FIFOThreshold;
+   \       0x8C   0x6AA6             LDR      R6,[R4, #+40]
+    267              
+    268              /* Check compatibility between FIFO threshold level and size of the memory burst */
+    269              /* for INCR4, INCR8, INCR16 bursts */
+    270              if (hdma->Init.MemBurst != DMA_MBURST_SINGLE)
+   \       0x8E   0x6AE1             LDR      R1,[R4, #+44]
+   \       0x90   0x4332             ORRS     R2,R6,R2
+   \       0x92   0xB131             CBZ.N    R1,??HAL_DMA_Init_5
+    271              {
+    272                if (DMA_CheckFifoParam(hdma) != HAL_OK)
+   \       0x94   0x69A0             LDR      R0,[R4, #+24]
+   \       0x96   0xB988             CBNZ.N   R0,??HAL_DMA_Init_6
+   \       0x98   0x2E00             CMP      R6,#+0
+   \       0x9A   0xBF18             IT       NE
+   \       0x9C   0x2E02             CMPNE    R6,#+2
+   \       0x9E   0xD01F             BEQ.N    ??HAL_DMA_Init_7
+   \       0xA0   0xD316             BCC.N    ??HAL_DMA_Init_8
+    273                {
+    274                  /* Update error code */
+    275                  hdma->ErrorCode = HAL_DMA_ERROR_PARAM;
+    276                  
+    277                  /* Change the DMA state */
+    278                  hdma->State = HAL_DMA_STATE_READY;
+    279                  
+    280                  return HAL_ERROR; 
+    281                }
+    282              }
+    283            }
+    284            
+    285            /* Write to DMA Stream FCR */
+    286            hdma->Instance->FCR = tmp;
+   \                     ??HAL_DMA_Init_5: (+1)
+   \       0xA2   0x615A             STR      R2,[R3, #+20]
+    287          
+    288            /* Initialize StreamBaseAddress and StreamIndex parameters to be used to calculate
+    289               DMA steam Base Address needed by HAL_DMA_IRQHandler() and HAL_DMA_PollForTransfer() */
+    290            regs = (DMA_Base_Registers *)DMA_CalcBaseAndBitshift(hdma);
+   \       0xA4   0x4620             MOV      R0,R4
+   \       0xA6   0x....'....        BL       DMA_CalcBaseAndBitshift
+    291            
+    292            /* Clear all interrupt flags */
+    293            regs->IFCR = 0x3FU << hdma->StreamIndex;
+   \       0xAA   0x6AA9             LDR      R1,[R5, #+40]
+   \       0xAC   0x223F             MOVS     R2,#+63
+   \       0xAE   0x408A             LSLS     R2,R2,R1
+   \       0xB0   0x6082             STR      R2,[R0, #+8]
+    294          
+    295            /* Initialize the error code */
+    296            hdma->ErrorCode = HAL_DMA_ERROR_NONE;
+   \       0xB2   0x2000             MOVS     R0,#+0
+   \       0xB4   0x6228             STR      R0,[R5, #+32]
+    297                                                                                               
+    298            /* Initialize the DMA state */
+    299            hdma->State = HAL_DMA_STATE_READY;
+   \       0xB6   0x2101             MOVS     R1,#+1
+   \       0xB8   0x7069             STRB     R1,[R5, #+1]
+    300          
+    301            return HAL_OK;
+   \       0xBA   0xBD70             POP      {R4-R6,PC}       ;; return
+   \                     ??HAL_DMA_Init_6: (+1)
+   \       0xBC   0xF5B0 0x5F00      CMP      R0,#+8192
+   \       0xC0   0xD10A             BNE.N    ??HAL_DMA_Init_9
+   \       0xC2   0x2E03             CMP      R6,#+3
+   \       0xC4   0xD8ED             BHI.N    ??HAL_DMA_Init_5
+   \       0xC6   0xE8DF 0xF006      TBB      [PC, R6]
+   \                     ??HAL_DMA_Init_0:
+   \       0xCA   0x0D 0x0B          DC8      0xD,0xB,0xD,0x3
+
+   \              0x0D 0x03
+   \                     ??HAL_DMA_Init_10: (+1)
+   \       0xCE   0xE7E8             B.N      ??HAL_DMA_Init_5
+   \                     ??HAL_DMA_Init_8: (+1)
+   \       0xD0   0xF1B1 0x7FC0      CMP      R1,#+25165824
+   \       0xD4   0xD1E5             BNE.N    ??HAL_DMA_Init_5
+   \       0xD6   0xE005             B.N      ??HAL_DMA_Init_11
+   \                     ??HAL_DMA_Init_9: (+1)
+   \       0xD8   0x2E02             CMP      R6,#+2
+   \       0xDA   0xD903             BLS.N    ??HAL_DMA_Init_11
+   \       0xDC   0x1EF6             SUBS     R6,R6,#+3
+   \       0xDE   0xD1E0             BNE.N    ??HAL_DMA_Init_5
+   \                     ??HAL_DMA_Init_7: (+1)
+   \       0xE0   0x01C8             LSLS     R0,R1,#+7
+   \       0xE2   0xD5DE             BPL.N    ??HAL_DMA_Init_5
+   \                     ??HAL_DMA_Init_11: (+1)
+   \       0xE4   0x2140             MOVS     R1,#+64
+   \       0xE6   0x6229             STR      R1,[R5, #+32]
+   \       0xE8   0x2001             MOVS     R0,#+1
+   \       0xEA   0x7068             STRB     R0,[R5, #+1]
+   \       0xEC   0xBD70             POP      {R4-R6,PC}
+    302          }
+    303          
+    304          /**
+    305            * @brief  DeInitializes the DMA peripheral 
+    306            * @param  hdma pointer to a DMA_HandleTypeDef structure that contains
+    307            *               the configuration information for the specified DMA Stream.  
+    308            * @retval HAL status
+    309            */
+
+   \                                 In section .text, align 2, keep-with-next
+    310          HAL_StatusTypeDef HAL_DMA_DeInit(DMA_HandleTypeDef *hdma)
+    311          {
+   \                     HAL_DMA_DeInit: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+    312            DMA_Base_Registers *regs;
+    313          
+    314            /* Check the DMA peripheral state */
+    315            if(hdma == NULL)
+   \        0x2   0xB908             CBNZ.N   R0,??HAL_DMA_DeInit_0
+    316            {
+    317              return HAL_ERROR;
+   \        0x4   0x2001             MOVS     R0,#+1
+   \        0x6   0xBD32             POP      {R1,R4,R5,PC}
+    318            }
+    319            
+    320            /* Check the DMA peripheral state */
+    321            if(hdma->State == HAL_DMA_STATE_BUSY)
+   \                     ??HAL_DMA_DeInit_0: (+1)
+   \        0x8   0xF100 0x0434      ADD      R4,R0,#+52
+   \        0xC   0x7861             LDRB     R1,[R4, #+1]
+   \        0xE   0x2902             CMP      R1,#+2
+   \       0x10   0xD101             BNE.N    ??HAL_DMA_DeInit_1
+    322            {
+    323              /* Return error status */
+    324              return HAL_BUSY;
+   \       0x12   0x2002             MOVS     R0,#+2
+   \       0x14   0xBD32             POP      {R1,R4,R5,PC}
+    325            }
+    326          
+    327            /* Check the parameters */
+    328            assert_param(IS_DMA_STREAM_ALL_INSTANCE(hdma->Instance));
+    329          
+    330            /* Disable the selected DMA Streamx */
+    331            __HAL_DMA_DISABLE(hdma);
+   \                     ??HAL_DMA_DeInit_1: (+1)
+   \       0x16   0x6801             LDR      R1,[R0, #+0]
+   \       0x18   0x680A             LDR      R2,[R1, #+0]
+   \       0x1A   0x0852             LSRS     R2,R2,#+1
+   \       0x1C   0x0052             LSLS     R2,R2,#+1
+   \       0x1E   0x600A             STR      R2,[R1, #+0]
+    332          
+    333            /* Reset DMA Streamx control register */
+    334            hdma->Instance->CR   = 0U;
+   \       0x20   0x2100             MOVS     R1,#+0
+   \       0x22   0x6803             LDR      R3,[R0, #+0]
+   \       0x24   0x6019             STR      R1,[R3, #+0]
+    335          
+    336            /* Reset DMA Streamx number of data to transfer register */
+    337            hdma->Instance->NDTR = 0U;
+    338          
+    339            /* Reset DMA Streamx peripheral address register */
+    340            hdma->Instance->PAR  = 0U;
+    341          
+    342            /* Reset DMA Streamx memory 0 address register */
+    343            hdma->Instance->M0AR = 0U;
+   \       0x26   0x2300             MOVS     R3,#+0
+   \       0x28   0x6805             LDR      R5,[R0, #+0]
+   \       0x2A   0x6069             STR      R1,[R5, #+4]
+   \       0x2C   0x6802             LDR      R2,[R0, #+0]
+   \       0x2E   0x6091             STR      R1,[R2, #+8]
+    344            
+    345            /* Reset DMA Streamx memory 1 address register */
+    346            hdma->Instance->M1AR = 0U;
+   \       0x30   0x2200             MOVS     R2,#+0
+   \       0x32   0x6801             LDR      R1,[R0, #+0]
+   \       0x34   0x60CB             STR      R3,[R1, #+12]
+    347            
+    348            /* Reset DMA Streamx FIFO control register */
+    349            hdma->Instance->FCR  = 0x00000021U;
+   \       0x36   0x2121             MOVS     R1,#+33
+   \       0x38   0x6803             LDR      R3,[R0, #+0]
+   \       0x3A   0x611A             STR      R2,[R3, #+16]
+   \       0x3C   0x6802             LDR      R2,[R0, #+0]
+   \       0x3E   0x6151             STR      R1,[R2, #+20]
+    350            
+    351            /* Get DMA steam Base Address */  
+    352            regs = (DMA_Base_Registers *)DMA_CalcBaseAndBitshift(hdma);
+   \       0x40   0x....'....        BL       DMA_CalcBaseAndBitshift
+    353            
+    354            /* Clean all callbacks */
+    355            hdma->XferCpltCallback = NULL;
+   \       0x44   0x2100             MOVS     R1,#+0
+   \       0x46   0x60A1             STR      R1,[R4, #+8]
+    356            hdma->XferHalfCpltCallback = NULL;
+    357            hdma->XferM1CpltCallback = NULL;
+   \       0x48   0x6121             STR      R1,[R4, #+16]
+    358            hdma->XferM1HalfCpltCallback = NULL;
+    359            hdma->XferErrorCallback = NULL;
+   \       0x4A   0x61A1             STR      R1,[R4, #+24]
+   \       0x4C   0x2200             MOVS     R2,#+0
+    360            hdma->XferAbortCallback = NULL;
+    361          
+    362            /* Clear all interrupt flags at correct offset within the register */
+    363            regs->IFCR = 0x3FU << hdma->StreamIndex;
+   \       0x4E   0x6AA1             LDR      R1,[R4, #+40]
+   \       0x50   0x60E2             STR      R2,[R4, #+12]
+   \       0x52   0x233F             MOVS     R3,#+63
+   \       0x54   0x6162             STR      R2,[R4, #+20]
+   \       0x56   0x61E2             STR      R2,[R4, #+28]
+   \       0x58   0x408B             LSLS     R3,R3,R1
+   \       0x5A   0x6083             STR      R3,[R0, #+8]
+    364          
+    365            /* Reset the error code */
+    366            hdma->ErrorCode = HAL_DMA_ERROR_NONE;
+   \       0x5C   0x2000             MOVS     R0,#+0
+   \       0x5E   0x6220             STR      R0,[R4, #+32]
+    367          
+    368            /* Reset the DMA state */
+    369            hdma->State = HAL_DMA_STATE_RESET;
+   \       0x60   0x7060             STRB     R0,[R4, #+1]
+    370          
+    371            /* Release Lock */
+    372            __HAL_UNLOCK(hdma);
+   \       0x62   0x7020             STRB     R0,[R4, #+0]
+    373          
+    374            return HAL_OK;
+   \       0x64   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    375          }
+    376          
+    377          /**
+    378            * @}
+    379            */
+    380          
+    381          /** @addtogroup DMA_Exported_Functions_Group2
+    382            *
+    383          @verbatim   
+    384           ===============================================================================
+    385                                #####  IO operation functions  #####
+    386           ===============================================================================
+    387              [..]  This section provides functions allowing to:
+    388                (+) Configure the source, destination address and data length and Start DMA transfer
+    389                (+) Configure the source, destination address and data length and 
+    390                    Start DMA transfer with interrupt
+    391                (+) Abort DMA transfer
+    392                (+) Poll for transfer complete
+    393                (+) Handle DMA interrupt request  
+    394          
+    395          @endverbatim
+    396            * @{
+    397            */
+    398          
+    399          /**
+    400            * @brief  Starts the DMA Transfer.
+    401            * @param  hdma       pointer to a DMA_HandleTypeDef structure that contains
+    402            *                     the configuration information for the specified DMA Stream.
+    403            * @param  SrcAddress The source memory Buffer address
+    404            * @param  DstAddress The destination memory Buffer address
+    405            * @param  DataLength The length of data to be transferred from source to destination
+    406            * @retval HAL status
+    407            */
+
+   \                                 In section .text, align 2, keep-with-next
+    408          HAL_StatusTypeDef HAL_DMA_Start(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength)
+    409          {
+   \                     HAL_DMA_Start: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+   \        0x2   0x4605             MOV      R5,R0
+    410            HAL_StatusTypeDef status = HAL_OK;
+    411            
+    412            /* Check the parameters */
+    413            assert_param(IS_DMA_BUFFER_SIZE(DataLength));
+    414          
+    415            /* Process locked */
+    416            __HAL_LOCK(hdma);
+   \        0x4   0xF105 0x0034      ADD      R0,R5,#+52
+   \        0x8   0x2400             MOVS     R4,#+0
+   \        0xA   0x7806             LDRB     R6,[R0, #+0]
+   \        0xC   0x2E01             CMP      R6,#+1
+   \        0xE   0xD101             BNE.N    ??HAL_DMA_Start_0
+   \       0x10   0x2002             MOVS     R0,#+2
+   \       0x12   0xBDF2             POP      {R1,R4-R7,PC}
+   \                     ??HAL_DMA_Start_0: (+1)
+   \       0x14   0x2601             MOVS     R6,#+1
+   \       0x16   0x7006             STRB     R6,[R0, #+0]
+    417          
+    418            if(HAL_DMA_STATE_READY == hdma->State)
+   \       0x18   0x7847             LDRB     R7,[R0, #+1]
+   \       0x1A   0x2F01             CMP      R7,#+1
+   \       0x1C   0xD10B             BNE.N    ??HAL_DMA_Start_1
+    419            {
+    420              /* Change DMA peripheral state */
+    421              hdma->State = HAL_DMA_STATE_BUSY;
+   \       0x1E   0x2602             MOVS     R6,#+2
+   \       0x20   0x7046             STRB     R6,[R0, #+1]
+    422              
+    423              /* Initialize the error code */
+    424              hdma->ErrorCode = HAL_DMA_ERROR_NONE;
+   \       0x22   0x6204             STR      R4,[R0, #+32]
+    425              
+    426              /* Configure the source, destination address and the data length */
+    427              DMA_SetConfig(hdma, SrcAddress, DstAddress, DataLength);
+   \       0x24   0x4628             MOV      R0,R5
+   \       0x26   0x....'....        BL       DMA_SetConfig
+    428          
+    429              /* Enable the Peripheral */
+    430              __HAL_DMA_ENABLE(hdma);
+   \       0x2A   0x6828             LDR      R0,[R5, #+0]
+   \       0x2C   0x6801             LDR      R1,[R0, #+0]
+   \       0x2E   0xF041 0x0101      ORR      R1,R1,#0x1
+   \       0x32   0x6001             STR      R1,[R0, #+0]
+   \       0x34   0xE001             B.N      ??HAL_DMA_Start_2
+    431            }
+    432            else
+    433            {
+    434              /* Process unlocked */
+    435              __HAL_UNLOCK(hdma);
+   \                     ??HAL_DMA_Start_1: (+1)
+   \       0x36   0x7004             STRB     R4,[R0, #+0]
+    436              
+    437              /* Return error status */
+    438              status = HAL_BUSY;
+   \       0x38   0x2402             MOVS     R4,#+2
+    439            } 
+    440            return status; 
+   \                     ??HAL_DMA_Start_2: (+1)
+   \       0x3A   0x4620             MOV      R0,R4
+   \       0x3C   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    441          }
+    442          
+    443          /**
+    444            * @brief  Start the DMA Transfer with interrupt enabled.
+    445            * @param  hdma       pointer to a DMA_HandleTypeDef structure that contains
+    446            *                     the configuration information for the specified DMA Stream.  
+    447            * @param  SrcAddress The source memory Buffer address
+    448            * @param  DstAddress The destination memory Buffer address
+    449            * @param  DataLength The length of data to be transferred from source to destination
+    450            * @retval HAL status
+    451            */
+
+   \                                 In section .text, align 2, keep-with-next
+    452          HAL_StatusTypeDef HAL_DMA_Start_IT(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength)
+    453          {
+   \                     HAL_DMA_Start_IT: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+   \        0x2   0x4604             MOV      R4,R0
+    454            HAL_StatusTypeDef status = HAL_OK;
+    455          
+    456            /* calculate DMA base and stream number */
+    457            DMA_Base_Registers *regs = (DMA_Base_Registers *)hdma->StreamBaseAddress;
+   \        0x4   0xF104 0x0634      ADD      R6,R4,#+52
+   \        0x8   0x2500             MOVS     R5,#+0
+    458            
+    459            /* Check the parameters */
+    460            assert_param(IS_DMA_BUFFER_SIZE(DataLength));
+    461           
+    462            /* Process locked */
+    463            __HAL_LOCK(hdma);
+   \        0xA   0x7830             LDRB     R0,[R6, #+0]
+   \        0xC   0x6A77             LDR      R7,[R6, #+36]
+   \        0xE   0x2801             CMP      R0,#+1
+   \       0x10   0xD101             BNE.N    ??HAL_DMA_Start_IT_0
+   \       0x12   0x2002             MOVS     R0,#+2
+   \       0x14   0xBDF2             POP      {R1,R4-R7,PC}
+   \                     ??HAL_DMA_Start_IT_0: (+1)
+   \       0x16   0x2001             MOVS     R0,#+1
+   \       0x18   0x7030             STRB     R0,[R6, #+0]
+    464            
+    465            if(HAL_DMA_STATE_READY == hdma->State)
+   \       0x1A   0x7870             LDRB     R0,[R6, #+1]
+   \       0x1C   0x2801             CMP      R0,#+1
+   \       0x1E   0xD11C             BNE.N    ??HAL_DMA_Start_IT_1
+    466            {
+    467              /* Change DMA peripheral state */
+    468              hdma->State = HAL_DMA_STATE_BUSY;
+   \       0x20   0x2002             MOVS     R0,#+2
+   \       0x22   0x7070             STRB     R0,[R6, #+1]
+    469              
+    470              /* Initialize the error code */
+    471              hdma->ErrorCode = HAL_DMA_ERROR_NONE;
+   \       0x24   0x6235             STR      R5,[R6, #+32]
+    472              
+    473              /* Configure the source, destination address and the data length */
+    474              DMA_SetConfig(hdma, SrcAddress, DstAddress, DataLength);
+   \       0x26   0x4620             MOV      R0,R4
+   \       0x28   0x....'....        BL       DMA_SetConfig
+    475              
+    476              /* Clear all interrupt flags at correct offset within the register */
+    477              regs->IFCR = 0x3FU << hdma->StreamIndex;
+   \       0x2C   0x6AB0             LDR      R0,[R6, #+40]
+   \       0x2E   0x213F             MOVS     R1,#+63
+   \       0x30   0xFA01 0xF000      LSL      R0,R1,R0
+   \       0x34   0x60B8             STR      R0,[R7, #+8]
+    478              
+    479              /* Enable Common interrupts*/
+    480              hdma->Instance->CR  |= DMA_IT_TC | DMA_IT_TE | DMA_IT_DME;
+   \       0x36   0x6820             LDR      R0,[R4, #+0]
+   \       0x38   0x6801             LDR      R1,[R0, #+0]
+   \       0x3A   0xF041 0x0116      ORR      R1,R1,#0x16
+   \       0x3E   0x6001             STR      R1,[R0, #+0]
+    481              
+    482              if(hdma->XferHalfCpltCallback != NULL)
+   \       0x40   0x68F0             LDR      R0,[R6, #+12]
+   \       0x42   0xB120             CBZ.N    R0,??HAL_DMA_Start_IT_2
+    483              {
+    484                hdma->Instance->CR  |= DMA_IT_HT;
+   \       0x44   0x6820             LDR      R0,[R4, #+0]
+   \       0x46   0x6801             LDR      R1,[R0, #+0]
+   \       0x48   0xF041 0x0108      ORR      R1,R1,#0x8
+   \       0x4C   0x6001             STR      R1,[R0, #+0]
+    485              }
+    486              
+    487              /* Enable the Peripheral */
+    488              __HAL_DMA_ENABLE(hdma);
+   \                     ??HAL_DMA_Start_IT_2: (+1)
+   \       0x4E   0x6820             LDR      R0,[R4, #+0]
+   \       0x50   0x6801             LDR      R1,[R0, #+0]
+   \       0x52   0xF041 0x0101      ORR      R1,R1,#0x1
+   \       0x56   0x6001             STR      R1,[R0, #+0]
+   \       0x58   0xE001             B.N      ??HAL_DMA_Start_IT_3
+    489            }
+    490            else
+    491            {
+    492              /* Process unlocked */
+    493              __HAL_UNLOCK(hdma);	  
+   \                     ??HAL_DMA_Start_IT_1: (+1)
+   \       0x5A   0x7035             STRB     R5,[R6, #+0]
+    494              
+    495              /* Return error status */
+    496              status = HAL_BUSY;
+   \       0x5C   0x2502             MOVS     R5,#+2
+    497            }
+    498            
+    499            return status;
+   \                     ??HAL_DMA_Start_IT_3: (+1)
+   \       0x5E   0x4628             MOV      R0,R5
+   \       0x60   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    500          }
+    501          
+    502          /**
+    503            * @brief  Aborts the DMA Transfer.
+    504            * @param  hdma   pointer to a DMA_HandleTypeDef structure that contains
+    505            *                 the configuration information for the specified DMA Stream.
+    506            *                   
+    507            * @note  After disabling a DMA Stream, a check for wait until the DMA Stream is 
+    508            *        effectively disabled is added. If a Stream is disabled 
+    509            *        while a data transfer is ongoing, the current data will be transferred
+    510            *        and the Stream will be effectively disabled only after the transfer of
+    511            *        this single data is finished.  
+    512            * @retval HAL status
+    513            */
+
+   \                                 In section .text, align 2, keep-with-next
+    514          HAL_StatusTypeDef HAL_DMA_Abort(DMA_HandleTypeDef *hdma)
+    515          {
+   \                     HAL_DMA_Abort: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+   \        0x2   0x4604             MOV      R4,R0
+    516            /* calculate DMA base and stream number */
+    517            DMA_Base_Registers *regs = (DMA_Base_Registers *)hdma->StreamBaseAddress;
+   \        0x4   0xF104 0x0534      ADD      R5,R4,#+52
+   \        0x8   0x6A6E             LDR      R6,[R5, #+36]
+    518            
+    519            uint32_t tickstart = HAL_GetTick();
+   \        0xA   0x....'....        BL       HAL_GetTick
+   \        0xE   0x4607             MOV      R7,R0
+    520            
+    521            if(hdma->State != HAL_DMA_STATE_BUSY)
+   \       0x10   0x7868             LDRB     R0,[R5, #+1]
+   \       0x12   0x2802             CMP      R0,#+2
+   \       0x14   0xD005             BEQ.N    ??HAL_DMA_Abort_0
+    522            {
+    523              hdma->ErrorCode = HAL_DMA_ERROR_NO_XFER;
+   \       0x16   0x2180             MOVS     R1,#+128
+   \       0x18   0x6229             STR      R1,[R5, #+32]
+    524              
+    525              /* Process Unlocked */
+    526              __HAL_UNLOCK(hdma);
+   \       0x1A   0x2000             MOVS     R0,#+0
+   \       0x1C   0x7028             STRB     R0,[R5, #+0]
+    527              
+    528              return HAL_ERROR;
+   \       0x1E   0x2001             MOVS     R0,#+1
+   \       0x20   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    529            }
+    530            else
+    531            {
+    532              /* Disable all the transfer interrupts */
+    533              hdma->Instance->CR  &= ~(DMA_IT_TC | DMA_IT_TE | DMA_IT_DME);
+   \                     ??HAL_DMA_Abort_0: (+1)
+   \       0x22   0x6820             LDR      R0,[R4, #+0]
+   \       0x24   0x6801             LDR      R1,[R0, #+0]
+   \       0x26   0xF021 0x0116      BIC      R1,R1,#0x16
+   \       0x2A   0x6001             STR      R1,[R0, #+0]
+    534              hdma->Instance->FCR &= ~(DMA_IT_FE);
+   \       0x2C   0x....'....        BL       ?Subroutine2
+    535              
+    536              if((hdma->XferHalfCpltCallback != NULL) || (hdma->XferM1HalfCpltCallback != NULL))
+   \                     ??CrossCallReturnLabel_4: (+1)
+   \       0x30   0x68E8             LDR      R0,[R5, #+12]
+   \       0x32   0x2800             CMP      R0,#+0
+   \       0x34   0xBF04             ITT      EQ
+   \       0x36   0x6968             LDREQ    R0,[R5, #+20]
+   \       0x38   0x2800             CMPEQ    R0,#+0
+   \       0x3A   0xD001             BEQ.N    ??CrossCallReturnLabel_0
+    537              {
+    538                hdma->Instance->CR  &= ~(DMA_IT_HT);
+   \       0x3C   0x....'....        BL       ?Subroutine0
+    539              }
+    540              
+    541              /* Disable the stream */
+    542              __HAL_DMA_DISABLE(hdma);
+   \                     ??CrossCallReturnLabel_0: (+1)
+   \       0x40   0x....'....        BL       ?Subroutine1
+    543              
+    544              /* Check if the DMA Stream is effectively disabled */
+    545              while((hdma->Instance->CR & DMA_SxCR_EN) != RESET)
+   \                     ??CrossCallReturnLabel_2: (+1)
+   \       0x44   0x6820             LDR      R0,[R4, #+0]
+   \       0x46   0x6801             LDR      R1,[R0, #+0]
+   \       0x48   0x07CA             LSLS     R2,R1,#+31
+   \       0x4A   0xD50C             BPL.N    ??HAL_DMA_Abort_1
+    546              {
+    547                /* Check for the Timeout */
+    548                if((HAL_GetTick() - tickstart ) > HAL_TIMEOUT_DMA_ABORT)
+   \       0x4C   0x....'....        BL       HAL_GetTick
+   \       0x50   0x1BC0             SUBS     R0,R0,R7
+   \       0x52   0x2806             CMP      R0,#+6
+   \       0x54   0xD3F6             BCC.N    ??CrossCallReturnLabel_2
+    549                {
+    550                  /* Update error code */
+    551                  hdma->ErrorCode = HAL_DMA_ERROR_TIMEOUT;
+   \       0x56   0x2020             MOVS     R0,#+32
+   \       0x58   0x6228             STR      R0,[R5, #+32]
+    552                  
+    553                  /* Process Unlocked */
+    554                  __HAL_UNLOCK(hdma);
+   \       0x5A   0x2100             MOVS     R1,#+0
+   \       0x5C   0x7029             STRB     R1,[R5, #+0]
+    555                  
+    556                  /* Change the DMA state */
+    557                  hdma->State = HAL_DMA_STATE_TIMEOUT;
+   \       0x5E   0x2203             MOVS     R2,#+3
+   \       0x60   0x706A             STRB     R2,[R5, #+1]
+    558                  
+    559                  return HAL_TIMEOUT;
+   \       0x62   0x2003             MOVS     R0,#+3
+   \       0x64   0xBDF2             POP      {R1,R4-R7,PC}
+    560                }
+    561              }
+    562              
+    563              /* Clear all interrupt flags at correct offset within the register */
+    564              regs->IFCR = 0x3FU << hdma->StreamIndex;
+   \                     ??HAL_DMA_Abort_1: (+1)
+   \       0x66   0x6AA9             LDR      R1,[R5, #+40]
+   \       0x68   0x203F             MOVS     R0,#+63
+   \       0x6A   0x4088             LSLS     R0,R0,R1
+   \       0x6C   0x60B0             STR      R0,[R6, #+8]
+    565              
+    566              /* Process Unlocked */
+    567              __HAL_UNLOCK(hdma);
+    568              
+    569              /* Change the DMA state*/
+    570              hdma->State = HAL_DMA_STATE_READY;
+   \       0x6E   0x2201             MOVS     R2,#+1
+   \       0x70   0x2000             MOVS     R0,#+0
+   \       0x72   0x7028             STRB     R0,[R5, #+0]
+   \       0x74   0x706A             STRB     R2,[R5, #+1]
+    571            }
+    572            return HAL_OK;
+   \       0x76   0xBDF2             POP      {R1,R4-R7,PC}
+    573          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine2: (+1)
+   \        0x0   0x6820             LDR      R0,[R4, #+0]
+   \        0x2   0x6941             LDR      R1,[R0, #+20]
+   \        0x4   0xF021 0x0180      BIC      R1,R1,#0x80
+   \        0x8   0x6141             STR      R1,[R0, #+20]
+   \        0xA   0x4770             BX       LR
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine1: (+1)
+   \        0x0   0x6820             LDR      R0,[R4, #+0]
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0x0849             LSRS     R1,R1,#+1
+   \        0x6   0x0049             LSLS     R1,R1,#+1
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+   \        0xA   0x4770             BX       LR
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine0: (+1)
+   \        0x0   0x6820             LDR      R0,[R4, #+0]
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF021 0x0108      BIC      R1,R1,#0x8
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+   \        0xA   0x4770             BX       LR
+    574          
+    575          /**
+    576            * @brief  Aborts the DMA Transfer in Interrupt mode.
+    577            * @param  hdma   pointer to a DMA_HandleTypeDef structure that contains
+    578            *                 the configuration information for the specified DMA Stream.
+    579            * @retval HAL status
+    580            */
+
+   \                                 In section .text, align 2, keep-with-next
+    581          HAL_StatusTypeDef HAL_DMA_Abort_IT(DMA_HandleTypeDef *hdma)
+    582          {
+    583            if(hdma->State != HAL_DMA_STATE_BUSY)
+   \                     HAL_DMA_Abort_IT: (+1)
+   \        0x0   0xF890 0x1035      LDRB     R1,[R0, #+53]
+   \        0x4   0x2902             CMP      R1,#+2
+   \        0x6   0xD003             BEQ.N    ??HAL_DMA_Abort_IT_0
+    584            {
+    585              hdma->ErrorCode = HAL_DMA_ERROR_NO_XFER;
+   \        0x8   0x2280             MOVS     R2,#+128
+   \        0xA   0x6542             STR      R2,[R0, #+84]
+    586              return HAL_ERROR;
+   \        0xC   0x2001             MOVS     R0,#+1
+   \        0xE   0x4770             BX       LR
+    587            }
+    588            else
+    589            {
+    590              /* Set Abort State  */
+    591              hdma->State = HAL_DMA_STATE_ABORT;
+   \                     ??HAL_DMA_Abort_IT_0: (+1)
+   \       0x10   0x2105             MOVS     R1,#+5
+   \       0x12   0xF880 0x1035      STRB     R1,[R0, #+53]
+    592              
+    593              /* Disable the stream */
+    594              __HAL_DMA_DISABLE(hdma);
+   \       0x16   0x6800             LDR      R0,[R0, #+0]
+   \       0x18   0x6802             LDR      R2,[R0, #+0]
+   \       0x1A   0x0852             LSRS     R2,R2,#+1
+   \       0x1C   0x0052             LSLS     R2,R2,#+1
+   \       0x1E   0x6002             STR      R2,[R0, #+0]
+    595            }
+    596          
+    597            return HAL_OK;
+   \       0x20   0x2000             MOVS     R0,#+0
+   \       0x22   0x4770             BX       LR               ;; return
+    598          }
+    599          
+    600          /**
+    601            * @brief  Polling for transfer complete.
+    602            * @param  hdma          pointer to a DMA_HandleTypeDef structure that contains
+    603            *                        the configuration information for the specified DMA Stream.
+    604            * @param  CompleteLevel Specifies the DMA level complete.
+    605            * @note   The polling mode is kept in this version for legacy. it is recommanded to use the IT model instead.
+    606            *         This model could be used for debug purpose.
+    607            * @note   The HAL_DMA_PollForTransfer API cannot be used in circular and double buffering mode (automatic circular mode). 
+    608            * @param  Timeout       Timeout duration.
+    609            * @retval HAL status
+    610            */
+
+   \                                 In section .text, align 2, keep-with-next
+    611          HAL_StatusTypeDef HAL_DMA_PollForTransfer(DMA_HandleTypeDef *hdma, HAL_DMA_LevelCompleteTypeDef CompleteLevel, uint32_t Timeout)
+    612          {
+   \                     HAL_DMA_PollForTransfer: (+1)
+   \        0x0   0xE92D 0x4FF8      PUSH     {R3-R11,LR}
+   \        0x4   0x4681             MOV      R9,R0
+   \        0x6   0x4688             MOV      R8,R1
+   \        0x8   0x4614             MOV      R4,R2
+    613            HAL_StatusTypeDef status = HAL_OK; 
+    614            uint32_t mask_cpltlevel;
+    615            uint32_t tickstart = HAL_GetTick(); 
+   \        0xA   0x....'....        BL       HAL_GetTick
+    616            uint32_t tmpisr;
+    617            
+    618            /* calculate DMA base and stream number */
+    619            DMA_Base_Registers *regs;
+    620          
+    621            if(HAL_DMA_STATE_BUSY != hdma->State)
+   \        0xE   0xF109 0x0734      ADD      R7,R9,#+52
+   \       0x12   0x4683             MOV      R11,R0
+   \       0x14   0x7878             LDRB     R0,[R7, #+1]
+   \       0x16   0x2802             CMP      R0,#+2
+   \       0x18   0xD004             BEQ.N    ??HAL_DMA_PollForTransfer_0
+    622            {
+    623              /* No transfer ongoing */
+    624              hdma->ErrorCode = HAL_DMA_ERROR_NO_XFER;
+   \       0x1A   0x2180             MOVS     R1,#+128
+   \       0x1C   0x6239             STR      R1,[R7, #+32]
+    625              __HAL_UNLOCK(hdma);
+   \       0x1E   0x2000             MOVS     R0,#+0
+   \       0x20   0x7038             STRB     R0,[R7, #+0]
+    626              return HAL_ERROR;
+   \       0x22   0xE061             B.N      ??HAL_DMA_PollForTransfer_1
+    627            }
+    628          
+    629            /* Polling mode not supported in circular mode and double buffering mode */
+    630            if ((hdma->Instance->CR & DMA_SxCR_CIRC) != RESET)
+   \                     ??HAL_DMA_PollForTransfer_0: (+1)
+   \       0x24   0xF8D9 0x1000      LDR      R1,[R9, #+0]
+   \       0x28   0x6808             LDR      R0,[R1, #+0]
+   \       0x2A   0x05C2             LSLS     R2,R0,#+23
+   \       0x2C   0xD503             BPL.N    ??HAL_DMA_PollForTransfer_2
+    631            {
+    632              hdma->ErrorCode = HAL_DMA_ERROR_NOT_SUPPORTED;
+   \       0x2E   0xF44F 0x7080      MOV      R0,#+256
+   \       0x32   0x6238             STR      R0,[R7, #+32]
+    633              return HAL_ERROR;
+   \       0x34   0xE058             B.N      ??HAL_DMA_PollForTransfer_1
+    634            }
+    635            
+    636            /* Get the level transfer complete flag */
+    637            if(CompleteLevel == HAL_DMA_FULL_TRANSFER)
+   \                     ??HAL_DMA_PollForTransfer_2: (+1)
+   \       0x36   0x6AB8             LDR      R0,[R7, #+40]
+    638            {
+    639              /* Transfer Complete flag */
+    640              mask_cpltlevel = DMA_FLAG_TCIF0_4 << hdma->StreamIndex;
+    641            }
+    642            else
+    643            {
+    644              /* Half Transfer Complete flag */
+    645              mask_cpltlevel = DMA_FLAG_HTIF0_4 << hdma->StreamIndex;
+    646            }
+    647            
+    648            regs = (DMA_Base_Registers *)hdma->StreamBaseAddress;
+   \       0x38   0x6A7D             LDR      R5,[R7, #+36]
+   \       0x3A   0x2610             MOVS     R6,#+16
+   \       0x3C   0xF1B8 0x0F00      CMP      R8,#+0
+   \       0x40   0xBF06             ITTE     EQ
+   \       0x42   0x2120             MOVEQ    R1,#+32
+   \       0x44   0xFA01 0xFA00      LSLEQ    R10,R1,R0
+   \       0x48   0xFA06 0xFA00      LSLNE    R10,R6,R0
+    649            tmpisr = regs->ISR;
+   \       0x4C   0x6828             LDR      R0,[R5, #+0]
+   \       0x4E   0xE023             B.N      ??HAL_DMA_PollForTransfer_3
+    650            
+    651            while(((tmpisr & mask_cpltlevel) == RESET) && ((hdma->ErrorCode & HAL_DMA_ERROR_TE) == RESET))
+    652            {
+    653              /* Check for the Timeout (Not applicable in circular mode)*/
+    654              if(Timeout != HAL_MAX_DELAY)
+    655              {
+    656                if((Timeout == 0U)||((HAL_GetTick() - tickstart ) > Timeout))
+    657                {
+    658                  /* Update error code */
+    659                  hdma->ErrorCode = HAL_DMA_ERROR_TIMEOUT;
+    660          
+    661                  /* Process Unlocked */
+    662                  __HAL_UNLOCK(hdma);
+    663                  
+    664                  /* Change the DMA state */
+    665                  hdma->State = HAL_DMA_STATE_READY;
+    666                  
+    667                  return HAL_TIMEOUT;
+    668                }
+    669              }
+    670          
+    671              /* Get the ISR register value */
+    672              tmpisr = regs->ISR;
+   \                     ??HAL_DMA_PollForTransfer_4: (+1)
+   \       0x50   0x6828             LDR      R0,[R5, #+0]
+    673          
+    674              if((tmpisr & (DMA_FLAG_TEIF0_4 << hdma->StreamIndex)) != RESET)
+   \       0x52   0x6AB9             LDR      R1,[R7, #+40]
+   \       0x54   0x2208             MOVS     R2,#+8
+   \       0x56   0xFA02 0xF101      LSL      R1,R2,R1
+   \       0x5A   0x4208             TST      R0,R1
+   \       0x5C   0xD004             BEQ.N    ??HAL_DMA_PollForTransfer_5
+    675              {
+    676                /* Update error code */
+    677                hdma->ErrorCode |= HAL_DMA_ERROR_TE;
+   \       0x5E   0x6A3A             LDR      R2,[R7, #+32]
+   \       0x60   0xF042 0x0201      ORR      R2,R2,#0x1
+   \       0x64   0x623A             STR      R2,[R7, #+32]
+    678                
+    679                /* Clear the transfer error flag */
+    680                regs->IFCR = DMA_FLAG_TEIF0_4 << hdma->StreamIndex;
+   \       0x66   0x60A9             STR      R1,[R5, #+8]
+    681              }
+    682              
+    683              if((tmpisr & (DMA_FLAG_FEIF0_4 << hdma->StreamIndex)) != RESET)
+   \                     ??HAL_DMA_PollForTransfer_5: (+1)
+   \       0x68   0x6AB9             LDR      R1,[R7, #+40]
+   \       0x6A   0xFA20 0xF201      LSR      R2,R0,R1
+   \       0x6E   0x07D3             LSLS     R3,R2,#+31
+   \       0x70   0xD507             BPL.N    ??HAL_DMA_PollForTransfer_6
+    684              {
+    685                /* Update error code */
+    686                hdma->ErrorCode |= HAL_DMA_ERROR_FE;
+   \       0x72   0x6A3A             LDR      R2,[R7, #+32]
+   \       0x74   0xF042 0x0202      ORR      R2,R2,#0x2
+    687                
+    688                /* Clear the FIFO error flag */
+    689                regs->IFCR = DMA_FLAG_FEIF0_4 << hdma->StreamIndex;
+   \       0x78   0x2301             MOVS     R3,#+1
+   \       0x7A   0x623A             STR      R2,[R7, #+32]
+   \       0x7C   0xFA03 0xF101      LSL      R1,R3,R1
+   \       0x80   0x60A9             STR      R1,[R5, #+8]
+    690              }
+    691              
+    692              if((tmpisr & (DMA_FLAG_DMEIF0_4 << hdma->StreamIndex)) != RESET)
+   \                     ??HAL_DMA_PollForTransfer_6: (+1)
+   \       0x82   0x2204             MOVS     R2,#+4
+   \       0x84   0x6AB9             LDR      R1,[R7, #+40]
+   \       0x86   0xFA02 0xF101      LSL      R1,R2,R1
+   \       0x8A   0x4208             TST      R0,R1
+   \       0x8C   0xD004             BEQ.N    ??HAL_DMA_PollForTransfer_3
+    693              {
+    694                /* Update error code */
+    695                hdma->ErrorCode |= HAL_DMA_ERROR_DME;
+   \       0x8E   0x6A3A             LDR      R2,[R7, #+32]
+   \       0x90   0xF042 0x0204      ORR      R2,R2,#0x4
+   \       0x94   0x623A             STR      R2,[R7, #+32]
+    696                
+    697                /* Clear the Direct Mode error flag */
+    698                regs->IFCR = DMA_FLAG_DMEIF0_4 << hdma->StreamIndex;
+   \       0x96   0x60A9             STR      R1,[R5, #+8]
+    699              }
+   \                     ??HAL_DMA_PollForTransfer_3: (+1)
+   \       0x98   0xEA10 0x0F0A      TST      R0,R10
+   \       0x9C   0xD114             BNE.N    ??HAL_DMA_PollForTransfer_7
+   \       0x9E   0x6A38             LDR      R0,[R7, #+32]
+   \       0xA0   0x07C1             LSLS     R1,R0,#+31
+   \       0xA2   0xD411             BMI.N    ??HAL_DMA_PollForTransfer_7
+   \       0xA4   0xF114 0x0F01      CMN      R4,#+1
+   \       0xA8   0xD0D2             BEQ.N    ??HAL_DMA_PollForTransfer_4
+   \       0xAA   0xB12C             CBZ.N    R4,??HAL_DMA_PollForTransfer_8
+   \       0xAC   0x....'....        BL       HAL_GetTick
+   \       0xB0   0xEBA0 0x000B      SUB      R0,R0,R11
+   \       0xB4   0x4284             CMP      R4,R0
+   \       0xB6   0xD2CB             BCS.N    ??HAL_DMA_PollForTransfer_4
+   \                     ??HAL_DMA_PollForTransfer_8: (+1)
+   \       0xB8   0x2020             MOVS     R0,#+32
+   \       0xBA   0x6238             STR      R0,[R7, #+32]
+   \       0xBC   0x2100             MOVS     R1,#+0
+   \       0xBE   0x7039             STRB     R1,[R7, #+0]
+   \       0xC0   0x2201             MOVS     R2,#+1
+   \       0xC2   0x707A             STRB     R2,[R7, #+1]
+   \       0xC4   0x2003             MOVS     R0,#+3
+   \       0xC6   0xE01F             B.N      ??HAL_DMA_PollForTransfer_9
+    700            }
+    701            
+    702            if(hdma->ErrorCode != HAL_DMA_ERROR_NONE)
+   \                     ??HAL_DMA_PollForTransfer_7: (+1)
+   \       0xC8   0x6A38             LDR      R0,[R7, #+32]
+   \       0xCA   0x2430             MOVS     R4,#+48
+   \       0xCC   0xB170             CBZ.N    R0,??HAL_DMA_PollForTransfer_10
+    703            {
+    704              if((hdma->ErrorCode & HAL_DMA_ERROR_TE) != RESET)
+   \       0xCE   0x6A38             LDR      R0,[R7, #+32]
+   \       0xD0   0x07C1             LSLS     R1,R0,#+31
+   \       0xD2   0xD50B             BPL.N    ??HAL_DMA_PollForTransfer_10
+    705              {
+    706                HAL_DMA_Abort(hdma);
+   \       0xD4   0x4648             MOV      R0,R9
+   \       0xD6   0x....'....        BL       HAL_DMA_Abort
+    707              
+    708                /* Clear the half transfer and transfer complete flags */
+    709                regs->IFCR = (DMA_FLAG_HTIF0_4 | DMA_FLAG_TCIF0_4) << hdma->StreamIndex;
+   \       0xDA   0x6AB8             LDR      R0,[R7, #+40]
+   \       0xDC   0x4084             LSLS     R4,R4,R0
+   \       0xDE   0x60AC             STR      R4,[R5, #+8]
+    710              
+    711                /* Process Unlocked */
+    712                __HAL_UNLOCK(hdma);
+   \       0xE0   0x2100             MOVS     R1,#+0
+   \       0xE2   0x7039             STRB     R1,[R7, #+0]
+    713          
+    714                /* Change the DMA state */
+    715                hdma->State= HAL_DMA_STATE_READY;
+   \       0xE4   0x2201             MOVS     R2,#+1
+   \       0xE6   0x707A             STRB     R2,[R7, #+1]
+    716          
+    717                return HAL_ERROR;
+   \                     ??HAL_DMA_PollForTransfer_1: (+1)
+   \       0xE8   0x2001             MOVS     R0,#+1
+   \       0xEA   0xE00D             B.N      ??HAL_DMA_PollForTransfer_9
+    718             }
+    719            }
+    720            
+    721            /* Get the level transfer complete flag */
+    722            if(CompleteLevel == HAL_DMA_FULL_TRANSFER)
+   \                     ??HAL_DMA_PollForTransfer_10: (+1)
+   \       0xEC   0x6AB8             LDR      R0,[R7, #+40]
+   \       0xEE   0xF1B8 0x0F00      CMP      R8,#+0
+   \       0xF2   0xD106             BNE.N    ??HAL_DMA_PollForTransfer_11
+    723            {
+    724              /* Clear the half transfer and transfer complete flags */
+    725              regs->IFCR = (DMA_FLAG_HTIF0_4 | DMA_FLAG_TCIF0_4) << hdma->StreamIndex;
+   \       0xF4   0x4084             LSLS     R4,R4,R0
+   \       0xF6   0x60AC             STR      R4,[R5, #+8]
+    726              
+    727              /* Process Unlocked */
+    728              __HAL_UNLOCK(hdma);
+   \       0xF8   0x2000             MOVS     R0,#+0
+   \       0xFA   0x7038             STRB     R0,[R7, #+0]
+    729          
+    730              hdma->State = HAL_DMA_STATE_READY;
+   \       0xFC   0x2101             MOVS     R1,#+1
+   \       0xFE   0x7079             STRB     R1,[R7, #+1]
+   \      0x100   0xE001             B.N      ??HAL_DMA_PollForTransfer_12
+    731            }
+    732            else
+    733            {
+    734              /* Clear the half transfer and transfer complete flags */
+    735              regs->IFCR = (DMA_FLAG_HTIF0_4) << hdma->StreamIndex;
+   \                     ??HAL_DMA_PollForTransfer_11: (+1)
+   \      0x102   0x4086             LSLS     R6,R6,R0
+   \      0x104   0x60AE             STR      R6,[R5, #+8]
+    736            }
+    737            
+    738            return status;
+   \                     ??HAL_DMA_PollForTransfer_12: (+1)
+   \      0x106   0x2000             MOVS     R0,#+0
+   \                     ??HAL_DMA_PollForTransfer_9: (+1)
+   \      0x108   0xE8BD 0x8FF2      POP      {R1,R4-R11,PC}   ;; return
+    739          }
+    740          
+    741          /**
+    742            * @brief  Handles DMA interrupt request.
+    743            * @param  hdma pointer to a DMA_HandleTypeDef structure that contains
+    744            *               the configuration information for the specified DMA Stream.  
+    745            * @retval None
+    746            */
+
+   \                                 In section .text, align 2, keep-with-next
+    747          void HAL_DMA_IRQHandler(DMA_HandleTypeDef *hdma)
+    748          {
+   \                     HAL_DMA_IRQHandler: (+1)
+   \        0x0   0xE92D 0x41FC      PUSH     {R2-R8,LR}
+   \        0x4   0x4604             MOV      R4,R0
+    749            uint32_t tmpisr;
+    750            __IO uint32_t count = 0U;
+    751            uint32_t timeout = SystemCoreClock / 9600U;
+    752          
+    753            /* calculate DMA base and stream number */
+    754            DMA_Base_Registers *regs = (DMA_Base_Registers *)hdma->StreamBaseAddress;
+   \        0x6   0xF104 0x0634      ADD      R6,R4,#+52
+   \        0xA   0x2000             MOVS     R0,#+0
+   \        0xC   0x....             LDR.N    R1,??DataTable2_1
+   \        0xE   0x9000             STR      R0,[SP, #+0]
+   \       0x10   0xF44F 0x5016      MOV      R0,#+9600
+   \       0x14   0x6A77             LDR      R7,[R6, #+36]
+   \       0x16   0x680A             LDR      R2,[R1, #+0]
+    755          
+    756            tmpisr = regs->ISR;
+   \       0x18   0x683D             LDR      R5,[R7, #+0]
+   \       0x1A   0xFBB2 0xF8F0      UDIV     R8,R2,R0
+    757          
+    758            /* Transfer Error Interrupt management ***************************************/
+    759            if ((tmpisr & (DMA_FLAG_TEIF0_4 << hdma->StreamIndex)) != RESET)
+   \       0x1E   0x6AB0             LDR      R0,[R6, #+40]
+   \       0x20   0x2108             MOVS     R1,#+8
+   \       0x22   0x....'....        BL       ??Subroutine3_0
+   \                     ??CrossCallReturnLabel_6: (+1)
+   \       0x26   0xD00E             BEQ.N    ??HAL_DMA_IRQHandler_0
+    760            {
+    761              if(__HAL_DMA_GET_IT_SOURCE(hdma, DMA_IT_TE) != RESET)
+   \       0x28   0x6820             LDR      R0,[R4, #+0]
+   \       0x2A   0x6802             LDR      R2,[R0, #+0]
+   \       0x2C   0x0753             LSLS     R3,R2,#+29
+   \       0x2E   0xD50A             BPL.N    ??HAL_DMA_IRQHandler_0
+    762              {
+    763                /* Disable the transfer error interrupt */
+    764                hdma->Instance->CR  &= ~(DMA_IT_TE);
+   \       0x30   0x6802             LDR      R2,[R0, #+0]
+   \       0x32   0xF022 0x0204      BIC      R2,R2,#0x4
+   \       0x36   0x6002             STR      R2,[R0, #+0]
+    765                
+    766                /* Clear the transfer error flag */
+    767                regs->IFCR = DMA_FLAG_TEIF0_4 << hdma->StreamIndex;
+   \       0x38   0x6AB0             LDR      R0,[R6, #+40]
+   \       0x3A   0x4081             LSLS     R1,R1,R0
+   \       0x3C   0x60B9             STR      R1,[R7, #+8]
+    768                
+    769                /* Update error code */
+    770                hdma->ErrorCode |= HAL_DMA_ERROR_TE;
+   \       0x3E   0x6A31             LDR      R1,[R6, #+32]
+   \       0x40   0xF041 0x0101      ORR      R1,R1,#0x1
+   \       0x44   0x6231             STR      R1,[R6, #+32]
+    771              }
+    772            }
+    773            /* FIFO Error Interrupt management ******************************************/
+    774            if ((tmpisr & (DMA_FLAG_FEIF0_4 << hdma->StreamIndex)) != RESET)
+   \                     ??HAL_DMA_IRQHandler_0: (+1)
+   \       0x46   0x6AB0             LDR      R0,[R6, #+40]
+   \       0x48   0xFA25 0xF100      LSR      R1,R5,R0
+   \       0x4C   0x07CA             LSLS     R2,R1,#+31
+   \       0x4E   0xD50B             BPL.N    ??HAL_DMA_IRQHandler_1
+    775            {
+    776              if(__HAL_DMA_GET_IT_SOURCE(hdma, DMA_IT_FE) != RESET)
+   \       0x50   0x6821             LDR      R1,[R4, #+0]
+   \       0x52   0x694A             LDR      R2,[R1, #+20]
+   \       0x54   0x0611             LSLS     R1,R2,#+24
+   \       0x56   0xD507             BPL.N    ??HAL_DMA_IRQHandler_1
+    777              {
+    778                /* Clear the FIFO error flag */
+    779                regs->IFCR = DMA_FLAG_FEIF0_4 << hdma->StreamIndex;
+   \       0x58   0x2201             MOVS     R2,#+1
+   \       0x5A   0xFA02 0xF000      LSL      R0,R2,R0
+   \       0x5E   0x60B8             STR      R0,[R7, #+8]
+    780          
+    781                /* Update error code */
+    782                hdma->ErrorCode |= HAL_DMA_ERROR_FE;
+   \       0x60   0x6A30             LDR      R0,[R6, #+32]
+   \       0x62   0xF040 0x0002      ORR      R0,R0,#0x2
+   \       0x66   0x6230             STR      R0,[R6, #+32]
+    783              }
+    784            }
+    785            /* Direct Mode Error Interrupt management ***********************************/
+    786            if ((tmpisr & (DMA_FLAG_DMEIF0_4 << hdma->StreamIndex)) != RESET)
+   \                     ??HAL_DMA_IRQHandler_1: (+1)
+   \       0x68   0x2104             MOVS     R1,#+4
+   \       0x6A   0x....'....        BL       ?Subroutine3
+   \                     ??CrossCallReturnLabel_7: (+1)
+   \       0x6E   0xD008             BEQ.N    ??HAL_DMA_IRQHandler_2
+    787            {
+    788              if(__HAL_DMA_GET_IT_SOURCE(hdma, DMA_IT_DME) != RESET)
+   \       0x70   0x6821             LDR      R1,[R4, #+0]
+   \       0x72   0x680A             LDR      R2,[R1, #+0]
+   \       0x74   0x0793             LSLS     R3,R2,#+30
+   \       0x76   0xD504             BPL.N    ??HAL_DMA_IRQHandler_2
+    789              {
+    790                /* Clear the direct mode error flag */
+    791                regs->IFCR = DMA_FLAG_DMEIF0_4 << hdma->StreamIndex;
+   \       0x78   0x60B8             STR      R0,[R7, #+8]
+    792          
+    793                /* Update error code */
+    794                hdma->ErrorCode |= HAL_DMA_ERROR_DME;
+   \       0x7A   0x6A30             LDR      R0,[R6, #+32]
+   \       0x7C   0xF040 0x0004      ORR      R0,R0,#0x4
+   \       0x80   0x6230             STR      R0,[R6, #+32]
+    795              }
+    796            }
+    797            /* Half Transfer Complete Interrupt management ******************************/
+    798            if ((tmpisr & (DMA_FLAG_HTIF0_4 << hdma->StreamIndex)) != RESET)
+   \                     ??HAL_DMA_IRQHandler_2: (+1)
+   \       0x82   0x2110             MOVS     R1,#+16
+   \       0x84   0x....'....        BL       ?Subroutine3
+   \                     ??CrossCallReturnLabel_8: (+1)
+   \       0x88   0xD01B             BEQ.N    ??HAL_DMA_IRQHandler_3
+    799            {
+    800              if(__HAL_DMA_GET_IT_SOURCE(hdma, DMA_IT_HT) != RESET)
+   \       0x8A   0x6821             LDR      R1,[R4, #+0]
+   \       0x8C   0x680A             LDR      R2,[R1, #+0]
+   \       0x8E   0x0713             LSLS     R3,R2,#+28
+   \       0x90   0xD517             BPL.N    ??HAL_DMA_IRQHandler_3
+    801              {
+    802                /* Clear the half transfer complete flag */
+    803                regs->IFCR = DMA_FLAG_HTIF0_4 << hdma->StreamIndex;
+   \       0x92   0x60B8             STR      R0,[R7, #+8]
+    804                
+    805                /* Multi_Buffering mode enabled */
+    806                if(((hdma->Instance->CR) & (uint32_t)(DMA_SxCR_DBM)) != RESET)
+   \       0x94   0x6820             LDR      R0,[R4, #+0]
+   \       0x96   0x6801             LDR      R1,[R0, #+0]
+   \       0x98   0x034A             LSLS     R2,R1,#+13
+   \       0x9A   0xD507             BPL.N    ??HAL_DMA_IRQHandler_4
+    807                {
+    808                  /* Current memory buffer used is Memory 0 */
+    809                  if((hdma->Instance->CR & DMA_SxCR_CT) == RESET)
+   \       0x9C   0x6800             LDR      R0,[R0, #+0]
+   \       0x9E   0x0301             LSLS     R1,R0,#+12
+   \       0xA0   0xD50B             BPL.N    ??HAL_DMA_IRQHandler_5
+    810                  {
+    811                    if(hdma->XferHalfCpltCallback != NULL)
+    812                    {
+    813                      /* Half transfer callback */
+    814                      hdma->XferHalfCpltCallback(hdma);
+    815                    }
+    816                  }
+    817                  /* Current memory buffer used is Memory 1 */
+    818                  else
+    819                  {
+    820                    if(hdma->XferM1HalfCpltCallback != NULL)
+   \       0xA2   0x6971             LDR      R1,[R6, #+20]
+   \       0xA4   0xB169             CBZ.N    R1,??HAL_DMA_IRQHandler_3
+    821                    {
+    822                      /* Half transfer callback */
+    823                      hdma->XferM1HalfCpltCallback(hdma);
+   \       0xA6   0x4620             MOV      R0,R4
+   \       0xA8   0x4788             BLX      R1
+   \       0xAA   0xE00A             B.N      ??HAL_DMA_IRQHandler_3
+    824                    }
+    825                  }
+    826                }
+    827                else
+    828                {
+    829                  /* Disable the half transfer interrupt if the DMA mode is not CIRCULAR */
+    830                  if((hdma->Instance->CR & DMA_SxCR_CIRC) == RESET)
+   \                     ??HAL_DMA_IRQHandler_4: (+1)
+   \       0xAC   0x6801             LDR      R1,[R0, #+0]
+   \       0xAE   0x05CA             LSLS     R2,R1,#+23
+   \       0xB0   0xD403             BMI.N    ??HAL_DMA_IRQHandler_5
+    831                  {
+    832                    /* Disable the half transfer interrupt */
+    833                    hdma->Instance->CR  &= ~(DMA_IT_HT);
+   \       0xB2   0x6801             LDR      R1,[R0, #+0]
+   \       0xB4   0xF021 0x0108      BIC      R1,R1,#0x8
+   \       0xB8   0x6001             STR      R1,[R0, #+0]
+    834                  }
+    835                  
+    836                  if(hdma->XferHalfCpltCallback != NULL)
+   \                     ??HAL_DMA_IRQHandler_5: (+1)
+   \       0xBA   0x68F1             LDR      R1,[R6, #+12]
+   \       0xBC   0xB109             CBZ.N    R1,??HAL_DMA_IRQHandler_3
+    837                  {
+    838                    /* Half transfer callback */
+    839                    hdma->XferHalfCpltCallback(hdma);
+   \       0xBE   0x4620             MOV      R0,R4
+   \       0xC0   0x4788             BLX      R1
+    840                  }
+    841                }
+    842              }
+    843            }
+    844            /* Transfer Complete Interrupt management ***********************************/
+    845            if ((tmpisr & (DMA_FLAG_TCIF0_4 << hdma->StreamIndex)) != RESET)
+   \                     ??HAL_DMA_IRQHandler_3: (+1)
+   \       0xC2   0x6AB0             LDR      R0,[R6, #+40]
+   \       0xC4   0x2120             MOVS     R1,#+32
+   \       0xC6   0x....'....        BL       ??Subroutine3_0
+   \                     ??CrossCallReturnLabel_9: (+1)
+   \       0xCA   0xD03F             BEQ.N    ??HAL_DMA_IRQHandler_6
+    846            {
+    847              if(__HAL_DMA_GET_IT_SOURCE(hdma, DMA_IT_TC) != RESET)
+   \       0xCC   0x6821             LDR      R1,[R4, #+0]
+   \       0xCE   0x680A             LDR      R2,[R1, #+0]
+   \       0xD0   0x06D3             LSLS     R3,R2,#+27
+   \       0xD2   0xD53B             BPL.N    ??HAL_DMA_IRQHandler_6
+    848              {
+    849                /* Clear the transfer complete flag */
+    850                regs->IFCR = DMA_FLAG_TCIF0_4 << hdma->StreamIndex;
+   \       0xD4   0x60B8             STR      R0,[R7, #+8]
+    851                
+    852                if(HAL_DMA_STATE_ABORT == hdma->State)
+   \       0xD6   0x6820             LDR      R0,[R4, #+0]
+   \       0xD8   0x7871             LDRB     R1,[R6, #+1]
+   \       0xDA   0x2905             CMP      R1,#+5
+   \       0xDC   0xD11C             BNE.N    ??HAL_DMA_IRQHandler_7
+    853                {
+    854                  /* Disable all the transfer interrupts */
+    855                  hdma->Instance->CR  &= ~(DMA_IT_TC | DMA_IT_TE | DMA_IT_DME);
+   \       0xDE   0x6802             LDR      R2,[R0, #+0]
+   \       0xE0   0xF022 0x0216      BIC      R2,R2,#0x16
+   \       0xE4   0x6002             STR      R2,[R0, #+0]
+    856                  hdma->Instance->FCR &= ~(DMA_IT_FE);
+   \       0xE6   0x....'....        BL       ?Subroutine2
+    857                  
+    858                  if((hdma->XferHalfCpltCallback != NULL) || (hdma->XferM1HalfCpltCallback != NULL))
+   \                     ??CrossCallReturnLabel_5: (+1)
+   \       0xEA   0x68F0             LDR      R0,[R6, #+12]
+   \       0xEC   0x2800             CMP      R0,#+0
+   \       0xEE   0xBF04             ITT      EQ
+   \       0xF0   0x6970             LDREQ    R0,[R6, #+20]
+   \       0xF2   0x2800             CMPEQ    R0,#+0
+   \       0xF4   0xD001             BEQ.N    ??CrossCallReturnLabel_1
+    859                  {
+    860                    hdma->Instance->CR  &= ~(DMA_IT_HT);
+   \       0xF6   0x....'....        BL       ?Subroutine0
+    861                  }
+    862          
+    863                  /* Clear all interrupt flags at correct offset within the register */
+    864                  regs->IFCR = 0x3FU << hdma->StreamIndex;
+   \                     ??CrossCallReturnLabel_1: (+1)
+   \       0xFA   0x223F             MOVS     R2,#+63
+   \       0xFC   0x6AB0             LDR      R0,[R6, #+40]
+   \       0xFE   0x4082             LSLS     R2,R2,R0
+   \      0x100   0x60BA             STR      R2,[R7, #+8]
+    865          
+    866                  /* Process Unlocked */
+    867                  __HAL_UNLOCK(hdma);
+   \      0x102   0x2100             MOVS     R1,#+0
+   \      0x104   0x7031             STRB     R1,[R6, #+0]
+    868          
+    869                  /* Change the DMA state */
+    870                  hdma->State = HAL_DMA_STATE_READY;
+   \      0x106   0x2201             MOVS     R2,#+1
+   \      0x108   0x7072             STRB     R2,[R6, #+1]
+    871          
+    872                  if(hdma->XferAbortCallback != NULL)
+   \      0x10A   0x69F1             LDR      R1,[R6, #+28]
+   \      0x10C   0x2900             CMP      R1,#+0
+   \      0x10E   0xD039             BEQ.N    ??HAL_DMA_IRQHandler_8
+    873                  {
+    874                    hdma->XferAbortCallback(hdma);
+   \      0x110   0x4620             MOV      R0,R4
+   \      0x112   0xE8BD 0x41FC      POP      {R2-R8,LR}
+   \      0x116   0x4708             BX       R1
+    875                  }
+    876                  return;
+    877                }
+    878          
+    879                if(((hdma->Instance->CR) & (uint32_t)(DMA_SxCR_DBM)) != RESET)
+   \                     ??HAL_DMA_IRQHandler_7: (+1)
+   \      0x118   0x6801             LDR      R1,[R0, #+0]
+   \      0x11A   0x034A             LSLS     R2,R1,#+13
+   \      0x11C   0xD507             BPL.N    ??HAL_DMA_IRQHandler_9
+    880                {
+    881                  /* Current memory buffer used is Memory 0 */
+    882                  if((hdma->Instance->CR & DMA_SxCR_CT) == RESET)
+   \      0x11E   0x6800             LDR      R0,[R0, #+0]
+   \      0x120   0x0301             LSLS     R1,R0,#+12
+   \      0x122   0xD40F             BMI.N    ??HAL_DMA_IRQHandler_10
+    883                  {
+    884                    if(hdma->XferM1CpltCallback != NULL)
+   \      0x124   0x6931             LDR      R1,[R6, #+16]
+   \      0x126   0xB189             CBZ.N    R1,??HAL_DMA_IRQHandler_6
+    885                    {
+    886                      /* Transfer complete Callback for memory1 */
+    887                      hdma->XferM1CpltCallback(hdma);
+   \      0x128   0x4620             MOV      R0,R4
+   \      0x12A   0x4788             BLX      R1
+   \      0x12C   0xE00E             B.N      ??HAL_DMA_IRQHandler_6
+    888                    }
+    889                  }
+    890                  /* Current memory buffer used is Memory 1 */
+    891                  else
+    892                  {
+    893                    if(hdma->XferCpltCallback != NULL)
+    894                    {
+    895                      /* Transfer complete Callback for memory0 */
+    896                      hdma->XferCpltCallback(hdma);
+    897                    }
+    898                  }
+    899                }
+    900                /* Disable the transfer complete interrupt if the DMA mode is not CIRCULAR */
+    901                else
+    902                {
+    903                  if((hdma->Instance->CR & DMA_SxCR_CIRC) == RESET)
+   \                     ??HAL_DMA_IRQHandler_9: (+1)
+   \      0x12E   0x6801             LDR      R1,[R0, #+0]
+   \      0x130   0x05CA             LSLS     R2,R1,#+23
+   \      0x132   0xD407             BMI.N    ??HAL_DMA_IRQHandler_10
+    904                  {
+    905                    /* Disable the transfer complete interrupt */
+    906                    hdma->Instance->CR  &= ~(DMA_IT_TC);
+   \      0x134   0x6801             LDR      R1,[R0, #+0]
+   \      0x136   0xF021 0x0110      BIC      R1,R1,#0x10
+   \      0x13A   0x6001             STR      R1,[R0, #+0]
+    907          
+    908                    /* Process Unlocked */
+    909                    __HAL_UNLOCK(hdma);
+   \      0x13C   0x2000             MOVS     R0,#+0
+   \      0x13E   0x7030             STRB     R0,[R6, #+0]
+    910          
+    911                    /* Change the DMA state */
+    912                    hdma->State = HAL_DMA_STATE_READY;
+   \      0x140   0x2201             MOVS     R2,#+1
+   \      0x142   0x7072             STRB     R2,[R6, #+1]
+    913                  }
+    914          
+    915                  if(hdma->XferCpltCallback != NULL)
+   \                     ??HAL_DMA_IRQHandler_10: (+1)
+   \      0x144   0x68B1             LDR      R1,[R6, #+8]
+   \      0x146   0xB109             CBZ.N    R1,??HAL_DMA_IRQHandler_6
+    916                  {
+    917                    /* Transfer complete callback */
+    918                    hdma->XferCpltCallback(hdma);
+   \      0x148   0x4620             MOV      R0,R4
+   \      0x14A   0x4788             BLX      R1
+    919                  }
+    920                }
+    921              }
+    922            }
+    923            
+    924            /* manage error case */
+    925            if(hdma->ErrorCode != HAL_DMA_ERROR_NONE)
+   \                     ??HAL_DMA_IRQHandler_6: (+1)
+   \      0x14C   0x6A30             LDR      R0,[R6, #+32]
+   \      0x14E   0xB1C8             CBZ.N    R0,??HAL_DMA_IRQHandler_8
+    926            {
+    927              if((hdma->ErrorCode & HAL_DMA_ERROR_TE) != RESET)
+   \      0x150   0x6A30             LDR      R0,[R6, #+32]
+   \      0x152   0x07C1             LSLS     R1,R0,#+31
+   \      0x154   0xD510             BPL.N    ??HAL_DMA_IRQHandler_11
+    928              {
+    929                hdma->State = HAL_DMA_STATE_ABORT;
+   \      0x156   0x2005             MOVS     R0,#+5
+   \      0x158   0x7070             STRB     R0,[R6, #+1]
+    930          
+    931                /* Disable the stream */
+    932                __HAL_DMA_DISABLE(hdma);
+   \      0x15A   0x....'....        BL       ?Subroutine1
+    933          
+    934                do
+    935                {
+    936                  if (++count > timeout)
+   \                     ??CrossCallReturnLabel_3: (+1)
+   \      0x15E   0x9800             LDR      R0,[SP, #+0]
+   \      0x160   0x1C40             ADDS     R0,R0,#+1
+   \      0x162   0x4580             CMP      R8,R0
+   \      0x164   0x9000             STR      R0,[SP, #+0]
+   \      0x166   0xD303             BCC.N    ??HAL_DMA_IRQHandler_12
+    937                  {
+    938                    break;
+    939                  }
+    940                }
+    941                while((hdma->Instance->CR & DMA_SxCR_EN) != RESET);
+   \      0x168   0x6820             LDR      R0,[R4, #+0]
+   \      0x16A   0x6801             LDR      R1,[R0, #+0]
+   \      0x16C   0x07CA             LSLS     R2,R1,#+31
+   \      0x16E   0xD4F6             BMI.N    ??CrossCallReturnLabel_3
+    942          
+    943                /* Process Unlocked */
+    944                __HAL_UNLOCK(hdma);
+   \                     ??HAL_DMA_IRQHandler_12: (+1)
+   \      0x170   0x2000             MOVS     R0,#+0
+   \      0x172   0x7030             STRB     R0,[R6, #+0]
+    945          
+    946                /* Change the DMA state */
+    947                hdma->State = HAL_DMA_STATE_READY;
+   \      0x174   0x2101             MOVS     R1,#+1
+   \      0x176   0x7071             STRB     R1,[R6, #+1]
+    948              }
+    949          
+    950              if(hdma->XferErrorCallback != NULL)
+   \                     ??HAL_DMA_IRQHandler_11: (+1)
+   \      0x178   0x69B1             LDR      R1,[R6, #+24]
+   \      0x17A   0xB119             CBZ.N    R1,??HAL_DMA_IRQHandler_8
+    951              {
+    952                /* Transfer error callback */
+    953                hdma->XferErrorCallback(hdma);
+   \      0x17C   0x4620             MOV      R0,R4
+   \      0x17E   0xE8BD 0x41FC      POP      {R2-R8,LR}
+   \      0x182   0x4708             BX       R1
+    954              }
+    955            }
+    956          }
+   \                     ??HAL_DMA_IRQHandler_8: (+1)
+   \      0x184   0xE8BD 0x81F3      POP      {R0,R1,R4-R8,PC}  ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine3: (+1)
+   \        0x0   0x6AB0             LDR      R0,[R6, #+40]
+   \                     ??Subroutine3_0: (+1)
+   \        0x2   0xFA01 0xF000      LSL      R0,R1,R0
+   \        0x6   0x4205             TST      R5,R0
+   \        0x8   0x4770             BX       LR
+    957          
+    958          /**
+    959            * @brief  Register callbacks
+    960            * @param  hdma                 pointer to a DMA_HandleTypeDef structure that contains
+    961            *                               the configuration information for the specified DMA Stream.
+    962            * @param  CallbackID           User Callback identifer
+    963            *                               a DMA_HandleTypeDef structure as parameter.
+    964            * @param  pCallback            pointer to private callbacsk function which has pointer to 
+    965            *                               a DMA_HandleTypeDef structure as parameter.
+    966            * @retval HAL status
+    967            */                      
+
+   \                                 In section .text, align 4, keep-with-next
+    968          HAL_StatusTypeDef HAL_DMA_RegisterCallback(DMA_HandleTypeDef *hdma, HAL_DMA_CallbackIDTypeDef CallbackID, void (* pCallback)(DMA_HandleTypeDef *_hdma))
+    969          {
+   \                     HAL_DMA_RegisterCallback: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+   \        0x2   0x4603             MOV      R3,R0
+    970          
+    971            HAL_StatusTypeDef status = HAL_OK;
+   \        0x4   0x2000             MOVS     R0,#+0
+    972          
+    973            /* Process locked */
+    974            __HAL_LOCK(hdma);
+   \        0x6   0xF813 0x4F34      LDRB     R4,[R3, #+52]!
+   \        0xA   0x2C01             CMP      R4,#+1
+   \        0xC   0xD101             BNE.N    ??HAL_DMA_RegisterCallback_1
+   \        0xE   0x2002             MOVS     R0,#+2
+   \       0x10   0xBD30             POP      {R4,R5,PC}
+   \                     ??HAL_DMA_RegisterCallback_1: (+1)
+   \       0x12   0x2401             MOVS     R4,#+1
+   \       0x14   0x701C             STRB     R4,[R3, #+0]
+    975          
+    976            if(HAL_DMA_STATE_READY == hdma->State)
+   \       0x16   0x785D             LDRB     R5,[R3, #+1]
+   \       0x18   0x2D01             CMP      R5,#+1
+   \       0x1A   0xD112             BNE.N    ??HAL_DMA_RegisterCallback_2
+    977            {
+    978              switch (CallbackID)
+   \       0x1C   0x2905             CMP      R1,#+5
+   \       0x1E   0xD811             BHI.N    ??HAL_DMA_RegisterCallback_3
+   \       0x20   0xE8DF 0xF001      TBB      [PC, R1]
+   \                     ??HAL_DMA_RegisterCallback_0:
+   \       0x24   0x03 0x05          DC8      0x3,0x5,0x7,0x9
+
+   \              0x07 0x09
+   \       0x28   0x0B 0x0D          DC8      0xB,0xD
+    979              {
+    980              case  HAL_DMA_XFER_CPLT_CB_ID:
+    981                hdma->XferCpltCallback = pCallback;
+   \                     ??HAL_DMA_RegisterCallback_4: (+1)
+   \       0x2A   0x609A             STR      R2,[R3, #+8]
+    982                break;
+   \       0x2C   0xE00A             B.N      ??HAL_DMA_RegisterCallback_3
+    983          
+    984              case  HAL_DMA_XFER_HALFCPLT_CB_ID:
+    985                hdma->XferHalfCpltCallback = pCallback;
+   \                     ??HAL_DMA_RegisterCallback_5: (+1)
+   \       0x2E   0x60DA             STR      R2,[R3, #+12]
+    986                break;
+   \       0x30   0xE008             B.N      ??HAL_DMA_RegisterCallback_3
+    987          
+    988              case  HAL_DMA_XFER_M1CPLT_CB_ID:
+    989                hdma->XferM1CpltCallback = pCallback;
+   \                     ??HAL_DMA_RegisterCallback_6: (+1)
+   \       0x32   0x611A             STR      R2,[R3, #+16]
+    990                break;
+   \       0x34   0xE006             B.N      ??HAL_DMA_RegisterCallback_3
+    991          
+    992              case  HAL_DMA_XFER_M1HALFCPLT_CB_ID:
+    993                hdma->XferM1HalfCpltCallback = pCallback;
+   \                     ??HAL_DMA_RegisterCallback_7: (+1)
+   \       0x36   0x615A             STR      R2,[R3, #+20]
+    994                break;
+   \       0x38   0xE004             B.N      ??HAL_DMA_RegisterCallback_3
+    995          
+    996              case  HAL_DMA_XFER_ERROR_CB_ID:
+    997                hdma->XferErrorCallback = pCallback;
+   \                     ??HAL_DMA_RegisterCallback_8: (+1)
+   \       0x3A   0x619A             STR      R2,[R3, #+24]
+    998                break;
+   \       0x3C   0xE002             B.N      ??HAL_DMA_RegisterCallback_3
+    999          
+   1000              case  HAL_DMA_XFER_ABORT_CB_ID:
+   1001                hdma->XferAbortCallback = pCallback;
+   \                     ??HAL_DMA_RegisterCallback_9: (+1)
+   \       0x3E   0x61DA             STR      R2,[R3, #+28]
+   1002                break;
+   \       0x40   0xE000             B.N      ??HAL_DMA_RegisterCallback_3
+   1003          
+   1004              default:
+   1005                break;
+   1006              }
+   1007            }
+   1008            else
+   1009            {
+   1010              /* Return error status */
+   1011              status =  HAL_ERROR;
+   \                     ??HAL_DMA_RegisterCallback_2: (+1)
+   \       0x42   0x2001             MOVS     R0,#+1
+   1012            }
+   1013          
+   1014            /* Release Lock */
+   1015            __HAL_UNLOCK(hdma);
+   \                     ??HAL_DMA_RegisterCallback_3: (+1)
+   \       0x44   0x2100             MOVS     R1,#+0
+   \       0x46   0x7019             STRB     R1,[R3, #+0]
+   1016            
+   1017            return status;
+   \       0x48   0xBD30             POP      {R4,R5,PC}       ;; return
+   1018          }
+   1019          
+   1020          /**
+   1021            * @brief  UnRegister callbacks
+   1022            * @param  hdma                 pointer to a DMA_HandleTypeDef structure that contains
+   1023            *                               the configuration information for the specified DMA Stream.
+   1024            * @param  CallbackID           User Callback identifer
+   1025            *                               a HAL_DMA_CallbackIDTypeDef ENUM as parameter.
+   1026            * @retval HAL status
+   1027            */              
+
+   \                                 In section .text, align 4, keep-with-next
+   1028          HAL_StatusTypeDef HAL_DMA_UnRegisterCallback(DMA_HandleTypeDef *hdma, HAL_DMA_CallbackIDTypeDef CallbackID)
+   1029          {
+   \                     HAL_DMA_UnRegisterCallback: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   1030            HAL_StatusTypeDef status = HAL_OK;
+   1031            
+   1032            /* Process locked */
+   1033            __HAL_LOCK(hdma);
+   \        0x2   0xF810 0x3F34      LDRB     R3,[R0, #+52]!
+   \        0x6   0x2200             MOVS     R2,#+0
+   \        0x8   0x2B01             CMP      R3,#+1
+   \        0xA   0xD101             BNE.N    ??HAL_DMA_UnRegisterCallback_1
+   \        0xC   0x2002             MOVS     R0,#+2
+   \        0xE   0xBD10             POP      {R4,PC}
+   \                     ??HAL_DMA_UnRegisterCallback_1: (+1)
+   \       0x10   0x2301             MOVS     R3,#+1
+   \       0x12   0x7003             STRB     R3,[R0, #+0]
+   1034            
+   1035            if(HAL_DMA_STATE_READY == hdma->State)
+   \       0x14   0x7844             LDRB     R4,[R0, #+1]
+   \       0x16   0x2C01             CMP      R4,#+1
+   \       0x18   0xD118             BNE.N    ??HAL_DMA_UnRegisterCallback_2
+   1036            {
+   1037              switch (CallbackID)
+   \       0x1A   0x2906             CMP      R1,#+6
+   \       0x1C   0xD816             BHI.N    ??HAL_DMA_UnRegisterCallback_2
+   \       0x1E   0xE8DF 0xF001      TBB      [PC, R1]
+   \                     ??HAL_DMA_UnRegisterCallback_0:
+   \       0x22   0x04 0x06          DC8      0x4,0x6,0x8,0xA
+
+   \              0x08 0x0A
+   \       0x26   0x0C 0x13          DC8      0xC,0x13,0xE,0x0
+
+   \              0x0E 0x00
+   1038              {
+   1039              case  HAL_DMA_XFER_CPLT_CB_ID:
+   1040                hdma->XferCpltCallback = NULL;
+   \                     ??HAL_DMA_UnRegisterCallback_3: (+1)
+   \       0x2A   0x6082             STR      R2,[R0, #+8]
+   1041                break;
+   \       0x2C   0xE00F             B.N      ??HAL_DMA_UnRegisterCallback_4
+   1042                
+   1043              case  HAL_DMA_XFER_HALFCPLT_CB_ID:
+   1044                hdma->XferHalfCpltCallback = NULL;
+   \                     ??HAL_DMA_UnRegisterCallback_5: (+1)
+   \       0x2E   0x60C2             STR      R2,[R0, #+12]
+   1045                break;
+   \       0x30   0xE00D             B.N      ??HAL_DMA_UnRegisterCallback_4
+   1046                
+   1047              case  HAL_DMA_XFER_M1CPLT_CB_ID:
+   1048                hdma->XferM1CpltCallback = NULL;
+   \                     ??HAL_DMA_UnRegisterCallback_6: (+1)
+   \       0x32   0x6102             STR      R2,[R0, #+16]
+   1049                break;
+   \       0x34   0xE00B             B.N      ??HAL_DMA_UnRegisterCallback_4
+   1050                
+   1051              case  HAL_DMA_XFER_M1HALFCPLT_CB_ID:
+   1052                hdma->XferM1HalfCpltCallback = NULL;
+   \                     ??HAL_DMA_UnRegisterCallback_7: (+1)
+   \       0x36   0x6142             STR      R2,[R0, #+20]
+   1053                break;
+   \       0x38   0xE009             B.N      ??HAL_DMA_UnRegisterCallback_4
+   1054                
+   1055              case  HAL_DMA_XFER_ERROR_CB_ID:
+   1056                hdma->XferErrorCallback = NULL;
+   \                     ??HAL_DMA_UnRegisterCallback_8: (+1)
+   \       0x3A   0x6182             STR      R2,[R0, #+24]
+   1057                break;
+   \       0x3C   0xE007             B.N      ??HAL_DMA_UnRegisterCallback_4
+   1058                
+   1059              case  HAL_DMA_XFER_ABORT_CB_ID:
+   1060                hdma->XferAbortCallback = NULL;
+   1061                break; 
+   1062                
+   1063              case   HAL_DMA_XFER_ALL_CB_ID:
+   1064                hdma->XferCpltCallback = NULL;
+   \                     ??HAL_DMA_UnRegisterCallback_9: (+1)
+   \       0x3E   0x6082             STR      R2,[R0, #+8]
+   1065                hdma->XferHalfCpltCallback = NULL;
+   \       0x40   0x60C2             STR      R2,[R0, #+12]
+   1066                hdma->XferM1CpltCallback = NULL;
+   \       0x42   0x6102             STR      R2,[R0, #+16]
+   1067                hdma->XferM1HalfCpltCallback = NULL;
+   \       0x44   0x6142             STR      R2,[R0, #+20]
+   1068                hdma->XferErrorCallback = NULL;
+   \       0x46   0x6182             STR      R2,[R0, #+24]
+   1069                hdma->XferAbortCallback = NULL;
+   \                     ??HAL_DMA_UnRegisterCallback_10: (+1)
+   \       0x48   0x61C2             STR      R2,[R0, #+28]
+   1070                break; 
+   \       0x4A   0xE000             B.N      ??HAL_DMA_UnRegisterCallback_4
+   1071                
+   1072              default:
+   1073                status = HAL_ERROR;
+   1074                break;
+   1075              }
+   1076            }
+   1077            else
+   1078            {
+   1079              status = HAL_ERROR;
+   \                     ??HAL_DMA_UnRegisterCallback_2: (+1)
+   \       0x4C   0x2201             MOVS     R2,#+1
+   1080            }
+   1081            
+   1082            /* Release Lock */
+   1083            __HAL_UNLOCK(hdma);
+   \                     ??HAL_DMA_UnRegisterCallback_4: (+1)
+   \       0x4E   0x2100             MOVS     R1,#+0
+   \       0x50   0x7001             STRB     R1,[R0, #+0]
+   1084            
+   1085            return status;
+   \       0x52   0x4610             MOV      R0,R2
+   \       0x54   0xBD10             POP      {R4,PC}          ;; return
+   1086          }
+   1087          
+   1088          /**
+   1089            * @}
+   1090            */
+   1091          
+   1092          /** @addtogroup DMA_Exported_Functions_Group3
+   1093            *
+   1094          @verbatim
+   1095           ===============================================================================
+   1096                              ##### State and Errors functions #####
+   1097           ===============================================================================
+   1098              [..]
+   1099              This subsection provides functions allowing to
+   1100                (+) Check the DMA state
+   1101                (+) Get error code
+   1102          
+   1103          @endverbatim
+   1104            * @{
+   1105            */
+   1106          
+   1107          /**
+   1108            * @brief  Returns the DMA state.
+   1109            * @param  hdma pointer to a DMA_HandleTypeDef structure that contains
+   1110            *               the configuration information for the specified DMA Stream.
+   1111            * @retval HAL state
+   1112            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1113          HAL_DMA_StateTypeDef HAL_DMA_GetState(DMA_HandleTypeDef *hdma)
+   1114          {
+   1115            return hdma->State;
+   \                     HAL_DMA_GetState: (+1)
+   \        0x0   0xF890 0x0035      LDRB     R0,[R0, #+53]
+   \        0x4   0x4770             BX       LR               ;; return
+   1116          }
+   1117          
+   1118          /**
+   1119            * @brief  Return the DMA error code
+   1120            * @param  hdma  pointer to a DMA_HandleTypeDef structure that contains
+   1121            *              the configuration information for the specified DMA Stream.
+   1122            * @retval DMA Error Code
+   1123            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1124          uint32_t HAL_DMA_GetError(DMA_HandleTypeDef *hdma)
+   1125          {
+   1126            return hdma->ErrorCode;
+   \                     HAL_DMA_GetError: (+1)
+   \        0x0   0x6D40             LDR      R0,[R0, #+84]
+   \        0x2   0x4770             BX       LR               ;; return
+   1127          }
+   1128          
+   1129          /**
+   1130            * @}
+   1131            */
+   1132          
+   1133          /**
+   1134            * @}
+   1135            */
+   1136          
+   1137          /** @addtogroup DMA_Private_Functions
+   1138            * @{
+   1139            */
+   1140          
+   1141          /**
+   1142            * @brief  Sets the DMA Transfer parameter.
+   1143            * @param  hdma       pointer to a DMA_HandleTypeDef structure that contains
+   1144            *                     the configuration information for the specified DMA Stream.
+   1145            * @param  SrcAddress The source memory Buffer address
+   1146            * @param  DstAddress The destination memory Buffer address
+   1147            * @param  DataLength The length of data to be transferred from source to destination
+   1148            * @retval HAL status
+   1149            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1150          static void DMA_SetConfig(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength)
+   1151          {
+   \                     DMA_SetConfig: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+   1152            /* Clear DBM bit */
+   1153            hdma->Instance->CR &= (uint32_t)(~DMA_SxCR_DBM);
+   \        0x2   0x6804             LDR      R4,[R0, #+0]
+   \        0x4   0x6825             LDR      R5,[R4, #+0]
+   \        0x6   0xF425 0x2580      BIC      R5,R5,#0x40000
+   \        0xA   0x6025             STR      R5,[R4, #+0]
+   1154          
+   1155            /* Configure DMA Stream data length */
+   1156            hdma->Instance->NDTR = DataLength;
+   \        0xC   0x6063             STR      R3,[R4, #+4]
+   1157          
+   1158            /* Memory to Peripheral */
+   1159            if((hdma->Init.Direction) == DMA_MEMORY_TO_PERIPH)
+   \        0xE   0x6880             LDR      R0,[R0, #+8]
+   \       0x10   0x2840             CMP      R0,#+64
+   \       0x12   0xD102             BNE.N    ??DMA_SetConfig_0
+   1160            {
+   1161              /* Configure DMA Stream destination address */
+   1162              hdma->Instance->PAR = DstAddress;
+   \       0x14   0x60A2             STR      R2,[R4, #+8]
+   1163          
+   1164              /* Configure DMA Stream source address */
+   1165              hdma->Instance->M0AR = SrcAddress;
+   \       0x16   0x60E1             STR      R1,[R4, #+12]
+   \       0x18   0xBD30             POP      {R4,R5,PC}
+   1166            }
+   1167            /* Peripheral to Memory */
+   1168            else
+   1169            {
+   1170              /* Configure DMA Stream source address */
+   1171              hdma->Instance->PAR = SrcAddress;
+   \                     ??DMA_SetConfig_0: (+1)
+   \       0x1A   0x60A1             STR      R1,[R4, #+8]
+   1172          
+   1173              /* Configure DMA Stream destination address */
+   1174              hdma->Instance->M0AR = DstAddress;
+   \       0x1C   0x60E2             STR      R2,[R4, #+12]
+   1175            }
+   1176          }
+   \       0x1E   0xBD30             POP      {R4,R5,PC}       ;; return
+   1177          
+   1178          /**
+   1179            * @brief  Returns the DMA Stream base address depending on stream number
+   1180            * @param  hdma       pointer to a DMA_HandleTypeDef structure that contains
+   1181            *                     the configuration information for the specified DMA Stream. 
+   1182            * @retval Stream base address
+   1183            */
+
+   \                                 In section .text, align 4, keep-with-next
+   1184          static uint32_t DMA_CalcBaseAndBitshift(DMA_HandleTypeDef *hdma)
+   1185          {
+   \                     DMA_CalcBaseAndBitshift: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+   1186            uint32_t stream_number = (((uint32_t)hdma->Instance & 0xFFU) - 16U) / 24U;
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   1187            
+   1188            /* lookup table for necessary bitshift of flags within status registers */
+   1189            static const uint8_t flagBitshiftOffset[8U] = {0U, 6U, 16U, 22U, 0U, 6U, 16U, 22U};
+   1190            hdma->StreamIndex = flagBitshiftOffset[stream_number];
+   \        0x4   0x....             ADR.N    R4,`DMA_CalcBaseAndBitshift::flagBitshiftOffset`
+   \        0x6   0xF001 0x02FF      AND      R2,R1,#0xFF
+   \        0xA   0x3A10             SUBS     R2,R2,#+16
+   \        0xC   0x2318             MOVS     R3,#+24
+   \        0xE   0xFBB2 0xF2F3      UDIV     R2,R2,R3
+   1191            
+   1192            if (stream_number > 3U)
+   \       0x12   0x0A89             LSRS     R1,R1,#+10
+   \       0x14   0x0289             LSLS     R1,R1,#+10
+   \       0x16   0x5CA5             LDRB     R5,[R4, R2]
+   \       0x18   0x65C5             STR      R5,[R0, #+92]
+   \       0x1A   0x2A04             CMP      R2,#+4
+   \       0x1C   0xBF28             IT       CS
+   \       0x1E   0x1D09             ADDCS    R1,R1,#+4
+   1193            {
+   1194              /* return pointer to HISR and HIFCR */
+   1195              hdma->StreamBaseAddress = (((uint32_t)hdma->Instance & (uint32_t)(~0x3FFU)) + 4U);
+   1196            }
+   1197            else
+   1198            {
+   1199              /* return pointer to LISR and LIFCR */
+   1200              hdma->StreamBaseAddress = ((uint32_t)hdma->Instance & (uint32_t)(~0x3FFU));
+   \       0x20   0x6581             STR      R1,[R0, #+88]
+   1201            }
+   1202            
+   1203            return hdma->StreamBaseAddress;
+   \       0x22   0x6D80             LDR      R0,[R0, #+88]
+   \       0x24   0xBD30             POP      {R4,R5,PC}       ;; return
+   1204          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     `DMA_CalcBaseAndBitshift::flagBitshiftOffset`:
+   \        0x0   0x00 0x06          DC8 0, 6, 16, 22, 0, 6, 16, 22
+
+   \              0x10 0x16    
+
+   \              0x00 0x06    
+
+   \              0x10 0x16
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2:
+   \        0x0   0xF010'803F        DC32     0xf010803f
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_1:
+   \        0x0   0x....'....        DC32     SystemCoreClock
+   1205          
+   1206          /**
+   1207            * @brief  Check compatibility between FIFO threshold level and size of the memory burst
+   1208            * @param  hdma       pointer to a DMA_HandleTypeDef structure that contains
+   1209            *                     the configuration information for the specified DMA Stream. 
+   1210            * @retval HAL status
+   1211            */
+   1212          static HAL_StatusTypeDef DMA_CheckFifoParam(DMA_HandleTypeDef *hdma)
+   1213          {
+   1214            HAL_StatusTypeDef status = HAL_OK;
+   1215            uint32_t tmp = hdma->Init.FIFOThreshold;
+   1216            
+   1217            /* Memory Data size equal to Byte */
+   1218            if(hdma->Init.MemDataAlignment == DMA_MDATAALIGN_BYTE)
+   1219            {
+   1220              switch (tmp)
+   1221              {
+   1222              case DMA_FIFO_THRESHOLD_1QUARTERFULL:
+   1223              case DMA_FIFO_THRESHOLD_3QUARTERSFULL:
+   1224                if ((hdma->Init.MemBurst & DMA_SxCR_MBURST_1) == DMA_SxCR_MBURST_1)
+   1225                {
+   1226                  status = HAL_ERROR;
+   1227                }
+   1228                break;
+   1229              case DMA_FIFO_THRESHOLD_HALFFULL:
+   1230                if (hdma->Init.MemBurst == DMA_MBURST_INC16)
+   1231                {
+   1232                  status = HAL_ERROR;
+   1233                }
+   1234                break;
+   1235              case DMA_FIFO_THRESHOLD_FULL:
+   1236                break;
+   1237              default:
+   1238                break;
+   1239              }
+   1240            }
+   1241            
+   1242            /* Memory Data size equal to Half-Word */
+   1243            else if (hdma->Init.MemDataAlignment == DMA_MDATAALIGN_HALFWORD)
+   1244            {
+   1245              switch (tmp)
+   1246              {
+   1247              case DMA_FIFO_THRESHOLD_1QUARTERFULL:
+   1248              case DMA_FIFO_THRESHOLD_3QUARTERSFULL:
+   1249                status = HAL_ERROR;
+   1250                break;
+   1251              case DMA_FIFO_THRESHOLD_HALFFULL:
+   1252                if ((hdma->Init.MemBurst & DMA_SxCR_MBURST_1) == DMA_SxCR_MBURST_1)
+   1253                {
+   1254                  status = HAL_ERROR;
+   1255                }
+   1256                break;
+   1257              case DMA_FIFO_THRESHOLD_FULL:
+   1258                if (hdma->Init.MemBurst == DMA_MBURST_INC16)
+   1259                {
+   1260                  status = HAL_ERROR;
+   1261                }
+   1262                break;   
+   1263              default:
+   1264                break;
+   1265              }
+   1266            }
+   1267            
+   1268            /* Memory Data size equal to Word */
+   1269            else
+   1270            {
+   1271              switch (tmp)
+   1272              {
+   1273              case DMA_FIFO_THRESHOLD_1QUARTERFULL:
+   1274              case DMA_FIFO_THRESHOLD_HALFFULL:
+   1275              case DMA_FIFO_THRESHOLD_3QUARTERSFULL:
+   1276                status = HAL_ERROR;
+   1277                break;
+   1278              case DMA_FIFO_THRESHOLD_FULL:
+   1279                if ((hdma->Init.MemBurst & DMA_SxCR_MBURST_1) == DMA_SxCR_MBURST_1)
+   1280                {
+   1281                  status = HAL_ERROR;
+   1282                }
+   1283                break;
+   1284              default:
+   1285                break;
+   1286              }
+   1287            } 
+   1288            
+   1289            return status; 
+   1290          }
+   1291          
+   1292          /**
+   1293            * @}
+   1294            */
+   1295          
+   1296          #endif /* HAL_DMA_MODULE_ENABLED */
+   1297          /**
+   1298            * @}
+   1299            */
+   1300          
+   1301          /**
+   1302            * @}
+   1303            */
+   1304          
+   1305          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      12   DMA_CalcBaseAndBitshift
+      12   DMA_SetConfig
+      24   HAL_DMA_Abort
+        24   -> HAL_GetTick
+       0   HAL_DMA_Abort_IT
+      16   HAL_DMA_DeInit
+        16   -> DMA_CalcBaseAndBitshift
+       0   HAL_DMA_GetError
+       0   HAL_DMA_GetState
+      32   HAL_DMA_IRQHandler
+         0   -- Indirect call
+        32   -- Indirect call
+      16   HAL_DMA_Init
+        16   -> DMA_CalcBaseAndBitshift
+        16   -> HAL_GetTick
+      40   HAL_DMA_PollForTransfer
+        40   -> HAL_DMA_Abort
+        40   -> HAL_GetTick
+      12   HAL_DMA_RegisterCallback
+      24   HAL_DMA_Start
+        24   -> DMA_SetConfig
+      24   HAL_DMA_Start_IT
+        24   -> DMA_SetConfig
+       8   HAL_DMA_UnRegisterCallback
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+      12  ?Subroutine0
+      12  ?Subroutine1
+      12  ?Subroutine2
+      10  ?Subroutine3
+      38  DMA_CalcBaseAndBitshift
+      32  DMA_SetConfig
+     120  HAL_DMA_Abort
+      36  HAL_DMA_Abort_IT
+     102  HAL_DMA_DeInit
+       4  HAL_DMA_GetError
+       6  HAL_DMA_GetState
+     392  HAL_DMA_IRQHandler
+     238  HAL_DMA_Init
+     268  HAL_DMA_PollForTransfer
+      74  HAL_DMA_RegisterCallback
+      62  HAL_DMA_Start
+      98  HAL_DMA_Start_IT
+      86  HAL_DMA_UnRegisterCallback
+       8  flagBitshiftOffset
+
+ 
+ 1'618 bytes in section .text
+ 
+ 1'618 bytes of CODE memory
+
+Errors: none
+Warnings: none

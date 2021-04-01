@@ -1,0 +1,2046 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         17/Feb/2020  18:42:19
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EWF552.tmp
+#        ("C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc.c"
+#        -D USE_HAL_DRIVER -D STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM\Task2\List" -o
+#        "C:\Users\mohit\Desktop\Microapps projects\LAB6\Task2\EWARM\Task2\Obj"
+#        --debug --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.4\arm\inc\c\DLib_Config_Full.h" -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM\Task2\List\stm32f4xx_hal_rcc.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM\Task2\Obj\stm32f4xx_hal_rcc.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\LAB6\Task2\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    stm32f4xx_hal_rcc.c
+      4            * @author  MCD Application Team
+      5            * @brief   RCC HAL module driver.
+      6            *          This file provides firmware functions to manage the following
+      7            *          functionalities of the Reset and Clock Control (RCC) peripheral:
+      8            *           + Initialization and de-initialization functions
+      9            *           + Peripheral Control functions
+     10            *
+     11            @verbatim
+     12            ==============================================================================
+     13                                ##### RCC specific features #####
+     14            ==============================================================================
+     15              [..]
+     16                After reset the device is running from Internal High Speed oscillator
+     17                (HSI 16MHz) with Flash 0 wait state, Flash prefetch buffer, D-Cache
+     18                and I-Cache are disabled, and all peripherals are off except internal
+     19                SRAM, Flash and JTAG.
+     20                (+) There is no prescaler on High speed (AHB) and Low speed (APB) busses;
+     21                    all peripherals mapped on these busses are running at HSI speed.
+     22                (+) The clock for all peripherals is switched off, except the SRAM and FLASH.
+     23                (+) All GPIOs are in input floating state, except the JTAG pins which
+     24                    are assigned to be used for debug purpose.
+     25          
+     26              [..]
+     27                Once the device started from reset, the user application has to:
+     28                (+) Configure the clock source to be used to drive the System clock
+     29                    (if the application needs higher frequency/performance)
+     30                (+) Configure the System clock frequency and Flash settings
+     31                (+) Configure the AHB and APB busses prescalers
+     32                (+) Enable the clock for the peripheral(s) to be used
+     33                (+) Configure the clock source(s) for peripherals which clocks are not
+     34                    derived from the System clock (I2S, RTC, ADC, USB OTG FS/SDIO/RNG)
+     35          
+     36                                ##### RCC Limitations #####
+     37            ==============================================================================
+     38              [..]
+     39                A delay between an RCC peripheral clock enable and the effective peripheral
+     40                enabling should be taken into account in order to manage the peripheral read/write
+     41                from/to registers.
+     42                (+) This delay depends on the peripheral mapping.
+     43                (+) If peripheral is mapped on AHB: the delay is 2 AHB clock cycle
+     44                    after the clock enable bit is set on the hardware register
+     45                (+) If peripheral is mapped on APB: the delay is 2 APB clock cycle
+     46                    after the clock enable bit is set on the hardware register
+     47          
+     48              [..]
+     49                Implemented Workaround:
+     50                (+) For AHB & APB peripherals, a dummy read to the peripheral register has been
+     51                    inserted in each __HAL_RCC_PPP_CLK_ENABLE() macro.
+     52          
+     53            @endverbatim
+     54            ******************************************************************************
+     55            * @attention
+     56            *
+     57            * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+     58            * All rights reserved.</center></h2>
+     59            *
+     60            * This software component is licensed by ST under BSD 3-Clause license,
+     61            * the "License"; You may not use this file except in compliance with the
+     62            * License. You may obtain a copy of the License at:
+     63            *                        opensource.org/licenses/BSD-3-Clause
+     64            *
+     65            ******************************************************************************
+     66            */
+     67          
+     68          /* Includes ------------------------------------------------------------------*/
+     69          #include "stm32f4xx_hal.h"
+     70          
+     71          /** @addtogroup STM32F4xx_HAL_Driver
+     72            * @{
+     73            */
+     74          
+     75          /** @defgroup RCC RCC
+     76            * @brief RCC HAL module driver
+     77            * @{
+     78            */
+     79          
+     80          #ifdef HAL_RCC_MODULE_ENABLED
+     81          
+     82          /* Private typedef -----------------------------------------------------------*/
+     83          /* Private define ------------------------------------------------------------*/
+     84          /** @addtogroup RCC_Private_Constants
+     85            * @{
+     86            */
+     87          
+     88          /* Private macro -------------------------------------------------------------*/
+     89          #define __MCO1_CLK_ENABLE()   __HAL_RCC_GPIOA_CLK_ENABLE()
+     90          #define MCO1_GPIO_PORT        GPIOA
+     91          #define MCO1_PIN              GPIO_PIN_8
+     92          
+     93          #define __MCO2_CLK_ENABLE()   __HAL_RCC_GPIOC_CLK_ENABLE()
+     94          #define MCO2_GPIO_PORT         GPIOC
+     95          #define MCO2_PIN               GPIO_PIN_9
+     96          /**
+     97            * @}
+     98            */
+     99          
+    100          /* Private variables ---------------------------------------------------------*/
+    101          /** @defgroup RCC_Private_Variables RCC Private Variables
+    102            * @{
+    103            */
+    104          /**
+    105            * @}
+    106            */
+    107          /* Private function prototypes -----------------------------------------------*/
+    108          /* Private functions ---------------------------------------------------------*/
+    109          
+    110          /** @defgroup RCC_Exported_Functions RCC Exported Functions
+    111            *  @{
+    112            */
+    113          
+    114          /** @defgroup RCC_Exported_Functions_Group1 Initialization and de-initialization functions
+    115           *  @brief    Initialization and Configuration functions
+    116           *
+    117          @verbatim
+    118           ===============================================================================
+    119                     ##### Initialization and de-initialization functions #####
+    120           ===============================================================================
+    121              [..]
+    122                This section provides functions allowing to configure the internal/external oscillators
+    123                (HSE, HSI, LSE, LSI, PLL, CSS and MCO) and the System busses clocks (SYSCLK, AHB, APB1
+    124                 and APB2).
+    125          
+    126              [..] Internal/external clock and PLL configuration
+    127                   (#) HSI (high-speed internal), 16 MHz factory-trimmed RC used directly or through
+    128                       the PLL as System clock source.
+    129          
+    130                   (#) LSI (low-speed internal), 32 KHz low consumption RC used as IWDG and/or RTC
+    131                       clock source.
+    132          
+    133                   (#) HSE (high-speed external), 4 to 26 MHz crystal oscillator used directly or
+    134                       through the PLL as System clock source. Can be used also as RTC clock source.
+    135          
+    136                   (#) LSE (low-speed external), 32 KHz oscillator used as RTC clock source.
+    137          
+    138                   (#) PLL (clocked by HSI or HSE), featuring two different output clocks:
+    139                     (++) The first output is used to generate the high speed system clock (up to 168 MHz)
+    140                     (++) The second output is used to generate the clock for the USB OTG FS (48 MHz),
+    141                          the random analog generator (<=48 MHz) and the SDIO (<= 48 MHz).
+    142          
+    143                   (#) CSS (Clock security system), once enable using the macro __HAL_RCC_CSS_ENABLE()
+    144                       and if a HSE clock failure occurs(HSE used directly or through PLL as System
+    145                       clock source), the System clocks automatically switched to HSI and an interrupt
+    146                       is generated if enabled. The interrupt is linked to the Cortex-M4 NMI
+    147                       (Non-Maskable Interrupt) exception vector.
+    148          
+    149                   (#) MCO1 (microcontroller clock output), used to output HSI, LSE, HSE or PLL
+    150                       clock (through a configurable prescaler) on PA8 pin.
+    151          
+    152                   (#) MCO2 (microcontroller clock output), used to output HSE, PLL, SYSCLK or PLLI2S
+    153                       clock (through a configurable prescaler) on PC9 pin.
+    154          
+    155              [..] System, AHB and APB busses clocks configuration
+    156                   (#) Several clock sources can be used to drive the System clock (SYSCLK): HSI,
+    157                       HSE and PLL.
+    158                       The AHB clock (HCLK) is derived from System clock through configurable
+    159                       prescaler and used to clock the CPU, memory and peripherals mapped
+    160                       on AHB bus (DMA, GPIO...). APB1 (PCLK1) and APB2 (PCLK2) clocks are derived
+    161                       from AHB clock through configurable prescalers and used to clock
+    162                       the peripherals mapped on these busses. You can use
+    163                       "HAL_RCC_GetSysClockFreq()" function to retrieve the frequencies of these clocks.
+    164          
+    165                   (#) For the STM32F405xx/07xx and STM32F415xx/17xx devices, the maximum
+    166                       frequency of the SYSCLK and HCLK is 168 MHz, PCLK2 84 MHz and PCLK1 42 MHz.
+    167                       Depending on the device voltage range, the maximum frequency should
+    168                       be adapted accordingly (refer to the product datasheets for more details).
+    169          
+    170                   (#) For the STM32F42xxx, STM32F43xxx, STM32F446xx, STM32F469xx and STM32F479xx devices,
+    171                       the maximum frequency of the SYSCLK and HCLK is 180 MHz, PCLK2 90 MHz and PCLK1 45 MHz.
+    172                       Depending on the device voltage range, the maximum frequency should
+    173                       be adapted accordingly (refer to the product datasheets for more details).
+    174          
+    175                   (#) For the STM32F401xx, the maximum frequency of the SYSCLK and HCLK is 84 MHz,
+    176                       PCLK2 84 MHz and PCLK1 42 MHz.
+    177                       Depending on the device voltage range, the maximum frequency should
+    178                       be adapted accordingly (refer to the product datasheets for more details).
+    179          
+    180                   (#) For the STM32F41xxx, the maximum frequency of the SYSCLK and HCLK is 100 MHz,
+    181                       PCLK2 100 MHz and PCLK1 50 MHz.
+    182                       Depending on the device voltage range, the maximum frequency should
+    183                       be adapted accordingly (refer to the product datasheets for more details).
+    184          
+    185          @endverbatim
+    186            * @{
+    187            */
+    188          
+    189          /**
+    190            * @brief  Resets the RCC clock configuration to the default reset state.
+    191            * @note   The default reset state of the clock configuration is given below:
+    192            *            - HSI ON and used as system clock source
+    193            *            - HSE and PLL OFF
+    194            *            - AHB, APB1 and APB2 prescaler set to 1.
+    195            *            - CSS, MCO1 and MCO2 OFF
+    196            *            - All interrupts disabled
+    197            * @note   This function doesn't modify the configuration of the
+    198            *            - Peripheral clocks
+    199            *            - LSI, LSE and RTC clocks
+    200            * @retval HAL status
+    201            */
+
+   \                                 In section .text, align 2
+    202          __weak HAL_StatusTypeDef HAL_RCC_DeInit(void)
+    203          {
+    204            return HAL_OK;
+   \                     HAL_RCC_DeInit: (+1)
+   \        0x0   0x2000             MOVS     R0,#+0
+   \        0x2   0x4770             BX       LR               ;; return
+    205          }
+    206          
+    207          /**
+    208            * @brief  Initializes the RCC Oscillators according to the specified parameters in the
+    209            *         RCC_OscInitTypeDef.
+    210            * @param  RCC_OscInitStruct pointer to an RCC_OscInitTypeDef structure that
+    211            *         contains the configuration information for the RCC Oscillators.
+    212            * @note   The PLL is not disabled when used as system clock.
+    213            * @note   Transitions LSE Bypass to LSE On and LSE On to LSE Bypass are not
+    214            *         supported by this API. User should request a transition to LSE Off
+    215            *         first and then LSE On or LSE Bypass.
+    216            * @note   Transition HSE Bypass to HSE On and HSE On to HSE Bypass are not
+    217            *         supported by this API. User should request a transition to HSE Off
+    218            *         first and then HSE On or HSE Bypass.
+    219            * @retval HAL status
+    220            */
+
+   \                                 In section .text, align 4
+    221          __weak HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
+    222          {
+   \                     HAL_RCC_OscConfig: (+1)
+   \        0x0   0xE92D 0x43F8      PUSH     {R3-R9,LR}
+   \        0x4   0x0004             MOVS     R4,R0
+    223            uint32_t tickstart, pll_config;
+    224          
+    225            /* Check Null pointer */
+    226            if(RCC_OscInitStruct == NULL)
+   \        0x6   0xD016             BEQ.N    ??HAL_RCC_OscConfig_1
+    227            {
+    228              return HAL_ERROR;
+    229            }
+    230          
+    231            /* Check the parameters */
+    232            assert_param(IS_RCC_OSCILLATORTYPE(RCC_OscInitStruct->OscillatorType));
+    233            /*------------------------------- HSE Configuration ------------------------*/
+    234            if(((RCC_OscInitStruct->OscillatorType) & RCC_OSCILLATORTYPE_HSE) == RCC_OSCILLATORTYPE_HSE)
+   \        0x8   0x7820             LDRB     R0,[R4, #+0]
+   \        0xA   0xF8DF 0x62F4      LDR.W    R6,??HAL_RCC_OscConfig_0  ;; 0x40023800
+   \        0xE   0x07C1             LSLS     R1,R0,#+31
+   \       0x10   0xD513             BPL.N    ??HAL_RCC_OscConfig_2
+    235            {
+    236              /* Check the parameters */
+    237              assert_param(IS_RCC_HSE(RCC_OscInitStruct->HSEState));
+    238              /* When the HSE is used as system clock or clock source for PLL in these cases HSE will not disabled */
+    239              if((__HAL_RCC_GET_SYSCLK_SOURCE() == RCC_CFGR_SWS_HSE) ||\
+    240                ((__HAL_RCC_GET_SYSCLK_SOURCE() == RCC_CFGR_SWS_PLL) && ((RCC->PLLCFGR & RCC_PLLCFGR_PLLSRC) == RCC_PLLCFGR_PLLSRC_HSE)))
+   \       0x12   0x68B0             LDR      R0,[R6, #+8]
+   \       0x14   0xF000 0x000C      AND      R0,R0,#0xC
+   \       0x18   0x2804             CMP      R0,#+4
+   \       0x1A   0xD007             BEQ.N    ??HAL_RCC_OscConfig_3
+   \       0x1C   0x68B0             LDR      R0,[R6, #+8]
+   \       0x1E   0xF000 0x000C      AND      R0,R0,#0xC
+   \       0x22   0x2808             CMP      R0,#+8
+   \       0x24   0xD13D             BNE.N    ??HAL_RCC_OscConfig_4
+   \       0x26   0x6870             LDR      R0,[R6, #+4]
+   \       0x28   0x0241             LSLS     R1,R0,#+9
+   \       0x2A   0xD53A             BPL.N    ??HAL_RCC_OscConfig_4
+    241              {
+    242                if((__HAL_RCC_GET_FLAG(RCC_FLAG_HSERDY) != RESET) && (RCC_OscInitStruct->HSEState == RCC_HSE_OFF))
+   \                     ??HAL_RCC_OscConfig_3: (+1)
+   \       0x2C   0x6830             LDR      R0,[R6, #+0]
+   \       0x2E   0x0381             LSLS     R1,R0,#+14
+   \       0x30   0xD503             BPL.N    ??HAL_RCC_OscConfig_2
+   \       0x32   0x6860             LDR      R0,[R4, #+4]
+   \       0x34   0x2800             CMP      R0,#+0
+   \                     ??HAL_RCC_OscConfig_1: (+1)
+   \       0x36   0xF000 0x815E      BEQ.W    ??HAL_RCC_OscConfig_5
+    243                {
+    244                  return HAL_ERROR;
+    245                }
+    246              }
+    247              else
+    248              {
+    249                /* Set the new HSE configuration ---------------------------------------*/
+    250                __HAL_RCC_HSE_CONFIG(RCC_OscInitStruct->HSEState);
+    251          
+    252                /* Check the HSE State */
+    253                if((RCC_OscInitStruct->HSEState) != RCC_HSE_OFF)
+    254                {
+    255                  /* Get Start Tick */
+    256                  tickstart = HAL_GetTick();
+    257          
+    258                  /* Wait till HSE is ready */
+    259                  while(__HAL_RCC_GET_FLAG(RCC_FLAG_HSERDY) == RESET)
+    260                  {
+    261                    if((HAL_GetTick() - tickstart ) > HSE_TIMEOUT_VALUE)
+    262                    {
+    263                      return HAL_TIMEOUT;
+    264                    }
+    265                  }
+    266                }
+    267                else
+    268                {
+    269                  /* Get Start Tick */
+    270                  tickstart = HAL_GetTick();
+    271          
+    272                  /* Wait till HSE is bypassed or disabled */
+    273                  while(__HAL_RCC_GET_FLAG(RCC_FLAG_HSERDY) != RESET)
+    274                  {
+    275                    if((HAL_GetTick() - tickstart ) > HSE_TIMEOUT_VALUE)
+    276                    {
+    277                      return HAL_TIMEOUT;
+    278                    }
+    279                  }
+    280                }
+    281              }
+    282            }
+    283            /*----------------------------- HSI Configuration --------------------------*/
+    284            if(((RCC_OscInitStruct->OscillatorType) & RCC_OSCILLATORTYPE_HSI) == RCC_OSCILLATORTYPE_HSI)
+   \                     ??HAL_RCC_OscConfig_2: (+1)
+   \       0x3A   0x7820             LDRB     R0,[R4, #+0]
+   \       0x3C   0x4FB1             LDR.N    R7,??HAL_RCC_OscConfig_0+0x4  ;; 0x42470000
+   \       0x3E   0x0781             LSLS     R1,R0,#+30
+   \       0x40   0xD519             BPL.N    ??HAL_RCC_OscConfig_6
+    285            {
+    286              /* Check the parameters */
+    287              assert_param(IS_RCC_HSI(RCC_OscInitStruct->HSIState));
+    288              assert_param(IS_RCC_CALIBRATION_VALUE(RCC_OscInitStruct->HSICalibrationValue));
+    289          
+    290              /* Check if HSI is used as system clock or as PLL source when PLL is selected as system clock */
+    291              if((__HAL_RCC_GET_SYSCLK_SOURCE() == RCC_CFGR_SWS_HSI) ||\
+    292                ((__HAL_RCC_GET_SYSCLK_SOURCE() == RCC_CFGR_SWS_PLL) && ((RCC->PLLCFGR & RCC_PLLCFGR_PLLSRC) == RCC_PLLCFGR_PLLSRC_HSI)))
+   \       0x42   0x68B0             LDR      R0,[R6, #+8]
+   \       0x44   0xF010 0x0F0C      TST      R0,#0xC
+   \       0x48   0xD007             BEQ.N    ??HAL_RCC_OscConfig_7
+   \       0x4A   0x68B0             LDR      R0,[R6, #+8]
+   \       0x4C   0xF000 0x000C      AND      R0,R0,#0xC
+   \       0x50   0x2808             CMP      R0,#+8
+   \       0x52   0xD15B             BNE.N    ??HAL_RCC_OscConfig_8
+   \       0x54   0x6870             LDR      R0,[R6, #+4]
+   \       0x56   0x0241             LSLS     R1,R0,#+9
+   \       0x58   0xD458             BMI.N    ??HAL_RCC_OscConfig_8
+    293              {
+    294                /* When HSI is used as system clock it will not disabled */
+    295                if((__HAL_RCC_GET_FLAG(RCC_FLAG_HSIRDY) != RESET) && (RCC_OscInitStruct->HSIState != RCC_HSI_ON))
+   \                     ??HAL_RCC_OscConfig_7: (+1)
+   \       0x5A   0x6830             LDR      R0,[R6, #+0]
+   \       0x5C   0x0781             LSLS     R1,R0,#+30
+   \       0x5E   0xD503             BPL.N    ??HAL_RCC_OscConfig_9
+   \       0x60   0x68E0             LDR      R0,[R4, #+12]
+   \       0x62   0x2801             CMP      R0,#+1
+   \       0x64   0xF040 0x8147      BNE.W    ??HAL_RCC_OscConfig_5
+    296                {
+    297                  return HAL_ERROR;
+    298                }
+    299                /* Otherwise, just the calibration is allowed */
+    300                else
+    301                {
+    302                  /* Adjusts the Internal High Speed oscillator (HSI) calibration value.*/
+    303                  __HAL_RCC_HSI_CALIBRATIONVALUE_ADJUST(RCC_OscInitStruct->HSICalibrationValue);
+   \                     ??HAL_RCC_OscConfig_9: (+1)
+   \       0x68   0x6831             LDR      R1,[R6, #+0]
+   \       0x6A   0x6920             LDR      R0,[R4, #+16]
+   \       0x6C   0xF021 0x01F8      BIC      R1,R1,#0xF8
+   \       0x70   0xEA41 0x01C0      ORR      R1,R1,R0, LSL #+3
+   \       0x74   0x6031             STR      R1,[R6, #+0]
+    304                }
+    305              }
+    306              else
+    307              {
+    308                /* Check the HSI State */
+    309                if((RCC_OscInitStruct->HSIState)!= RCC_HSI_OFF)
+    310                {
+    311                  /* Enable the Internal High Speed oscillator (HSI). */
+    312                  __HAL_RCC_HSI_ENABLE();
+    313          
+    314                  /* Get Start Tick*/
+    315                  tickstart = HAL_GetTick();
+    316          
+    317                  /* Wait till HSI is ready */
+    318                  while(__HAL_RCC_GET_FLAG(RCC_FLAG_HSIRDY) == RESET)
+    319                  {
+    320                    if((HAL_GetTick() - tickstart ) > HSI_TIMEOUT_VALUE)
+    321                    {
+    322                      return HAL_TIMEOUT;
+    323                    }
+    324                  }
+    325          
+    326                  /* Adjusts the Internal High Speed oscillator (HSI) calibration value. */
+    327                  __HAL_RCC_HSI_CALIBRATIONVALUE_ADJUST(RCC_OscInitStruct->HSICalibrationValue);
+    328                }
+    329                else
+    330                {
+    331                  /* Disable the Internal High Speed oscillator (HSI). */
+    332                  __HAL_RCC_HSI_DISABLE();
+    333          
+    334                  /* Get Start Tick*/
+    335                  tickstart = HAL_GetTick();
+    336          
+    337                  /* Wait till HSI is ready */
+    338                  while(__HAL_RCC_GET_FLAG(RCC_FLAG_HSIRDY) != RESET)
+    339                  {
+    340                    if((HAL_GetTick() - tickstart ) > HSI_TIMEOUT_VALUE)
+    341                    {
+    342                      return HAL_TIMEOUT;
+    343                    }
+    344                  }
+    345                }
+    346              }
+    347            }
+    348            /*------------------------------ LSI Configuration -------------------------*/
+    349            if(((RCC_OscInitStruct->OscillatorType) & RCC_OSCILLATORTYPE_LSI) == RCC_OSCILLATORTYPE_LSI)
+   \                     ??HAL_RCC_OscConfig_6: (+1)
+   \       0x76   0x7821             LDRB     R1,[R4, #+0]
+   \       0x78   0x0708             LSLS     R0,R1,#+28
+   \       0x7A   0xD579             BPL.N    ??HAL_RCC_OscConfig_10
+    350            {
+    351              /* Check the parameters */
+    352              assert_param(IS_RCC_LSI(RCC_OscInitStruct->LSIState));
+    353          
+    354              /* Check the LSI State */
+    355              if((RCC_OscInitStruct->LSIState)!= RCC_LSI_OFF)
+   \       0x7C   0x6960             LDR      R0,[R4, #+20]
+   \       0x7E   0x49A2             LDR.N    R1,??HAL_RCC_OscConfig_0+0x8  ;; 0x42470e80
+   \       0x80   0x2800             CMP      R0,#+0
+   \       0x82   0xD068             BEQ.N    ??HAL_RCC_OscConfig_11
+    356              {
+    357                /* Enable the Internal Low Speed oscillator (LSI). */
+    358                __HAL_RCC_LSI_ENABLE();
+   \       0x84   0x2201             MOVS     R2,#+1
+   \       0x86   0x600A             STR      R2,[R1, #+0]
+    359          
+    360                /* Get Start Tick*/
+    361                tickstart = HAL_GetTick();
+   \       0x88   0x....'....        BL       HAL_GetTick
+   \       0x8C   0x4605             MOV      R5,R0
+    362          
+    363                /* Wait till LSI is ready */
+    364                while(__HAL_RCC_GET_FLAG(RCC_FLAG_LSIRDY) == RESET)
+   \                     ??HAL_RCC_OscConfig_12: (+1)
+   \       0x8E   0x6F70             LDR      R0,[R6, #+116]
+   \       0x90   0x0781             LSLS     R1,R0,#+30
+   \       0x92   0xD46D             BMI.N    ??HAL_RCC_OscConfig_10
+    365                {
+    366                  if((HAL_GetTick() - tickstart ) > LSI_TIMEOUT_VALUE)
+   \       0x94   0x....'....        BL       HAL_GetTick
+   \       0x98   0x1B40             SUBS     R0,R0,R5
+   \       0x9A   0x2802             CMP      R0,#+2
+   \       0x9C   0xD9F7             BLS.N    ??HAL_RCC_OscConfig_12
+    367                  {
+    368                    return HAL_TIMEOUT;
+    369                  }
+    370                }
+    371              }
+    372              else
+    373              {
+    374                /* Disable the Internal Low Speed oscillator (LSI). */
+    375                __HAL_RCC_LSI_DISABLE();
+    376          
+    377                /* Get Start Tick */
+    378                tickstart = HAL_GetTick();
+    379          
+    380                /* Wait till LSI is ready */
+    381                while(__HAL_RCC_GET_FLAG(RCC_FLAG_LSIRDY) != RESET)
+    382                {
+    383                  if((HAL_GetTick() - tickstart ) > LSI_TIMEOUT_VALUE)
+    384                  {
+    385                    return HAL_TIMEOUT;
+    386                  }
+    387                }
+    388              }
+    389            }
+    390            /*------------------------------ LSE Configuration -------------------------*/
+    391            if(((RCC_OscInitStruct->OscillatorType) & RCC_OSCILLATORTYPE_LSE) == RCC_OSCILLATORTYPE_LSE)
+    392            {
+    393              FlagStatus       pwrclkchanged = RESET;
+    394          
+    395              /* Check the parameters */
+    396              assert_param(IS_RCC_LSE(RCC_OscInitStruct->LSEState));
+    397          
+    398              /* Update LSE configuration in Backup Domain control register    */
+    399              /* Requires to enable write access to Backup Domain of necessary */
+    400              if(__HAL_RCC_PWR_IS_CLK_DISABLED())
+    401              {
+    402                __HAL_RCC_PWR_CLK_ENABLE();
+    403                pwrclkchanged = SET;
+    404              }
+    405          
+    406              if(HAL_IS_BIT_CLR(PWR->CR, PWR_CR_DBP))
+    407              {
+    408                /* Enable write access to Backup domain */
+    409                SET_BIT(PWR->CR, PWR_CR_DBP);
+    410          
+    411                /* Wait for Backup domain Write protection disable */
+    412                tickstart = HAL_GetTick();
+    413          
+    414                while(HAL_IS_BIT_CLR(PWR->CR, PWR_CR_DBP))
+    415                {
+    416                  if((HAL_GetTick() - tickstart) > RCC_DBP_TIMEOUT_VALUE)
+    417                  {
+    418                    return HAL_TIMEOUT;
+    419                  }
+    420                }
+    421              }
+    422          
+    423              /* Set the new LSE configuration -----------------------------------------*/
+    424              __HAL_RCC_LSE_CONFIG(RCC_OscInitStruct->LSEState);
+    425              /* Check the LSE State */
+    426              if((RCC_OscInitStruct->LSEState) != RCC_LSE_OFF)
+    427              {
+    428                /* Get Start Tick*/
+    429                tickstart = HAL_GetTick();
+    430          
+    431                /* Wait till LSE is ready */
+    432                while(__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET)
+    433                {
+    434                  if((HAL_GetTick() - tickstart ) > RCC_LSE_TIMEOUT_VALUE)
+    435                  {
+    436                    return HAL_TIMEOUT;
+    437                  }
+    438                }
+    439              }
+    440              else
+    441              {
+    442                /* Get Start Tick */
+    443                tickstart = HAL_GetTick();
+    444          
+    445                /* Wait till LSE is ready */
+    446                while(__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) != RESET)
+    447                {
+    448                  if((HAL_GetTick() - tickstart ) > RCC_LSE_TIMEOUT_VALUE)
+    449                  {
+    450                    return HAL_TIMEOUT;
+    451                  }
+    452                }
+    453              }
+    454          
+    455              /* Restore clock configuration if changed */
+    456              if(pwrclkchanged == SET)
+    457              {
+    458                __HAL_RCC_PWR_CLK_DISABLE();
+    459              }
+    460            }
+    461            /*-------------------------------- PLL Configuration -----------------------*/
+    462            /* Check the parameters */
+    463            assert_param(IS_RCC_PLL(RCC_OscInitStruct->PLL.PLLState));
+    464            if ((RCC_OscInitStruct->PLL.PLLState) != RCC_PLL_NONE)
+    465            {
+    466              /* Check if the PLL is used as system clock or not */
+    467              if(__HAL_RCC_GET_SYSCLK_SOURCE() != RCC_CFGR_SWS_PLL)
+    468              {
+    469                if((RCC_OscInitStruct->PLL.PLLState) == RCC_PLL_ON)
+    470                {
+    471                  /* Check the parameters */
+    472                  assert_param(IS_RCC_PLLSOURCE(RCC_OscInitStruct->PLL.PLLSource));
+    473                  assert_param(IS_RCC_PLLM_VALUE(RCC_OscInitStruct->PLL.PLLM));
+    474                  assert_param(IS_RCC_PLLN_VALUE(RCC_OscInitStruct->PLL.PLLN));
+    475                  assert_param(IS_RCC_PLLP_VALUE(RCC_OscInitStruct->PLL.PLLP));
+    476                  assert_param(IS_RCC_PLLQ_VALUE(RCC_OscInitStruct->PLL.PLLQ));
+    477          
+    478                  /* Disable the main PLL. */
+    479                  __HAL_RCC_PLL_DISABLE();
+    480          
+    481                  /* Get Start Tick */
+    482                  tickstart = HAL_GetTick();
+    483          
+    484                  /* Wait till PLL is ready */
+    485                  while(__HAL_RCC_GET_FLAG(RCC_FLAG_PLLRDY) != RESET)
+    486                  {
+    487                    if((HAL_GetTick() - tickstart ) > PLL_TIMEOUT_VALUE)
+    488                    {
+    489                      return HAL_TIMEOUT;
+    490                    }
+    491                  }
+    492          
+    493                  /* Configure the main PLL clock source, multiplication and division factors. */
+    494                  WRITE_REG(RCC->PLLCFGR, (RCC_OscInitStruct->PLL.PLLSource                                            | \
+    495                                           RCC_OscInitStruct->PLL.PLLM                                                 | \
+    496                                           (RCC_OscInitStruct->PLL.PLLN << RCC_PLLCFGR_PLLN_Pos)             | \
+    497                                           (((RCC_OscInitStruct->PLL.PLLP >> 1U) - 1U) << RCC_PLLCFGR_PLLP_Pos) | \
+    498                                           (RCC_OscInitStruct->PLL.PLLQ << RCC_PLLCFGR_PLLQ_Pos)));
+    499                  /* Enable the main PLL. */
+    500                  __HAL_RCC_PLL_ENABLE();
+    501          
+    502                  /* Get Start Tick */
+    503                  tickstart = HAL_GetTick();
+    504          
+    505                  /* Wait till PLL is ready */
+    506                  while(__HAL_RCC_GET_FLAG(RCC_FLAG_PLLRDY) == RESET)
+    507                  {
+    508                    if((HAL_GetTick() - tickstart ) > PLL_TIMEOUT_VALUE)
+    509                    {
+    510                      return HAL_TIMEOUT;
+    511                    }
+    512                  }
+    513                }
+    514                else
+    515                {
+    516                  /* Disable the main PLL. */
+    517                  __HAL_RCC_PLL_DISABLE();
+    518          
+    519                  /* Get Start Tick */
+    520                  tickstart = HAL_GetTick();
+    521          
+    522                  /* Wait till PLL is ready */
+    523                  while(__HAL_RCC_GET_FLAG(RCC_FLAG_PLLRDY) != RESET)
+    524                  {
+    525                    if((HAL_GetTick() - tickstart ) > PLL_TIMEOUT_VALUE)
+    526                    {
+    527                      return HAL_TIMEOUT;
+   \                     ??HAL_RCC_OscConfig_13: (+1)
+   \       0x9E   0x2003             MOVS     R0,#+3
+   \       0xA0   0xE12C             B.N      ??HAL_RCC_OscConfig_14
+    528                    }
+   \                     ??HAL_RCC_OscConfig_4: (+1)
+   \       0xA2   0x6860             LDR      R0,[R4, #+4]
+   \       0xA4   0xF5B0 0x3F80      CMP      R0,#+65536
+   \       0xA8   0xD104             BNE.N    ??HAL_RCC_OscConfig_15
+   \       0xAA   0x6830             LDR      R0,[R6, #+0]
+   \       0xAC   0xF440 0x3080      ORR      R0,R0,#0x10000
+   \       0xB0   0x6030             STR      R0,[R6, #+0]
+   \       0xB2   0xE011             B.N      ??HAL_RCC_OscConfig_16
+   \                     ??HAL_RCC_OscConfig_15: (+1)
+   \       0xB4   0xF5B0 0x2FA0      CMP      R0,#+327680
+   \       0xB8   0x6830             LDR      R0,[R6, #+0]
+   \       0xBA   0xD106             BNE.N    ??HAL_RCC_OscConfig_17
+   \       0xBC   0xF440 0x2080      ORR      R0,R0,#0x40000
+   \       0xC0   0x6030             STR      R0,[R6, #+0]
+   \       0xC2   0x6831             LDR      R1,[R6, #+0]
+   \       0xC4   0xF441 0x3180      ORR      R1,R1,#0x10000
+   \       0xC8   0xE005             B.N      ??HAL_RCC_OscConfig_18
+   \                     ??HAL_RCC_OscConfig_17: (+1)
+   \       0xCA   0xF420 0x3080      BIC      R0,R0,#0x10000
+   \       0xCE   0x6030             STR      R0,[R6, #+0]
+   \       0xD0   0x6831             LDR      R1,[R6, #+0]
+   \       0xD2   0xF421 0x2180      BIC      R1,R1,#0x40000
+   \                     ??HAL_RCC_OscConfig_18: (+1)
+   \       0xD6   0x6031             STR      R1,[R6, #+0]
+   \                     ??HAL_RCC_OscConfig_16: (+1)
+   \       0xD8   0x6860             LDR      R0,[R4, #+4]
+   \       0xDA   0xB158             CBZ.N    R0,??HAL_RCC_OscConfig_19
+   \       0xDC   0x....'....        BL       HAL_GetTick
+   \       0xE0   0x4605             MOV      R5,R0
+   \                     ??HAL_RCC_OscConfig_20: (+1)
+   \       0xE2   0x6830             LDR      R0,[R6, #+0]
+   \       0xE4   0x0381             LSLS     R1,R0,#+14
+   \       0xE6   0xD4A8             BMI.N    ??HAL_RCC_OscConfig_2
+   \       0xE8   0x....'....        BL       HAL_GetTick
+   \       0xEC   0x1B40             SUBS     R0,R0,R5
+   \       0xEE   0x2865             CMP      R0,#+101
+   \       0xF0   0xD3F7             BCC.N    ??HAL_RCC_OscConfig_20
+   \       0xF2   0xE7D4             B.N      ??HAL_RCC_OscConfig_13
+   \                     ??HAL_RCC_OscConfig_19: (+1)
+   \       0xF4   0x....'....        BL       HAL_GetTick
+   \       0xF8   0x4605             MOV      R5,R0
+   \                     ??HAL_RCC_OscConfig_21: (+1)
+   \       0xFA   0x6830             LDR      R0,[R6, #+0]
+   \       0xFC   0x0381             LSLS     R1,R0,#+14
+   \       0xFE   0xD59C             BPL.N    ??HAL_RCC_OscConfig_2
+   \      0x100   0x....'....        BL       HAL_GetTick
+   \      0x104   0x1B40             SUBS     R0,R0,R5
+   \      0x106   0x2865             CMP      R0,#+101
+   \      0x108   0xD3F7             BCC.N    ??HAL_RCC_OscConfig_21
+   \      0x10A   0xE7C8             B.N      ??HAL_RCC_OscConfig_13
+   \                     ??HAL_RCC_OscConfig_8: (+1)
+   \      0x10C   0x68E0             LDR      R0,[R4, #+12]
+   \      0x10E   0xB1A8             CBZ.N    R0,??HAL_RCC_OscConfig_22
+   \      0x110   0x2101             MOVS     R1,#+1
+   \      0x112   0x6039             STR      R1,[R7, #+0]
+   \      0x114   0x....'....        BL       HAL_GetTick
+   \      0x118   0x4605             MOV      R5,R0
+   \                     ??HAL_RCC_OscConfig_23: (+1)
+   \      0x11A   0x6830             LDR      R0,[R6, #+0]
+   \      0x11C   0x0781             LSLS     R1,R0,#+30
+   \      0x11E   0xD405             BMI.N    ??HAL_RCC_OscConfig_24
+   \      0x120   0x....'....        BL       HAL_GetTick
+   \      0x124   0x1B40             SUBS     R0,R0,R5
+   \      0x126   0x2802             CMP      R0,#+2
+   \      0x128   0xD9F7             BLS.N    ??HAL_RCC_OscConfig_23
+   \      0x12A   0xE7B8             B.N      ??HAL_RCC_OscConfig_13
+   \                     ??HAL_RCC_OscConfig_24: (+1)
+   \      0x12C   0x6830             LDR      R0,[R6, #+0]
+   \      0x12E   0x6921             LDR      R1,[R4, #+16]
+   \      0x130   0xF020 0x00F8      BIC      R0,R0,#0xF8
+   \      0x134   0xEA40 0x00C1      ORR      R0,R0,R1, LSL #+3
+   \      0x138   0x6030             STR      R0,[R6, #+0]
+   \      0x13A   0xE79C             B.N      ??HAL_RCC_OscConfig_6
+   \                     ??HAL_RCC_OscConfig_22: (+1)
+   \      0x13C   0x6038             STR      R0,[R7, #+0]
+   \      0x13E   0x....'....        BL       HAL_GetTick
+   \      0x142   0x4605             MOV      R5,R0
+   \                     ??HAL_RCC_OscConfig_25: (+1)
+   \      0x144   0x6831             LDR      R1,[R6, #+0]
+   \      0x146   0x0788             LSLS     R0,R1,#+30
+   \      0x148   0xD595             BPL.N    ??HAL_RCC_OscConfig_6
+   \      0x14A   0x....'....        BL       HAL_GetTick
+   \      0x14E   0x1B40             SUBS     R0,R0,R5
+   \      0x150   0x2802             CMP      R0,#+2
+   \      0x152   0xD9F7             BLS.N    ??HAL_RCC_OscConfig_25
+   \      0x154   0xE7A3             B.N      ??HAL_RCC_OscConfig_13
+   \                     ??HAL_RCC_OscConfig_11: (+1)
+   \      0x156   0x6008             STR      R0,[R1, #+0]
+   \      0x158   0x....'....        BL       HAL_GetTick
+   \      0x15C   0x4605             MOV      R5,R0
+   \                     ??HAL_RCC_OscConfig_26: (+1)
+   \      0x15E   0x6F70             LDR      R0,[R6, #+116]
+   \      0x160   0x0781             LSLS     R1,R0,#+30
+   \      0x162   0xD505             BPL.N    ??HAL_RCC_OscConfig_10
+   \      0x164   0x....'....        BL       HAL_GetTick
+   \      0x168   0x1B40             SUBS     R0,R0,R5
+   \      0x16A   0x2802             CMP      R0,#+2
+   \      0x16C   0xD9F7             BLS.N    ??HAL_RCC_OscConfig_26
+   \      0x16E   0xE796             B.N      ??HAL_RCC_OscConfig_13
+   \                     ??HAL_RCC_OscConfig_10: (+1)
+   \      0x170   0x7820             LDRB     R0,[R4, #+0]
+   \      0x172   0x0741             LSLS     R1,R0,#+29
+   \      0x174   0xD55F             BPL.N    ??HAL_RCC_OscConfig_27
+   \      0x176   0x6C30             LDR      R0,[R6, #+64]
+   \      0x178   0x2500             MOVS     R5,#+0
+   \      0x17A   0x00C1             LSLS     R1,R0,#+3
+   \      0x17C   0xD40A             BMI.N    ??HAL_RCC_OscConfig_28
+   \      0x17E   0x9500             STR      R5,[SP, #+0]
+   \      0x180   0x2501             MOVS     R5,#+1
+   \      0x182   0x6C31             LDR      R1,[R6, #+64]
+   \      0x184   0xF041 0x5180      ORR      R1,R1,#0x10000000
+   \      0x188   0x6431             STR      R1,[R6, #+64]
+   \      0x18A   0x6C30             LDR      R0,[R6, #+64]
+   \      0x18C   0xF000 0x5080      AND      R0,R0,#0x10000000
+   \      0x190   0x9000             STR      R0,[SP, #+0]
+   \      0x192   0x9800             LDR      R0,[SP, #+0]
+   \                     ??HAL_RCC_OscConfig_28: (+1)
+   \      0x194   0xF8DF 0x8174      LDR.W    R8,??HAL_RCC_OscConfig_0+0xC  ;; 0x40007000
+   \      0x198   0xF8D8 0x0000      LDR      R0,[R8, #+0]
+   \      0x19C   0x05C1             LSLS     R1,R0,#+23
+   \      0x19E   0xD413             BMI.N    ??HAL_RCC_OscConfig_29
+   \      0x1A0   0xF8D8 0x0000      LDR      R0,[R8, #+0]
+   \      0x1A4   0xF440 0x7080      ORR      R0,R0,#0x100
+   \      0x1A8   0xF8C8 0x0000      STR      R0,[R8, #+0]
+   \      0x1AC   0x....'....        BL       HAL_GetTick
+   \      0x1B0   0x4681             MOV      R9,R0
+   \                     ??HAL_RCC_OscConfig_30: (+1)
+   \      0x1B2   0xF8D8 0x0000      LDR      R0,[R8, #+0]
+   \      0x1B6   0x05C1             LSLS     R1,R0,#+23
+   \      0x1B8   0xD406             BMI.N    ??HAL_RCC_OscConfig_29
+   \      0x1BA   0x....'....        BL       HAL_GetTick
+   \      0x1BE   0xEBA0 0x0009      SUB      R0,R0,R9
+   \      0x1C2   0x2802             CMP      R0,#+2
+   \      0x1C4   0xD9F5             BLS.N    ??HAL_RCC_OscConfig_30
+   \      0x1C6   0xE76A             B.N      ??HAL_RCC_OscConfig_13
+   \                     ??HAL_RCC_OscConfig_29: (+1)
+   \      0x1C8   0x68A0             LDR      R0,[R4, #+8]
+   \      0x1CA   0x2801             CMP      R0,#+1
+   \      0x1CC   0xD005             BEQ.N    ??HAL_RCC_OscConfig_31
+   \      0x1CE   0x2805             CMP      R0,#+5
+   \      0x1D0   0x6F30             LDR      R0,[R6, #+112]
+   \      0x1D2   0xD106             BNE.N    ??HAL_RCC_OscConfig_32
+   \      0x1D4   0xF040 0x0004      ORR      R0,R0,#0x4
+   \      0x1D8   0x6730             STR      R0,[R6, #+112]
+   \                     ??HAL_RCC_OscConfig_31: (+1)
+   \      0x1DA   0x6F30             LDR      R0,[R6, #+112]
+   \      0x1DC   0xF040 0x0001      ORR      R0,R0,#0x1
+   \      0x1E0   0xE005             B.N      ??HAL_RCC_OscConfig_33
+   \                     ??HAL_RCC_OscConfig_32: (+1)
+   \      0x1E2   0x0840             LSRS     R0,R0,#+1
+   \      0x1E4   0x0040             LSLS     R0,R0,#+1
+   \      0x1E6   0x6730             STR      R0,[R6, #+112]
+   \      0x1E8   0x6F30             LDR      R0,[R6, #+112]
+   \      0x1EA   0xF020 0x0004      BIC      R0,R0,#0x4
+   \                     ??HAL_RCC_OscConfig_33: (+1)
+   \      0x1EE   0x6730             STR      R0,[R6, #+112]
+   \      0x1F0   0xF241 0x3889      MOVW     R8,#+5001
+   \      0x1F4   0x68A0             LDR      R0,[R4, #+8]
+   \      0x1F6   0xB160             CBZ.N    R0,??HAL_RCC_OscConfig_34
+   \      0x1F8   0x....'....        BL       HAL_GetTick
+   \      0x1FC   0x4681             MOV      R9,R0
+   \                     ??HAL_RCC_OscConfig_35: (+1)
+   \      0x1FE   0x6F30             LDR      R0,[R6, #+112]
+   \      0x200   0x0781             LSLS     R1,R0,#+30
+   \      0x202   0xD413             BMI.N    ??HAL_RCC_OscConfig_36
+   \      0x204   0x....'....        BL       HAL_GetTick
+   \      0x208   0xEBA0 0x0009      SUB      R0,R0,R9
+   \      0x20C   0x4540             CMP      R0,R8
+   \      0x20E   0xD3F6             BCC.N    ??HAL_RCC_OscConfig_35
+   \      0x210   0xE745             B.N      ??HAL_RCC_OscConfig_13
+   \                     ??HAL_RCC_OscConfig_34: (+1)
+   \      0x212   0x....'....        BL       HAL_GetTick
+   \      0x216   0x4681             MOV      R9,R0
+   \                     ??HAL_RCC_OscConfig_37: (+1)
+   \      0x218   0x6F30             LDR      R0,[R6, #+112]
+   \      0x21A   0x0781             LSLS     R1,R0,#+30
+   \      0x21C   0xD506             BPL.N    ??HAL_RCC_OscConfig_36
+   \      0x21E   0x....'....        BL       HAL_GetTick
+   \      0x222   0xEBA0 0x0009      SUB      R0,R0,R9
+   \      0x226   0x4540             CMP      R0,R8
+   \      0x228   0xD3F6             BCC.N    ??HAL_RCC_OscConfig_37
+   \      0x22A   0xE738             B.N      ??HAL_RCC_OscConfig_13
+   \                     ??HAL_RCC_OscConfig_36: (+1)
+   \      0x22C   0xB11D             CBZ.N    R5,??HAL_RCC_OscConfig_27
+   \      0x22E   0x6C30             LDR      R0,[R6, #+64]
+   \      0x230   0xF020 0x5080      BIC      R0,R0,#0x10000000
+   \      0x234   0x6430             STR      R0,[R6, #+64]
+   \                     ??HAL_RCC_OscConfig_27: (+1)
+   \      0x236   0x69A0             LDR      R0,[R4, #+24]
+   \      0x238   0x2800             CMP      R0,#+0
+   \      0x23A   0xD05E             BEQ.N    ??HAL_RCC_OscConfig_38
+   \      0x23C   0x68B1             LDR      R1,[R6, #+8]
+   \      0x23E   0xF001 0x010C      AND      R1,R1,#0xC
+   \      0x242   0x2908             CMP      R1,#+8
+   \      0x244   0xD03A             BEQ.N    ??HAL_RCC_OscConfig_39
+   \      0x246   0x2802             CMP      R0,#+2
+   \      0x248   0xD12A             BNE.N    ??HAL_RCC_OscConfig_40
+   \      0x24A   0x2000             MOVS     R0,#+0
+   \      0x24C   0x6638             STR      R0,[R7, #+96]
+   \      0x24E   0x....'....        BL       HAL_GetTick
+   \      0x252   0x4605             MOV      R5,R0
+   \                     ??HAL_RCC_OscConfig_41: (+1)
+   \      0x254   0x6830             LDR      R0,[R6, #+0]
+   \      0x256   0x0181             LSLS     R1,R0,#+6
+   \      0x258   0xD505             BPL.N    ??HAL_RCC_OscConfig_42
+   \      0x25A   0x....'....        BL       HAL_GetTick
+   \      0x25E   0x1B40             SUBS     R0,R0,R5
+   \      0x260   0x2802             CMP      R0,#+2
+   \      0x262   0xD9F7             BLS.N    ??HAL_RCC_OscConfig_41
+   \      0x264   0xE71B             B.N      ??HAL_RCC_OscConfig_13
+   \                     ??HAL_RCC_OscConfig_42: (+1)
+   \      0x266   0x69E0             LDR      R0,[R4, #+28]
+   \      0x268   0x6A21             LDR      R1,[R4, #+32]
+   \      0x26A   0x6A62             LDR      R2,[R4, #+36]
+   \      0x26C   0x4308             ORRS     R0,R1,R0
+   \      0x26E   0x6AA1             LDR      R1,[R4, #+40]
+   \      0x270   0x0849             LSRS     R1,R1,#+1
+   \      0x272   0xEA40 0x1082      ORR      R0,R0,R2, LSL #+6
+   \      0x276   0x1E49             SUBS     R1,R1,#+1
+   \      0x278   0xEA40 0x4001      ORR      R0,R0,R1, LSL #+16
+   \      0x27C   0x6AE1             LDR      R1,[R4, #+44]
+   \      0x27E   0xEA40 0x6001      ORR      R0,R0,R1, LSL #+24
+   \      0x282   0x6070             STR      R0,[R6, #+4]
+   \      0x284   0x2001             MOVS     R0,#+1
+   \      0x286   0x6638             STR      R0,[R7, #+96]
+   \      0x288   0x....'....        BL       HAL_GetTick
+   \      0x28C   0x4604             MOV      R4,R0
+   \                     ??HAL_RCC_OscConfig_43: (+1)
+   \      0x28E   0x6830             LDR      R0,[R6, #+0]
+   \      0x290   0x0181             LSLS     R1,R0,#+6
+   \      0x292   0xD432             BMI.N    ??HAL_RCC_OscConfig_38
+   \      0x294   0x....'....        BL       HAL_GetTick
+   \      0x298   0x1B00             SUBS     R0,R0,R4
+   \      0x29A   0x2802             CMP      R0,#+2
+   \      0x29C   0xD9F7             BLS.N    ??HAL_RCC_OscConfig_43
+   \      0x29E   0xE6FE             B.N      ??HAL_RCC_OscConfig_13
+   \                     ??HAL_RCC_OscConfig_40: (+1)
+   \      0x2A0   0x2000             MOVS     R0,#+0
+   \      0x2A2   0x6638             STR      R0,[R7, #+96]
+   \      0x2A4   0x....'....        BL       HAL_GetTick
+   \      0x2A8   0x4604             MOV      R4,R0
+   \                     ??HAL_RCC_OscConfig_44: (+1)
+   \      0x2AA   0x6830             LDR      R0,[R6, #+0]
+   \      0x2AC   0x0181             LSLS     R1,R0,#+6
+   \      0x2AE   0xD524             BPL.N    ??HAL_RCC_OscConfig_38
+   \      0x2B0   0x....'....        BL       HAL_GetTick
+   \      0x2B4   0x1B00             SUBS     R0,R0,R4
+   \      0x2B6   0x2802             CMP      R0,#+2
+   \      0x2B8   0xD9F7             BLS.N    ??HAL_RCC_OscConfig_44
+   \      0x2BA   0xE6F0             B.N      ??HAL_RCC_OscConfig_13
+    529                  }
+    530                }
+    531              }
+    532              else
+    533              {
+    534                /* Check if there is a request to disable the PLL used as System clock source */
+    535                if((RCC_OscInitStruct->PLL.PLLState) == RCC_PLL_OFF)
+   \                     ??HAL_RCC_OscConfig_39: (+1)
+   \      0x2BC   0x2801             CMP      R0,#+1
+   \      0x2BE   0xD01A             BEQ.N    ??HAL_RCC_OscConfig_5
+    536                {
+    537                  return HAL_ERROR;
+    538                }
+    539                else
+    540                {
+    541                  /* Do not return HAL_ERROR if request repeats the current configuration */
+    542                  pll_config = RCC->CFGR;
+   \      0x2C0   0x68B0             LDR      R0,[R6, #+8]
+    543                  if((READ_BIT(pll_config, RCC_PLLCFGR_PLLSRC) != RCC_OscInitStruct->PLL.PLLSource) ||
+    544                     (READ_BIT(pll_config, RCC_PLLCFGR_PLLM) != RCC_OscInitStruct->PLL.PLLM) ||
+    545                     (READ_BIT(pll_config, RCC_PLLCFGR_PLLN) != RCC_OscInitStruct->PLL.PLLN) ||
+    546                     (READ_BIT(pll_config, RCC_PLLCFGR_PLLP) != RCC_OscInitStruct->PLL.PLLP) ||
+    547                     (READ_BIT(pll_config, RCC_PLLCFGR_PLLQ) != RCC_OscInitStruct->PLL.PLLQ))
+   \      0x2C2   0x69E2             LDR      R2,[R4, #+28]
+   \      0x2C4   0xF400 0x0180      AND      R1,R0,#0x400000
+   \      0x2C8   0x4291             CMP      R1,R2
+   \      0x2CA   0xBF02             ITTT     EQ
+   \      0x2CC   0xF000 0x013F      ANDEQ    R1,R0,#0x3F
+   \      0x2D0   0x6A22             LDREQ    R2,[R4, #+32]
+   \      0x2D2   0x4291             CMPEQ    R1,R2
+   \      0x2D4   0xD10F             BNE.N    ??HAL_RCC_OscConfig_5
+   \      0x2D6   0xF647 0x71C0      MOVW     R1,#+32704
+   \      0x2DA   0x6A62             LDR      R2,[R4, #+36]
+   \      0x2DC   0x4001             ANDS     R1,R1,R0
+   \      0x2DE   0x4291             CMP      R1,R2
+   \      0x2E0   0xBF02             ITTT     EQ
+   \      0x2E2   0xF400 0x3140      ANDEQ    R1,R0,#0x30000
+   \      0x2E6   0x6AA2             LDREQ    R2,[R4, #+40]
+   \      0x2E8   0x4291             CMPEQ    R1,R2
+   \      0x2EA   0xBF02             ITTT     EQ
+   \      0x2EC   0xF000 0x6070      ANDEQ    R0,R0,#0xF000000
+   \      0x2F0   0x6AE1             LDREQ    R1,[R4, #+44]
+   \      0x2F2   0x4288             CMPEQ    R0,R1
+   \      0x2F4   0xD001             BEQ.N    ??HAL_RCC_OscConfig_38
+    548                  {
+    549                    return HAL_ERROR;
+   \                     ??HAL_RCC_OscConfig_5: (+1)
+   \      0x2F6   0x2001             MOVS     R0,#+1
+   \      0x2F8   0xE000             B.N      ??HAL_RCC_OscConfig_14
+    550                  }
+    551                }
+    552              }
+    553            }
+    554            return HAL_OK;
+   \                     ??HAL_RCC_OscConfig_38: (+1)
+   \      0x2FA   0x2000             MOVS     R0,#+0
+   \                     ??HAL_RCC_OscConfig_14: (+1)
+   \      0x2FC   0xE8BD 0x83F2      POP      {R1,R4-R9,PC}    ;; return
+   \                     ??HAL_RCC_OscConfig_0:
+   \      0x300   0x4002'3800        DC32     0x40023800
+   \      0x304   0x4247'0000        DC32     0x42470000
+   \      0x308   0x4247'0E80        DC32     0x42470e80
+   \      0x30C   0x4000'7000        DC32     0x40007000
+    555          }
+    556          
+    557          /**
+    558            * @brief  Initializes the CPU, AHB and APB busses clocks according to the specified
+    559            *         parameters in the RCC_ClkInitStruct.
+    560            * @param  RCC_ClkInitStruct pointer to an RCC_OscInitTypeDef structure that
+    561            *         contains the configuration information for the RCC peripheral.
+    562            * @param  FLatency FLASH Latency, this parameter depend on device selected
+    563            *
+    564            * @note   The SystemCoreClock CMSIS variable is used to store System Clock Frequency
+    565            *         and updated by HAL_RCC_GetHCLKFreq() function called within this function
+    566            *
+    567            * @note   The HSI is used (enabled by hardware) as system clock source after
+    568            *         startup from Reset, wake-up from STOP and STANDBY mode, or in case
+    569            *         of failure of the HSE used directly or indirectly as system clock
+    570            *         (if the Clock Security System CSS is enabled).
+    571            *
+    572            * @note   A switch from one clock source to another occurs only if the target
+    573            *         clock source is ready (clock stable after startup delay or PLL locked).
+    574            *         If a clock source which is not yet ready is selected, the switch will
+    575            *         occur when the clock source will be ready.
+    576            *
+    577            * @note   Depending on the device voltage range, the software has to set correctly
+    578            *         HPRE[3:0] bits to ensure that HCLK not exceed the maximum allowed frequency
+    579            *         (for more details refer to section above "Initialization/de-initialization functions")
+    580            * @retval None
+    581            */
+
+   \                                 In section .text, align 2, keep-with-next
+    582          HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, uint32_t FLatency)
+    583          {
+   \                     HAL_RCC_ClockConfig: (+1)
+   \        0x0   0xE92D 0x41F0      PUSH     {R4-R8,LR}
+   \        0x4   0x0004             MOVS     R4,R0
+   \        0x6   0x460F             MOV      R7,R1
+    584            uint32_t tickstart;
+    585          
+    586            /* Check Null pointer */
+    587            if(RCC_ClkInitStruct == NULL)
+   \        0x8   0xD054             BEQ.N    ??HAL_RCC_ClockConfig_0
+    588            {
+    589              return HAL_ERROR;
+    590            }
+    591          
+    592            /* Check the parameters */
+    593            assert_param(IS_RCC_CLOCKTYPE(RCC_ClkInitStruct->ClockType));
+    594            assert_param(IS_FLASH_LATENCY(FLatency));
+    595          
+    596            /* To correctly read data from FLASH memory, the number of wait states (LATENCY)
+    597              must be correctly programmed according to the frequency of the CPU clock
+    598              (HCLK) and the supply voltage of the device. */
+    599          
+    600            /* Increasing the number of wait states because of higher CPU frequency */
+    601            if(FLatency > __HAL_FLASH_GET_LATENCY())
+   \        0xA   0x....             LDR.N    R6,??DataTable8  ;; 0x40023c00
+   \        0xC   0x6830             LDR      R0,[R6, #+0]
+   \        0xE   0xF000 0x000F      AND      R0,R0,#0xF
+   \       0x12   0x42B8             CMP      R0,R7
+   \       0x14   0xD202             BCS.N    ??HAL_RCC_ClockConfig_1
+    602            {
+    603              /* Program the new number of wait states to the LATENCY bits in the FLASH_ACR register */
+    604              __HAL_FLASH_SET_LATENCY(FLatency);
+   \       0x16   0x....'....        BL       ?Subroutine2
+    605          
+    606              /* Check that the new number of wait states is taken into account to access the Flash
+    607              memory by reading the FLASH_ACR register */
+    608              if(__HAL_FLASH_GET_LATENCY() != FLatency)
+    609              {
+    610                return HAL_ERROR;
+    611              }
+    612            }
+   \                     ??CrossCallReturnLabel_2: (+1)
+   \       0x1A   0xD14B             BNE.N    ??HAL_RCC_ClockConfig_0
+    613          
+    614            /*-------------------------- HCLK Configuration --------------------------*/
+    615            if(((RCC_ClkInitStruct->ClockType) & RCC_CLOCKTYPE_HCLK) == RCC_CLOCKTYPE_HCLK)
+   \                     ??HAL_RCC_ClockConfig_1: (+1)
+   \       0x1C   0x6820             LDR      R0,[R4, #+0]
+   \       0x1E   0x....             LDR.N    R5,??DataTable8_1  ;; 0x40023800
+   \       0x20   0x0781             LSLS     R1,R0,#+30
+   \       0x22   0xD512             BPL.N    ??HAL_RCC_ClockConfig_2
+    616            {
+    617              /* Set the highest APBx dividers in order to ensure that we do not go through
+    618                 a non-spec phase whatever we decrease or increase HCLK. */
+    619              if(((RCC_ClkInitStruct->ClockType) & RCC_CLOCKTYPE_PCLK1) == RCC_CLOCKTYPE_PCLK1)
+   \       0x24   0x0740             LSLS     R0,R0,#+29
+   \       0x26   0xD503             BPL.N    ??HAL_RCC_ClockConfig_3
+    620              {
+    621                MODIFY_REG(RCC->CFGR, RCC_CFGR_PPRE1, RCC_HCLK_DIV16);
+   \       0x28   0x68A9             LDR      R1,[R5, #+8]
+   \       0x2A   0xF441 0x51E0      ORR      R1,R1,#0x1C00
+   \       0x2E   0x60A9             STR      R1,[R5, #+8]
+    622              }
+    623          
+    624              if(((RCC_ClkInitStruct->ClockType) & RCC_CLOCKTYPE_PCLK2) == RCC_CLOCKTYPE_PCLK2)
+   \                     ??HAL_RCC_ClockConfig_3: (+1)
+   \       0x30   0x7820             LDRB     R0,[R4, #+0]
+   \       0x32   0x0701             LSLS     R1,R0,#+28
+   \       0x34   0xD503             BPL.N    ??HAL_RCC_ClockConfig_4
+    625              {
+    626                MODIFY_REG(RCC->CFGR, RCC_CFGR_PPRE2, (RCC_HCLK_DIV16 << 3));
+   \       0x36   0x68A8             LDR      R0,[R5, #+8]
+   \       0x38   0xF440 0x4060      ORR      R0,R0,#0xE000
+   \       0x3C   0x60A8             STR      R0,[R5, #+8]
+    627              }
+    628          
+    629              assert_param(IS_RCC_HCLK(RCC_ClkInitStruct->AHBCLKDivider));
+    630              MODIFY_REG(RCC->CFGR, RCC_CFGR_HPRE, RCC_ClkInitStruct->AHBCLKDivider);
+   \                     ??HAL_RCC_ClockConfig_4: (+1)
+   \       0x3E   0x68A9             LDR      R1,[R5, #+8]
+   \       0x40   0x68A0             LDR      R0,[R4, #+8]
+   \       0x42   0xF021 0x01F0      BIC      R1,R1,#0xF0
+   \       0x46   0x4301             ORRS     R1,R0,R1
+   \       0x48   0x60A9             STR      R1,[R5, #+8]
+    631            }
+    632          
+    633            /*------------------------- SYSCLK Configuration ---------------------------*/
+    634            if(((RCC_ClkInitStruct->ClockType) & RCC_CLOCKTYPE_SYSCLK) == RCC_CLOCKTYPE_SYSCLK)
+   \                     ??HAL_RCC_ClockConfig_2: (+1)
+   \       0x4A   0x7821             LDRB     R1,[R4, #+0]
+   \       0x4C   0x07C8             LSLS     R0,R1,#+31
+   \       0x4E   0xD529             BPL.N    ??HAL_RCC_ClockConfig_5
+    635            {
+    636              assert_param(IS_RCC_SYSCLKSOURCE(RCC_ClkInitStruct->SYSCLKSource));
+    637          
+    638              /* HSE is selected as System Clock Source */
+    639              if(RCC_ClkInitStruct->SYSCLKSource == RCC_SYSCLKSOURCE_HSE)
+   \       0x50   0x6860             LDR      R0,[R4, #+4]
+   \       0x52   0x2801             CMP      R0,#+1
+   \       0x54   0xD102             BNE.N    ??HAL_RCC_ClockConfig_6
+    640              {
+    641                /* Check the HSE ready flag */
+    642                if(__HAL_RCC_GET_FLAG(RCC_FLAG_HSERDY) == RESET)
+   \       0x56   0x6829             LDR      R1,[R5, #+0]
+   \       0x58   0x038A             LSLS     R2,R1,#+14
+   \       0x5A   0xE005             B.N      ??HAL_RCC_ClockConfig_7
+    643                {
+    644                  return HAL_ERROR;
+    645                }
+    646              }
+    647              /* PLL is selected as System Clock Source */
+    648              else if((RCC_ClkInitStruct->SYSCLKSource == RCC_SYSCLKSOURCE_PLLCLK)   ||
+    649                      (RCC_ClkInitStruct->SYSCLKSource == RCC_SYSCLKSOURCE_PLLRCLK))
+   \                     ??HAL_RCC_ClockConfig_6: (+1)
+   \       0x5C   0x2802             CMP      R0,#+2
+   \       0x5E   0xBF18             IT       NE
+   \       0x60   0x2803             CMPNE    R0,#+3
+   \       0x62   0xD103             BNE.N    ??HAL_RCC_ClockConfig_8
+    650              {
+    651                /* Check the PLL ready flag */
+    652                if(__HAL_RCC_GET_FLAG(RCC_FLAG_PLLRDY) == RESET)
+   \       0x64   0x6829             LDR      R1,[R5, #+0]
+   \       0x66   0x018A             LSLS     R2,R1,#+6
+   \                     ??HAL_RCC_ClockConfig_7: (+1)
+   \       0x68   0xD403             BMI.N    ??HAL_RCC_ClockConfig_9
+   \       0x6A   0xE023             B.N      ??HAL_RCC_ClockConfig_0
+    653                {
+    654                  return HAL_ERROR;
+    655                }
+    656              }
+    657              /* HSI is selected as System Clock Source */
+    658              else
+    659              {
+    660                /* Check the HSI ready flag */
+    661                if(__HAL_RCC_GET_FLAG(RCC_FLAG_HSIRDY) == RESET)
+   \                     ??HAL_RCC_ClockConfig_8: (+1)
+   \       0x6C   0x6829             LDR      R1,[R5, #+0]
+   \       0x6E   0x078A             LSLS     R2,R1,#+30
+   \       0x70   0xD520             BPL.N    ??HAL_RCC_ClockConfig_0
+    662                {
+    663                  return HAL_ERROR;
+    664                }
+    665              }
+    666          
+    667              __HAL_RCC_SYSCLK_CONFIG(RCC_ClkInitStruct->SYSCLKSource);
+   \                     ??HAL_RCC_ClockConfig_9: (+1)
+   \       0x72   0x68A9             LDR      R1,[R5, #+8]
+   \       0x74   0x0889             LSRS     R1,R1,#+2
+   \       0x76   0xEA40 0x0081      ORR      R0,R0,R1, LSL #+2
+   \       0x7A   0x60A8             STR      R0,[R5, #+8]
+    668          
+    669              /* Get Start Tick */
+    670              tickstart = HAL_GetTick();
+   \       0x7C   0x....'....        BL       HAL_GetTick
+   \       0x80   0x4680             MOV      R8,R0
+    671          
+    672              while (__HAL_RCC_GET_SYSCLK_SOURCE() != (RCC_ClkInitStruct->SYSCLKSource << RCC_CFGR_SWS_Pos))
+   \                     ??HAL_RCC_ClockConfig_10: (+1)
+   \       0x82   0x68A8             LDR      R0,[R5, #+8]
+   \       0x84   0x6861             LDR      R1,[R4, #+4]
+   \       0x86   0xF000 0x000C      AND      R0,R0,#0xC
+   \       0x8A   0xEBB0 0x0F81      CMP      R0,R1, LSL #+2
+   \       0x8E   0xD009             BEQ.N    ??HAL_RCC_ClockConfig_5
+    673              {
+    674                if ((HAL_GetTick() - tickstart) > CLOCKSWITCH_TIMEOUT_VALUE)
+   \       0x90   0x....'....        BL       HAL_GetTick
+   \       0x94   0xEBA0 0x0008      SUB      R0,R0,R8
+   \       0x98   0xF241 0x3189      MOVW     R1,#+5001
+   \       0x9C   0x4288             CMP      R0,R1
+   \       0x9E   0xD3F0             BCC.N    ??HAL_RCC_ClockConfig_10
+    675                {
+    676                  return HAL_TIMEOUT;
+   \       0xA0   0x2003             MOVS     R0,#+3
+   \       0xA2   0xE02B             B.N      ??HAL_RCC_ClockConfig_11
+    677                }
+    678              }
+    679            }
+    680          
+    681            /* Decreasing the number of wait states because of lower CPU frequency */
+    682            if(FLatency < __HAL_FLASH_GET_LATENCY())
+   \                     ??HAL_RCC_ClockConfig_5: (+1)
+   \       0xA4   0x6830             LDR      R0,[R6, #+0]
+   \       0xA6   0xF000 0x000F      AND      R0,R0,#0xF
+   \       0xAA   0x4287             CMP      R7,R0
+   \       0xAC   0xD204             BCS.N    ??HAL_RCC_ClockConfig_12
+    683            {
+    684               /* Program the new number of wait states to the LATENCY bits in the FLASH_ACR register */
+    685              __HAL_FLASH_SET_LATENCY(FLatency);
+   \       0xAE   0x....'....        BL       ?Subroutine2
+    686          
+    687              /* Check that the new number of wait states is taken into account to access the Flash
+    688              memory by reading the FLASH_ACR register */
+    689              if(__HAL_FLASH_GET_LATENCY() != FLatency)
+   \                     ??CrossCallReturnLabel_3: (+1)
+   \       0xB2   0xD001             BEQ.N    ??HAL_RCC_ClockConfig_12
+    690              {
+    691                return HAL_ERROR;
+   \                     ??HAL_RCC_ClockConfig_0: (+1)
+   \       0xB4   0x2001             MOVS     R0,#+1
+   \       0xB6   0xE021             B.N      ??HAL_RCC_ClockConfig_11
+    692              }
+    693            }
+    694          
+    695            /*-------------------------- PCLK1 Configuration ---------------------------*/
+    696            if(((RCC_ClkInitStruct->ClockType) & RCC_CLOCKTYPE_PCLK1) == RCC_CLOCKTYPE_PCLK1)
+   \                     ??HAL_RCC_ClockConfig_12: (+1)
+   \       0xB8   0x7820             LDRB     R0,[R4, #+0]
+   \       0xBA   0x0741             LSLS     R1,R0,#+29
+   \       0xBC   0xD505             BPL.N    ??HAL_RCC_ClockConfig_13
+    697            {
+    698              assert_param(IS_RCC_PCLK(RCC_ClkInitStruct->APB1CLKDivider));
+    699              MODIFY_REG(RCC->CFGR, RCC_CFGR_PPRE1, RCC_ClkInitStruct->APB1CLKDivider);
+   \       0xBE   0x68AA             LDR      R2,[R5, #+8]
+   \       0xC0   0x68E0             LDR      R0,[R4, #+12]
+   \       0xC2   0xF422 0x52E0      BIC      R2,R2,#0x1C00
+   \       0xC6   0x4302             ORRS     R2,R0,R2
+   \       0xC8   0x60AA             STR      R2,[R5, #+8]
+    700            }
+    701          
+    702            /*-------------------------- PCLK2 Configuration ---------------------------*/
+    703            if(((RCC_ClkInitStruct->ClockType) & RCC_CLOCKTYPE_PCLK2) == RCC_CLOCKTYPE_PCLK2)
+   \                     ??HAL_RCC_ClockConfig_13: (+1)
+   \       0xCA   0x7821             LDRB     R1,[R4, #+0]
+   \       0xCC   0x0708             LSLS     R0,R1,#+28
+   \       0xCE   0xD506             BPL.N    ??HAL_RCC_ClockConfig_14
+    704            {
+    705              assert_param(IS_RCC_PCLK(RCC_ClkInitStruct->APB2CLKDivider));
+    706              MODIFY_REG(RCC->CFGR, RCC_CFGR_PPRE2, ((RCC_ClkInitStruct->APB2CLKDivider) << 3U));
+   \       0xD0   0x68A9             LDR      R1,[R5, #+8]
+   \       0xD2   0x6920             LDR      R0,[R4, #+16]
+   \       0xD4   0xF421 0x4160      BIC      R1,R1,#0xE000
+   \       0xD8   0xEA41 0x01C0      ORR      R1,R1,R0, LSL #+3
+   \       0xDC   0x60A9             STR      R1,[R5, #+8]
+    707            }
+    708          
+    709            /* Update the SystemCoreClock global variable */
+    710            SystemCoreClock = HAL_RCC_GetSysClockFreq() >> AHBPrescTable[(RCC->CFGR & RCC_CFGR_HPRE)>> RCC_CFGR_HPRE_Pos];
+   \                     ??HAL_RCC_ClockConfig_14: (+1)
+   \       0xDE   0x....'....        BL       HAL_RCC_GetSysClockFreq
+   \       0xE2   0x68AA             LDR      R2,[R5, #+8]
+   \       0xE4   0x....             LDR.N    R1,??DataTable8_2
+   \       0xE6   0x....             LDR.N    R3,??DataTable8_3
+   \       0xE8   0xF3C2 0x1203      UBFX     R2,R2,#+4,#+4
+   \       0xEC   0x5C89             LDRB     R1,[R1, R2]
+   \       0xEE   0x40C8             LSRS     R0,R0,R1
+   \       0xF0   0x6018             STR      R0,[R3, #+0]
+    711          
+    712            /* Configure the source of time base considering new system clocks settings */
+    713            HAL_InitTick (uwTickPrio);
+   \       0xF2   0x....             LDR.N    R0,??DataTable8_4
+   \       0xF4   0x6800             LDR      R0,[R0, #+0]
+   \       0xF6   0x....'....        BL       HAL_InitTick
+    714          
+    715            return HAL_OK;
+   \       0xFA   0x2000             MOVS     R0,#+0
+   \                     ??HAL_RCC_ClockConfig_11: (+1)
+   \       0xFC   0xE8BD 0x81F0      POP      {R4-R8,PC}       ;; return
+    716          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine2: (+1)
+   \        0x0   0x7037             STRB     R7,[R6, #+0]
+   \        0x2   0x6831             LDR      R1,[R6, #+0]
+   \        0x4   0xF001 0x010F      AND      R1,R1,#0xF
+   \        0x8   0x42B9             CMP      R1,R7
+   \        0xA   0x4770             BX       LR
+    717          
+    718          /**
+    719            * @}
+    720            */
+    721          
+    722          /** @defgroup RCC_Exported_Functions_Group2 Peripheral Control functions
+    723           *  @brief   RCC clocks control functions
+    724           *
+    725          @verbatim
+    726           ===============================================================================
+    727                                ##### Peripheral Control functions #####
+    728           ===============================================================================
+    729              [..]
+    730              This subsection provides a set of functions allowing to control the RCC Clocks
+    731              frequencies.
+    732          
+    733          @endverbatim
+    734            * @{
+    735            */
+    736          
+    737          /**
+    738            * @brief  Selects the clock source to output on MCO1 pin(PA8) or on MCO2 pin(PC9).
+    739            * @note   PA8/PC9 should be configured in alternate function mode.
+    740            * @param  RCC_MCOx specifies the output direction for the clock source.
+    741            *          This parameter can be one of the following values:
+    742            *            @arg RCC_MCO1: Clock source to output on MCO1 pin(PA8).
+    743            *            @arg RCC_MCO2: Clock source to output on MCO2 pin(PC9).
+    744            * @param  RCC_MCOSource specifies the clock source to output.
+    745            *          This parameter can be one of the following values:
+    746            *            @arg RCC_MCO1SOURCE_HSI: HSI clock selected as MCO1 source
+    747            *            @arg RCC_MCO1SOURCE_LSE: LSE clock selected as MCO1 source
+    748            *            @arg RCC_MCO1SOURCE_HSE: HSE clock selected as MCO1 source
+    749            *            @arg RCC_MCO1SOURCE_PLLCLK: main PLL clock selected as MCO1 source
+    750            *            @arg RCC_MCO2SOURCE_SYSCLK: System clock (SYSCLK) selected as MCO2 source
+    751            *            @arg RCC_MCO2SOURCE_PLLI2SCLK: PLLI2S clock selected as MCO2 source, available for all STM32F4 devices except STM32F410xx
+    752            *            @arg RCC_MCO2SOURCE_I2SCLK: I2SCLK clock selected as MCO2 source, available only for STM32F410Rx devices
+    753            *            @arg RCC_MCO2SOURCE_HSE: HSE clock selected as MCO2 source
+    754            *            @arg RCC_MCO2SOURCE_PLLCLK: main PLL clock selected as MCO2 source
+    755            * @param  RCC_MCODiv specifies the MCOx prescaler.
+    756            *          This parameter can be one of the following values:
+    757            *            @arg RCC_MCODIV_1: no division applied to MCOx clock
+    758            *            @arg RCC_MCODIV_2: division by 2 applied to MCOx clock
+    759            *            @arg RCC_MCODIV_3: division by 3 applied to MCOx clock
+    760            *            @arg RCC_MCODIV_4: division by 4 applied to MCOx clock
+    761            *            @arg RCC_MCODIV_5: division by 5 applied to MCOx clock
+    762            * @note  For STM32F410Rx devices to output I2SCLK clock on MCO2 you should have
+    763            *        at last one of the SPI clocks enabled (SPI1, SPI2 or SPI5).
+    764            * @retval None
+    765            */
+
+   \                                 In section .text, align 2, keep-with-next
+    766          void HAL_RCC_MCOConfig(uint32_t RCC_MCOx, uint32_t RCC_MCOSource, uint32_t RCC_MCODiv)
+    767          {
+   \                     HAL_RCC_MCOConfig: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0xB086             SUB      SP,SP,#+24
+   \        0x4   0x460C             MOV      R4,R1
+   \        0x6   0x4615             MOV      R5,R2
+    768            GPIO_InitTypeDef GPIO_InitStruct;
+    769            /* Check the parameters */
+    770            assert_param(IS_RCC_MCO(RCC_MCOx));
+    771            assert_param(IS_RCC_MCODIV(RCC_MCODiv));
+    772            /* RCC_MCO1 */
+    773            if(RCC_MCOx == RCC_MCO1)
+   \        0x8   0x....             LDR.N    R6,??DataTable8_5  ;; 0x40023808
+   \        0xA   0xB9A8             CBNZ.N   R0,??HAL_RCC_MCOConfig_0
+    774            {
+    775              assert_param(IS_RCC_MCO1SOURCE(RCC_MCOSource));
+    776          
+    777              /* MCO1 Clock Enable */
+    778              __MCO1_CLK_ENABLE();
+   \        0xC   0x9000             STR      R0,[SP, #+0]
+    779          
+    780              /* Configure the MCO1 pin in alternate function mode */
+    781              GPIO_InitStruct.Pin = MCO1_PIN;
+    782              GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+   \        0xE   0x2202             MOVS     R2,#+2
+   \       0x10   0x6AB1             LDR      R1,[R6, #+40]
+   \       0x12   0xF041 0x0101      ORR      R1,R1,#0x1
+   \       0x16   0x62B1             STR      R1,[R6, #+40]
+   \       0x18   0xF44F 0x7180      MOV      R1,#+256
+   \       0x1C   0x6AB0             LDR      R0,[R6, #+40]
+   \       0x1E   0xF000 0x0001      AND      R0,R0,#0x1
+   \       0x22   0x9000             STR      R0,[SP, #+0]
+   \       0x24   0x9800             LDR      R0,[SP, #+0]
+    783              GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    784              GPIO_InitStruct.Pull = GPIO_NOPULL;
+    785              GPIO_InitStruct.Alternate = GPIO_AF0_MCO;
+    786              HAL_GPIO_Init(MCO1_GPIO_PORT, &GPIO_InitStruct);
+   \       0x26   0x....             LDR.N    R0,??DataTable8_6  ;; 0x40020000
+   \       0x28   0x....'....        BL       ?Subroutine1
+    787          
+    788              /* Mask MCO1 and MCO1PRE[2:0] bits then Select MCO1 clock source and prescaler */
+    789              MODIFY_REG(RCC->CFGR, (RCC_CFGR_MCO1 | RCC_CFGR_MCO1PRE), (RCC_MCOSource | RCC_MCODiv));
+   \                     ??CrossCallReturnLabel_1: (+1)
+   \       0x2C   0x6831             LDR      R1,[R6, #+0]
+   \       0x2E   0xF021 0x61EC      BIC      R1,R1,#0x7600000
+   \       0x32   0x430C             ORRS     R4,R4,R1
+   \       0x34   0x432C             ORRS     R4,R5,R4
+   \       0x36   0xE016             B.N      ??HAL_RCC_MCOConfig_1
+    790          
+    791             /* This RCC MCO1 enable feature is available only on STM32F410xx devices */
+    792          #if defined(RCC_CFGR_MCO1EN)
+    793              __HAL_RCC_MCO1_ENABLE();
+    794          #endif /* RCC_CFGR_MCO1EN */
+    795            }
+    796          #if defined(RCC_CFGR_MCO2)
+    797            else
+    798            {
+    799              assert_param(IS_RCC_MCO2SOURCE(RCC_MCOSource));
+    800          
+    801              /* MCO2 Clock Enable */
+    802              __MCO2_CLK_ENABLE();
+   \                     ??HAL_RCC_MCOConfig_0: (+1)
+   \       0x38   0x2000             MOVS     R0,#+0
+   \       0x3A   0x9000             STR      R0,[SP, #+0]
+    803          
+    804              /* Configure the MCO2 pin in alternate function mode */
+    805              GPIO_InitStruct.Pin = MCO2_PIN;
+    806              GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+   \       0x3C   0x2202             MOVS     R2,#+2
+   \       0x3E   0x6AB1             LDR      R1,[R6, #+40]
+   \       0x40   0xF041 0x0104      ORR      R1,R1,#0x4
+   \       0x44   0x62B1             STR      R1,[R6, #+40]
+   \       0x46   0xF44F 0x7100      MOV      R1,#+512
+   \       0x4A   0x6AB0             LDR      R0,[R6, #+40]
+   \       0x4C   0xF000 0x0004      AND      R0,R0,#0x4
+   \       0x50   0x9000             STR      R0,[SP, #+0]
+   \       0x52   0x9800             LDR      R0,[SP, #+0]
+    807              GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    808              GPIO_InitStruct.Pull = GPIO_NOPULL;
+    809              GPIO_InitStruct.Alternate = GPIO_AF0_MCO;
+    810              HAL_GPIO_Init(MCO2_GPIO_PORT, &GPIO_InitStruct);
+   \       0x54   0x....             LDR.N    R0,??DataTable8_7  ;; 0x40020800
+   \       0x56   0x....'....        BL       ?Subroutine1
+    811          
+    812              /* Mask MCO2 and MCO2PRE[2:0] bits then Select MCO2 clock source and prescaler */
+    813              MODIFY_REG(RCC->CFGR, (RCC_CFGR_MCO2 | RCC_CFGR_MCO2PRE), (RCC_MCOSource | (RCC_MCODiv << 3U)));
+   \                     ??CrossCallReturnLabel_0: (+1)
+   \       0x5A   0x6830             LDR      R0,[R6, #+0]
+   \       0x5C   0xF020 0x4078      BIC      R0,R0,#0xF8000000
+   \       0x60   0x4304             ORRS     R4,R4,R0
+   \       0x62   0xEA44 0x04C5      ORR      R4,R4,R5, LSL #+3
+   \                     ??HAL_RCC_MCOConfig_1: (+1)
+   \       0x66   0x6034             STR      R4,[R6, #+0]
+    814          
+    815             /* This RCC MCO2 enable feature is available only on STM32F410Rx devices */
+    816          #if defined(RCC_CFGR_MCO2EN)
+    817              __HAL_RCC_MCO2_ENABLE();
+    818          #endif /* RCC_CFGR_MCO2EN */
+    819            }
+    820          #endif /* RCC_CFGR_MCO2 */
+    821          }
+   \       0x68   0xB006             ADD      SP,SP,#+24
+   \       0x6A   0xBD70             POP      {R4-R6,PC}       ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine1: (+1)
+   \        0x0   0x9101             STR      R1,[SP, #+4]
+   \        0x2   0x9202             STR      R2,[SP, #+8]
+   \        0x4   0x2103             MOVS     R1,#+3
+   \        0x6   0x9104             STR      R1,[SP, #+16]
+   \        0x8   0x2200             MOVS     R2,#+0
+   \        0xA   0x9203             STR      R2,[SP, #+12]
+   \        0xC   0x9205             STR      R2,[SP, #+20]
+   \        0xE   0xA901             ADD      R1,SP,#+4
+   \       0x10   0x....'....        B.W      HAL_GPIO_Init
+    822          
+    823          /**
+    824            * @brief  Enables the Clock Security System.
+    825            * @note   If a failure is detected on the HSE oscillator clock, this oscillator
+    826            *         is automatically disabled and an interrupt is generated to inform the
+    827            *         software about the failure (Clock Security System Interrupt, CSSI),
+    828            *         allowing the MCU to perform rescue operations. The CSSI is linked to
+    829            *         the Cortex-M4 NMI (Non-Maskable Interrupt) exception vector.
+    830            * @retval None
+    831            */
+
+   \                                 In section .text, align 2, keep-with-next
+    832          void HAL_RCC_EnableCSS(void)
+    833          {
+    834            *(__IO uint32_t *) RCC_CR_CSSON_BB = (uint32_t)ENABLE;
+   \                     HAL_RCC_EnableCSS: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable8_8  ;; 0x4247004c
+   \        0x2   0x2001             MOVS     R0,#+1
+   \        0x4   0x6008             STR      R0,[R1, #+0]
+    835          }
+   \        0x6   0x4770             BX       LR               ;; return
+    836          
+    837          /**
+    838            * @brief  Disables the Clock Security System.
+    839            * @retval None
+    840            */
+
+   \                                 In section .text, align 2, keep-with-next
+    841          void HAL_RCC_DisableCSS(void)
+    842          {
+    843            *(__IO uint32_t *) RCC_CR_CSSON_BB = (uint32_t)DISABLE;
+   \                     HAL_RCC_DisableCSS: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable8_8  ;; 0x4247004c
+   \        0x2   0x2000             MOVS     R0,#+0
+   \        0x4   0x6008             STR      R0,[R1, #+0]
+    844          }
+   \        0x6   0x4770             BX       LR               ;; return
+    845          
+    846          /**
+    847            * @brief  Returns the SYSCLK frequency
+    848            *
+    849            * @note   The system frequency computed by this function is not the real
+    850            *         frequency in the chip. It is calculated based on the predefined
+    851            *         constant and the selected clock source:
+    852            * @note     If SYSCLK source is HSI, function returns values based on HSI_VALUE(*)
+    853            * @note     If SYSCLK source is HSE, function returns values based on HSE_VALUE(**)
+    854            * @note     If SYSCLK source is PLL, function returns values based on HSE_VALUE(**)
+    855            *           or HSI_VALUE(*) multiplied/divided by the PLL factors.
+    856            * @note     (*) HSI_VALUE is a constant defined in stm32f4xx_hal_conf.h file (default value
+    857            *               16 MHz) but the real value may vary depending on the variations
+    858            *               in voltage and temperature.
+    859            * @note     (**) HSE_VALUE is a constant defined in stm32f4xx_hal_conf.h file (default value
+    860            *                25 MHz), user has to ensure that HSE_VALUE is same as the real
+    861            *                frequency of the crystal used. Otherwise, this function may
+    862            *                have wrong result.
+    863            *
+    864            * @note   The result of this function could be not correct when using fractional
+    865            *         value for HSE crystal.
+    866            *
+    867            * @note   This function can be used by the user application to compute the
+    868            *         baudrate for the communication peripherals or configure other parameters.
+    869            *
+    870            * @note   Each time SYSCLK changes, this function must be called to update the
+    871            *         right SYSCLK value. Otherwise, any configuration based on this function will be incorrect.
+    872            *
+    873            *
+    874            * @retval SYSCLK frequency
+    875            */
+
+   \                                 In section .text, align 4
+    876          __weak uint32_t HAL_RCC_GetSysClockFreq(void)
+    877          {
+   \                     HAL_RCC_GetSysClockFreq: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+    878            uint32_t pllm = 0U, pllvco = 0U, pllp = 0U;
+    879            uint32_t sysclockfreq = 0U;
+    880          
+    881            /* Get SYSCLK source -------------------------------------------------------*/
+    882            switch (RCC->CFGR & RCC_CFGR_SWS)
+   \        0x2   0x4C14             LDR.N    R4,??HAL_RCC_GetSysClockFreq_0  ;; 0x40023804
+   \        0x4   0x6860             LDR      R0,[R4, #+4]
+   \        0x6   0xF000 0x000C      AND      R0,R0,#0xC
+   \        0xA   0x2804             CMP      R0,#+4
+   \        0xC   0xD002             BEQ.N    ??HAL_RCC_GetSysClockFreq_1
+   \        0xE   0x2808             CMP      R0,#+8
+   \       0x10   0xD002             BEQ.N    ??HAL_RCC_GetSysClockFreq_2
+   \       0x12   0xE01D             B.N      ??HAL_RCC_GetSysClockFreq_3
+    883            {
+    884              case RCC_CFGR_SWS_HSI:  /* HSI used as system clock source */
+    885              {
+    886                sysclockfreq = HSI_VALUE;
+    887                 break;
+    888              }
+    889              case RCC_CFGR_SWS_HSE:  /* HSE used as system clock  source */
+    890              {
+    891                sysclockfreq = HSE_VALUE;
+   \                     ??HAL_RCC_GetSysClockFreq_1: (+1)
+   \       0x14   0x4810             LDR.N    R0,??HAL_RCC_GetSysClockFreq_0+0x4  ;; 0x7a1200
+    892                break;
+   \       0x16   0xBD30             POP      {R4,R5,PC}
+    893              }
+    894              case RCC_CFGR_SWS_PLL:  /* PLL used as system clock  source */
+    895              {
+    896                /* PLL_VCO = (HSE_VALUE or HSI_VALUE / PLLM) * PLLN
+    897                SYSCLK = PLL_VCO / PLLP */
+    898                pllm = RCC->PLLCFGR & RCC_PLLCFGR_PLLM;
+   \                     ??HAL_RCC_GetSysClockFreq_2: (+1)
+   \       0x18   0x6822             LDR      R2,[R4, #+0]
+    899                if(__HAL_RCC_GET_PLL_OSCSOURCE() != RCC_PLLSOURCE_HSI)
+   \       0x1A   0x6820             LDR      R0,[R4, #+0]
+   \       0x1C   0x2300             MOVS     R3,#+0
+   \       0x1E   0x0241             LSLS     R1,R0,#+9
+   \       0x20   0xF002 0x023F      AND      R2,R2,#0x3F
+   \       0x24   0xD504             BPL.N    ??HAL_RCC_GetSysClockFreq_4
+    900                {
+    901                  /* HSE used as PLL clock source */
+    902                  pllvco = (uint32_t) ((((uint64_t) HSE_VALUE * ((uint64_t) ((RCC->PLLCFGR & RCC_PLLCFGR_PLLN) >> RCC_PLLCFGR_PLLN_Pos)))) / (uint64_t)pllm);
+   \       0x26   0x6825             LDR      R5,[R4, #+0]
+   \       0x28   0x490B             LDR.N    R1,??HAL_RCC_GetSysClockFreq_0+0x4  ;; 0x7a1200
+   \       0x2A   0xF3C5 0x1088      UBFX     R0,R5,#+6,#+9
+   \       0x2E   0xE003             B.N      ??HAL_RCC_GetSysClockFreq_5
+    903                }
+    904                else
+    905                {
+    906                  /* HSI used as PLL clock source */
+    907                  pllvco = (uint32_t) ((((uint64_t) HSI_VALUE * ((uint64_t) ((RCC->PLLCFGR & RCC_PLLCFGR_PLLN) >> RCC_PLLCFGR_PLLN_Pos)))) / (uint64_t)pllm);
+   \                     ??HAL_RCC_GetSysClockFreq_4: (+1)
+   \       0x30   0x6820             LDR      R0,[R4, #+0]
+   \       0x32   0x490A             LDR.N    R1,??HAL_RCC_GetSysClockFreq_0+0x8  ;; 0xf42400
+   \       0x34   0xF3C0 0x1088      UBFX     R0,R0,#+6,#+9
+   \                     ??HAL_RCC_GetSysClockFreq_5: (+1)
+   \       0x38   0xFBA1 0x0100      UMULL    R0,R1,R1,R0
+   \       0x3C   0x....'....        BL       __aeabi_uldivmod
+    908                }
+    909                pllp = ((((RCC->PLLCFGR & RCC_PLLCFGR_PLLP) >> RCC_PLLCFGR_PLLP_Pos) + 1U) *2U);
+   \       0x40   0x6821             LDR      R1,[R4, #+0]
+    910          
+    911                sysclockfreq = pllvco/pllp;
+   \       0x42   0xF3C1 0x4101      UBFX     R1,R1,#+16,#+2
+   \       0x46   0x1C49             ADDS     R1,R1,#+1
+   \       0x48   0x0049             LSLS     R1,R1,#+1
+   \       0x4A   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+    912                break;
+   \       0x4E   0xBD30             POP      {R4,R5,PC}
+    913              }
+    914              default:
+    915              {
+    916                sysclockfreq = HSI_VALUE;
+   \                     ??HAL_RCC_GetSysClockFreq_3: (+1)
+   \       0x50   0x4802             LDR.N    R0,??HAL_RCC_GetSysClockFreq_0+0x8  ;; 0xf42400
+    917                break;
+    918              }
+    919            }
+    920            return sysclockfreq;
+   \       0x52   0xBD30             POP      {R4,R5,PC}       ;; return
+   \                     ??HAL_RCC_GetSysClockFreq_0:
+   \       0x54   0x4002'3804        DC32     0x40023804
+   \       0x58   0x007A'1200        DC32     0x7a1200
+   \       0x5C   0x00F4'2400        DC32     0xf42400
+    921          }
+    922          
+    923          /**
+    924            * @brief  Returns the HCLK frequency
+    925            * @note   Each time HCLK changes, this function must be called to update the
+    926            *         right HCLK value. Otherwise, any configuration based on this function will be incorrect.
+    927            *
+    928            * @note   The SystemCoreClock CMSIS variable is used to store System Clock Frequency
+    929            *         and updated within this function
+    930            * @retval HCLK frequency
+    931            */
+
+   \                                 In section .text, align 2, keep-with-next
+    932          uint32_t HAL_RCC_GetHCLKFreq(void)
+    933          {
+    934            return SystemCoreClock;
+   \                     HAL_RCC_GetHCLKFreq: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable8_3
+   \        0x2   0x6800             LDR      R0,[R0, #+0]
+   \        0x4   0x4770             BX       LR               ;; return
+    935          }
+    936          
+    937          /**
+    938            * @brief  Returns the PCLK1 frequency
+    939            * @note   Each time PCLK1 changes, this function must be called to update the
+    940            *         right PCLK1 value. Otherwise, any configuration based on this function will be incorrect.
+    941            * @retval PCLK1 frequency
+    942            */
+
+   \                                 In section .text, align 2, keep-with-next
+    943          uint32_t HAL_RCC_GetPCLK1Freq(void)
+    944          {
+    945            /* Get HCLK source and Compute PCLK1 frequency ---------------------------*/
+    946            return (HAL_RCC_GetHCLKFreq() >> APBPrescTable[(RCC->CFGR & RCC_CFGR_PPRE1)>> RCC_CFGR_PPRE1_Pos]);
+   \                     HAL_RCC_GetPCLK1Freq: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable8_3
+   \        0x2   0x....             LDR.N    R2,??DataTable8_5  ;; 0x40023808
+   \        0x4   0x6800             LDR      R0,[R0, #+0]
+   \        0x6   0x6813             LDR      R3,[R2, #+0]
+   \        0x8   0x....             LDR.N    R1,??DataTable8_9
+   \        0xA   0xF3C3 0x2282      UBFX     R2,R3,#+10,#+3
+   \        0xE   0x....             B.N      ?Subroutine0
+    947          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine0: (+1)
+   \        0x0   0x5C89             LDRB     R1,[R1, R2]
+   \        0x2   0x40C8             LSRS     R0,R0,R1
+   \        0x4   0x4770             BX       LR               ;; return
+    948          
+    949          /**
+    950            * @brief  Returns the PCLK2 frequency
+    951            * @note   Each time PCLK2 changes, this function must be called to update the
+    952            *         right PCLK2 value. Otherwise, any configuration based on this function will be incorrect.
+    953            * @retval PCLK2 frequency
+    954            */
+
+   \                                 In section .text, align 2, keep-with-next
+    955          uint32_t HAL_RCC_GetPCLK2Freq(void)
+    956          {
+    957            /* Get HCLK source and Compute PCLK2 frequency ---------------------------*/
+    958            return (HAL_RCC_GetHCLKFreq()>> APBPrescTable[(RCC->CFGR & RCC_CFGR_PPRE2)>> RCC_CFGR_PPRE2_Pos]);
+   \                     HAL_RCC_GetPCLK2Freq: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable8_3
+   \        0x2   0x....             LDR.N    R2,??DataTable8_5  ;; 0x40023808
+   \        0x4   0x6800             LDR      R0,[R0, #+0]
+   \        0x6   0x6813             LDR      R3,[R2, #+0]
+   \        0x8   0x....             LDR.N    R1,??DataTable8_9
+   \        0xA   0xF3C3 0x3242      UBFX     R2,R3,#+13,#+3
+   \        0xE                      REQUIRE ?Subroutine0
+   \        0xE                      ;; // Fall through to label ?Subroutine0
+    959          }
+    960          
+    961          /**
+    962            * @brief  Configures the RCC_OscInitStruct according to the internal
+    963            * RCC configuration registers.
+    964            * @param  RCC_OscInitStruct pointer to an RCC_OscInitTypeDef structure that
+    965            * will be configured.
+    966            * @retval None
+    967            */
+
+   \                                 In section .text, align 4
+    968          __weak void HAL_RCC_GetOscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
+    969          {
+    970            /* Set all possible values for the Oscillator type parameter ---------------*/
+    971            RCC_OscInitStruct->OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSE | RCC_OSCILLATORTYPE_LSI;
+   \                     HAL_RCC_GetOscConfig: (+1)
+   \        0x0   0x210F             MOVS     R1,#+15
+   \        0x2   0x6001             STR      R1,[R0, #+0]
+    972          
+    973            /* Get the HSE configuration -----------------------------------------------*/
+    974            if((RCC->CR &RCC_CR_HSEBYP) == RCC_CR_HSEBYP)
+   \        0x4   0x4924             LDR.N    R1,??HAL_RCC_GetOscConfig_0  ;; 0x40023800
+   \        0x6   0x680A             LDR      R2,[R1, #+0]
+   \        0x8   0x0353             LSLS     R3,R2,#+13
+   \        0xA   0xBF48             IT       MI
+   \        0xC   0xF44F 0x22A0      MOVMI    R2,#+327680
+    975            {
+    976              RCC_OscInitStruct->HSEState = RCC_HSE_BYPASS;
+   \       0x10   0xD407             BMI.N    ??HAL_RCC_GetOscConfig_1
+    977            }
+    978            else if((RCC->CR &RCC_CR_HSEON) == RCC_CR_HSEON)
+   \       0x12   0x680B             LDR      R3,[R1, #+0]
+   \       0x14   0x03DA             LSLS     R2,R3,#+15
+   \       0x16   0xD503             BPL.N    ??HAL_RCC_GetOscConfig_2
+    979            {
+    980              RCC_OscInitStruct->HSEState = RCC_HSE_ON;
+   \       0x18   0xF44F 0x3380      MOV      R3,#+65536
+   \       0x1C   0x6043             STR      R3,[R0, #+4]
+   \       0x1E   0xE001             B.N      ??HAL_RCC_GetOscConfig_3
+    981            }
+    982            else
+    983            {
+    984              RCC_OscInitStruct->HSEState = RCC_HSE_OFF;
+   \                     ??HAL_RCC_GetOscConfig_2: (+1)
+   \       0x20   0x2200             MOVS     R2,#+0
+   \                     ??HAL_RCC_GetOscConfig_1: (+1)
+   \       0x22   0x6042             STR      R2,[R0, #+4]
+    985            }
+    986          
+    987            /* Get the HSI configuration -----------------------------------------------*/
+    988            if((RCC->CR &RCC_CR_HSION) == RCC_CR_HSION)
+   \                     ??HAL_RCC_GetOscConfig_3: (+1)
+   \       0x24   0x680B             LDR      R3,[R1, #+0]
+   \       0x26   0xF013 0x0201      ANDS     R2,R3,#0x1
+   \       0x2A   0xBF18             IT       NE
+   \       0x2C   0x2201             MOVNE    R2,#+1
+   \       0x2E   0x60C2             STR      R2,[R0, #+12]
+    989            {
+    990              RCC_OscInitStruct->HSIState = RCC_HSI_ON;
+    991            }
+    992            else
+    993            {
+    994              RCC_OscInitStruct->HSIState = RCC_HSI_OFF;
+    995            }
+    996          
+    997            RCC_OscInitStruct->HSICalibrationValue = (uint32_t)((RCC->CR &RCC_CR_HSITRIM) >> RCC_CR_HSITRIM_Pos);
+   \       0x30   0x680A             LDR      R2,[R1, #+0]
+   \       0x32   0xF3C2 0x02C4      UBFX     R2,R2,#+3,#+5
+   \       0x36   0x6102             STR      R2,[R0, #+16]
+    998          
+    999            /* Get the LSE configuration -----------------------------------------------*/
+   1000            if((RCC->BDCR &RCC_BDCR_LSEBYP) == RCC_BDCR_LSEBYP)
+   \       0x38   0x6F0A             LDR      R2,[R1, #+112]
+   \       0x3A   0x0753             LSLS     R3,R2,#+29
+   \       0x3C   0xBF48             IT       MI
+   \       0x3E   0x2205             MOVMI    R2,#+5
+   1001            {
+   1002              RCC_OscInitStruct->LSEState = RCC_LSE_BYPASS;
+   \       0x40   0xD404             BMI.N    ??HAL_RCC_GetOscConfig_4
+   1003            }
+   1004            else if((RCC->BDCR &RCC_BDCR_LSEON) == RCC_BDCR_LSEON)
+   \       0x42   0x6F0A             LDR      R2,[R1, #+112]
+   \       0x44   0xF012 0x0201      ANDS     R2,R2,#0x1
+   \       0x48   0xBF18             IT       NE
+   \       0x4A   0x2201             MOVNE    R2,#+1
+   \                     ??HAL_RCC_GetOscConfig_4: (+1)
+   \       0x4C   0x6082             STR      R2,[R0, #+8]
+   1005            {
+   1006              RCC_OscInitStruct->LSEState = RCC_LSE_ON;
+   1007            }
+   1008            else
+   1009            {
+   1010              RCC_OscInitStruct->LSEState = RCC_LSE_OFF;
+   1011            }
+   1012          
+   1013            /* Get the LSI configuration -----------------------------------------------*/
+   1014            if((RCC->CSR &RCC_CSR_LSION) == RCC_CSR_LSION)
+   \       0x4E   0x6F4A             LDR      R2,[R1, #+116]
+   \       0x50   0xF012 0x0201      ANDS     R2,R2,#0x1
+   \       0x54   0xBF18             IT       NE
+   \       0x56   0x2201             MOVNE    R2,#+1
+   \       0x58   0x6142             STR      R2,[R0, #+20]
+   1015            {
+   1016              RCC_OscInitStruct->LSIState = RCC_LSI_ON;
+   1017            }
+   1018            else
+   1019            {
+   1020              RCC_OscInitStruct->LSIState = RCC_LSI_OFF;
+   1021            }
+   1022          
+   1023            /* Get the PLL configuration -----------------------------------------------*/
+   1024            if((RCC->CR &RCC_CR_PLLON) == RCC_CR_PLLON)
+   \       0x5A   0x680B             LDR      R3,[R1, #+0]
+   \       0x5C   0x01DA             LSLS     R2,R3,#+7
+   \       0x5E   0xBF47             ITTEE    MI
+   \       0x60   0x2302             MOVMI    R3,#+2
+   \       0x62   0x6183             STRMI    R3,[R0, #+24]
+   \       0x64   0x2201             MOVPL    R2,#+1
+   \       0x66   0x6182             STRPL    R2,[R0, #+24]
+   1025            {
+   1026              RCC_OscInitStruct->PLL.PLLState = RCC_PLL_ON;
+   1027            }
+   1028            else
+   1029            {
+   1030              RCC_OscInitStruct->PLL.PLLState = RCC_PLL_OFF;
+   1031            }
+   1032            RCC_OscInitStruct->PLL.PLLSource = (uint32_t)(RCC->PLLCFGR & RCC_PLLCFGR_PLLSRC);
+   \       0x68   0x684A             LDR      R2,[R1, #+4]
+   \       0x6A   0xF402 0x0280      AND      R2,R2,#0x400000
+   \       0x6E   0x61C2             STR      R2,[R0, #+28]
+   1033            RCC_OscInitStruct->PLL.PLLM = (uint32_t)(RCC->PLLCFGR & RCC_PLLCFGR_PLLM);
+   \       0x70   0x684A             LDR      R2,[R1, #+4]
+   \       0x72   0xF002 0x023F      AND      R2,R2,#0x3F
+   \       0x76   0x6202             STR      R2,[R0, #+32]
+   1034            RCC_OscInitStruct->PLL.PLLN = (uint32_t)((RCC->PLLCFGR & RCC_PLLCFGR_PLLN) >> RCC_PLLCFGR_PLLN_Pos);
+   \       0x78   0x684A             LDR      R2,[R1, #+4]
+   \       0x7A   0xF3C2 0x1288      UBFX     R2,R2,#+6,#+9
+   \       0x7E   0x6242             STR      R2,[R0, #+36]
+   1035            RCC_OscInitStruct->PLL.PLLP = (uint32_t)((((RCC->PLLCFGR & RCC_PLLCFGR_PLLP) + RCC_PLLCFGR_PLLP_0) << 1U) >> RCC_PLLCFGR_PLLP_Pos);
+   \       0x80   0x684A             LDR      R2,[R1, #+4]
+   \       0x82   0xF402 0x3240      AND      R2,R2,#0x30000
+   \       0x86   0xF502 0x3280      ADD      R2,R2,#+65536
+   \       0x8A   0x0BD2             LSRS     R2,R2,#+15
+   \       0x8C   0x6282             STR      R2,[R0, #+40]
+   1036            RCC_OscInitStruct->PLL.PLLQ = (uint32_t)((RCC->PLLCFGR & RCC_PLLCFGR_PLLQ) >> RCC_PLLCFGR_PLLQ_Pos);
+   \       0x8E   0x6849             LDR      R1,[R1, #+4]
+   \       0x90   0xF3C1 0x6103      UBFX     R1,R1,#+24,#+4
+   \       0x94   0x62C1             STR      R1,[R0, #+44]
+   1037          }
+   \       0x96   0x4770             BX       LR               ;; return
+   \                     ??HAL_RCC_GetOscConfig_0:
+   \       0x98   0x4002'3800        DC32     0x40023800
+   1038          
+   1039          /**
+   1040            * @brief  Configures the RCC_ClkInitStruct according to the internal
+   1041            * RCC configuration registers.
+   1042            * @param  RCC_ClkInitStruct pointer to an RCC_ClkInitTypeDef structure that
+   1043            * will be configured.
+   1044            * @param  pFLatency Pointer on the Flash Latency.
+   1045            * @retval None
+   1046            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1047          void HAL_RCC_GetClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, uint32_t *pFLatency)
+   1048          {
+   \                     HAL_RCC_GetClockConfig: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   1049            /* Set all possible values for the Clock type parameter --------------------*/
+   1050            RCC_ClkInitStruct->ClockType = RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+   \        0x2   0x220F             MOVS     R2,#+15
+   \        0x4   0x6002             STR      R2,[R0, #+0]
+   1051          
+   1052            /* Get the SYSCLK configuration --------------------------------------------*/
+   1053            RCC_ClkInitStruct->SYSCLKSource = (uint32_t)(RCC->CFGR & RCC_CFGR_SW);
+   \        0x6   0x....             LDR.N    R2,??DataTable8_5  ;; 0x40023808
+   \        0x8   0x6813             LDR      R3,[R2, #+0]
+   \        0xA   0xF003 0x0303      AND      R3,R3,#0x3
+   \        0xE   0x6043             STR      R3,[R0, #+4]
+   1054          
+   1055            /* Get the HCLK configuration ----------------------------------------------*/
+   1056            RCC_ClkInitStruct->AHBCLKDivider = (uint32_t)(RCC->CFGR & RCC_CFGR_HPRE);
+   \       0x10   0x6814             LDR      R4,[R2, #+0]
+   \       0x12   0xF004 0x04F0      AND      R4,R4,#0xF0
+   \       0x16   0x6084             STR      R4,[R0, #+8]
+   1057          
+   1058            /* Get the APB1 configuration ----------------------------------------------*/
+   1059            RCC_ClkInitStruct->APB1CLKDivider = (uint32_t)(RCC->CFGR & RCC_CFGR_PPRE1);
+   \       0x18   0x6813             LDR      R3,[R2, #+0]
+   \       0x1A   0xF403 0x53E0      AND      R3,R3,#0x1C00
+   \       0x1E   0x60C3             STR      R3,[R0, #+12]
+   1060          
+   1061            /* Get the APB2 configuration ----------------------------------------------*/
+   1062            RCC_ClkInitStruct->APB2CLKDivider = (uint32_t)((RCC->CFGR & RCC_CFGR_PPRE2) >> 3U);
+   \       0x20   0x6812             LDR      R2,[R2, #+0]
+   \       0x22   0x08D2             LSRS     R2,R2,#+3
+   \       0x24   0xF402 0x52E0      AND      R2,R2,#0x1C00
+   \       0x28   0x6102             STR      R2,[R0, #+16]
+   1063          
+   1064            /* Get the Flash Wait State (Latency) configuration ------------------------*/
+   1065            *pFLatency = (uint32_t)(FLASH->ACR & FLASH_ACR_LATENCY);
+   \       0x2A   0x....             LDR.N    R0,??DataTable8  ;; 0x40023c00
+   \       0x2C   0x6802             LDR      R2,[R0, #+0]
+   \       0x2E   0xF002 0x020F      AND      R2,R2,#0xF
+   \       0x32   0x600A             STR      R2,[R1, #+0]
+   1066          }
+   \       0x34   0xBD10             POP      {R4,PC}          ;; return
+   1067          
+   1068          /**
+   1069            * @brief This function handles the RCC CSS interrupt request.
+   1070            * @note This API should be called under the NMI_Handler().
+   1071            * @retval None
+   1072            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1073          void HAL_RCC_NMI_IRQHandler(void)
+   1074          {
+   \                     HAL_RCC_NMI_IRQHandler: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   1075            /* Check RCC CSSF flag  */
+   1076            if(__HAL_RCC_GET_IT(RCC_IT_CSS))
+   \        0x2   0x....             LDR.N    R4,??DataTable8_10  ;; 0x4002380c
+   \        0x4   0x6820             LDR      R0,[R4, #+0]
+   \        0x6   0x0601             LSLS     R1,R0,#+24
+   \        0x8   0xD503             BPL.N    ??HAL_RCC_NMI_IRQHandler_0
+   1077            {
+   1078              /* RCC Clock Security System interrupt user callback */
+   1079              HAL_RCC_CSSCallback();
+   \        0xA   0x....'....        BL       HAL_RCC_CSSCallback
+   1080          
+   1081              /* Clear RCC CSS pending bit */
+   1082              __HAL_RCC_CLEAR_IT(RCC_IT_CSS);
+   \        0xE   0x2080             MOVS     R0,#+128
+   \       0x10   0x70A0             STRB     R0,[R4, #+2]
+   1083            }
+   1084          }
+   \                     ??HAL_RCC_NMI_IRQHandler_0: (+1)
+   \       0x12   0xBD10             POP      {R4,PC}          ;; return
+   1085          
+   1086          /**
+   1087            * @brief  RCC Clock Security System interrupt callback
+   1088            * @retval None
+   1089            */
+
+   \                                 In section .text, align 2
+   1090          __weak void HAL_RCC_CSSCallback(void)
+   1091          {
+   1092            /* NOTE : This function Should not be modified, when the callback is needed,
+   1093                      the HAL_RCC_CSSCallback could be implemented in the user file
+   1094             */
+   1095          }
+   \                     HAL_RCC_CSSCallback: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable8:
+   \        0x0   0x4002'3C00        DC32     0x40023c00
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable8_1:
+   \        0x0   0x4002'3800        DC32     0x40023800
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable8_2:
+   \        0x0   0x....'....        DC32     AHBPrescTable
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable8_3:
+   \        0x0   0x....'....        DC32     SystemCoreClock
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable8_4:
+   \        0x0   0x....'....        DC32     uwTickPrio
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable8_5:
+   \        0x0   0x4002'3808        DC32     0x40023808
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable8_6:
+   \        0x0   0x4002'0000        DC32     0x40020000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable8_7:
+   \        0x0   0x4002'0800        DC32     0x40020800
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable8_8:
+   \        0x0   0x4247'004C        DC32     0x4247004c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable8_9:
+   \        0x0   0x....'....        DC32     APBPrescTable
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable8_10:
+   \        0x0   0x4002'380C        DC32     0x4002380c
+   1096          
+   1097          /**
+   1098            * @}
+   1099            */
+   1100          
+   1101          /**
+   1102            * @}
+   1103            */
+   1104          
+   1105          #endif /* HAL_RCC_MODULE_ENABLED */
+   1106          /**
+   1107            * @}
+   1108            */
+   1109          
+   1110          /**
+   1111            * @}
+   1112            */
+   1113          
+   1114          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   HAL_RCC_CSSCallback
+      24   HAL_RCC_ClockConfig
+        24   -> HAL_GetTick
+        24   -> HAL_InitTick
+        24   -> HAL_RCC_GetSysClockFreq
+       0   HAL_RCC_DeInit
+       0   HAL_RCC_DisableCSS
+       0   HAL_RCC_EnableCSS
+       8   HAL_RCC_GetClockConfig
+       0   HAL_RCC_GetHCLKFreq
+       0   HAL_RCC_GetOscConfig
+       0   HAL_RCC_GetPCLK1Freq
+       0   HAL_RCC_GetPCLK2Freq
+      12   HAL_RCC_GetSysClockFreq
+        12 __aeabi_uldivmod
+      40   HAL_RCC_MCOConfig
+        40   -> HAL_GPIO_Init
+       8   HAL_RCC_NMI_IRQHandler
+         8   -> HAL_RCC_CSSCallback
+      32   HAL_RCC_OscConfig
+        32   -> HAL_GetTick
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable8
+       4  ??DataTable8_1
+       4  ??DataTable8_10
+       4  ??DataTable8_2
+       4  ??DataTable8_3
+       4  ??DataTable8_4
+       4  ??DataTable8_5
+       4  ??DataTable8_6
+       4  ??DataTable8_7
+       4  ??DataTable8_8
+       4  ??DataTable8_9
+       6  ?Subroutine0
+      20  ?Subroutine1
+      12  ?Subroutine2
+       2  HAL_RCC_CSSCallback
+     256  HAL_RCC_ClockConfig
+       4  HAL_RCC_DeInit
+       8  HAL_RCC_DisableCSS
+       8  HAL_RCC_EnableCSS
+      54  HAL_RCC_GetClockConfig
+       6  HAL_RCC_GetHCLKFreq
+     156  HAL_RCC_GetOscConfig
+      16  HAL_RCC_GetPCLK1Freq
+      14  HAL_RCC_GetPCLK2Freq
+      96  HAL_RCC_GetSysClockFreq
+     108  HAL_RCC_MCOConfig
+      20  HAL_RCC_NMI_IRQHandler
+     784  HAL_RCC_OscConfig
+
+ 
+ 1'614 bytes in section .text
+ 
+ 572 bytes of CODE memory (+ 1'042 bytes shared)
+
+Errors: none
+Warnings: none

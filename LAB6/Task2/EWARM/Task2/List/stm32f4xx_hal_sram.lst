@@ -1,0 +1,1381 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         17/Feb/2020  18:42:19
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_sram.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EWF60F.tmp
+#        ("C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_sram.c"
+#        -D USE_HAL_DRIVER -D STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM\Task2\List" -o
+#        "C:\Users\mohit\Desktop\Microapps projects\LAB6\Task2\EWARM\Task2\Obj"
+#        --debug --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.4\arm\inc\c\DLib_Config_Full.h" -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM\Task2\List\stm32f4xx_hal_sram.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM\Task2\Obj\stm32f4xx_hal_sram.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\LAB6\Task2\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_sram.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    stm32f4xx_hal_sram.c
+      4            * @author  MCD Application Team
+      5            * @brief   SRAM HAL module driver.
+      6            *          This file provides a generic firmware to drive SRAM memories  
+      7            *          mounted as external device.
+      8            *         
+      9            @verbatim
+     10            ==============================================================================
+     11                                    ##### How to use this driver #####
+     12            ==============================================================================  
+     13            [..]
+     14              This driver is a generic layered driver which contains a set of APIs used to 
+     15              control SRAM memories. It uses the FMC layer functions to interface 
+     16              with SRAM devices.  
+     17              The following sequence should be followed to configure the FMC/FSMC to interface
+     18              with SRAM/PSRAM memories: 
+     19                
+     20             (#) Declare a SRAM_HandleTypeDef handle structure, for example:
+     21                    SRAM_HandleTypeDef  hsram; and: 
+     22                    
+     23                 (++) Fill the SRAM_HandleTypeDef handle "Init" field with the allowed 
+     24                      values of the structure member.
+     25                      
+     26                 (++) Fill the SRAM_HandleTypeDef handle "Instance" field with a predefined 
+     27                      base register instance for NOR or SRAM device 
+     28                                   
+     29                 (++) Fill the SRAM_HandleTypeDef handle "Extended" field with a predefined
+     30                      base register instance for NOR or SRAM extended mode 
+     31                       
+     32             (#) Declare two FMC_NORSRAM_TimingTypeDef structures, for both normal and extended 
+     33                 mode timings; for example:
+     34                    FMC_NORSRAM_TimingTypeDef  Timing and FMC_NORSRAM_TimingTypeDef  ExTiming;
+     35                and fill its fields with the allowed values of the structure member.
+     36                
+     37             (#) Initialize the SRAM Controller by calling the function HAL_SRAM_Init(). This function
+     38                 performs the following sequence:
+     39                    
+     40                 (##) MSP hardware layer configuration using the function HAL_SRAM_MspInit()
+     41                 (##) Control register configuration using the FMC NORSRAM interface function 
+     42                      FMC_NORSRAM_Init()
+     43                 (##) Timing register configuration using the FMC NORSRAM interface function 
+     44                      FMC_NORSRAM_Timing_Init()
+     45                 (##) Extended mode Timing register configuration using the FMC NORSRAM interface function 
+     46                      FMC_NORSRAM_Extended_Timing_Init()
+     47                 (##) Enable the SRAM device using the macro __FMC_NORSRAM_ENABLE()    
+     48          
+     49             (#) At this stage you can perform read/write accesses from/to the memory connected 
+     50                 to the NOR/SRAM Bank. You can perform either polling or DMA transfer using the
+     51                 following APIs:
+     52                 (++) HAL_SRAM_Read()/HAL_SRAM_Write() for polling read/write access
+     53                 (++) HAL_SRAM_Read_DMA()/HAL_SRAM_Write_DMA() for DMA read/write transfer
+     54                 
+     55             (#) You can also control the SRAM device by calling the control APIs HAL_SRAM_WriteOperation_Enable()/
+     56                 HAL_SRAM_WriteOperation_Disable() to respectively enable/disable the SRAM write operation  
+     57                 
+     58             (#) You can continuously monitor the SRAM device HAL state by calling the function
+     59                 HAL_SRAM_GetState()
+     60          
+     61                 *** Callback registration ***
+     62              =============================================
+     63              [..]
+     64                The compilation define  USE_HAL_SRAM_REGISTER_CALLBACKS when set to 1
+     65                allows the user to configure dynamically the driver callbacks.
+     66          
+     67                Use Functions @ref HAL_SRAM_RegisterCallback() to register a user callback,
+     68                it allows to register following callbacks:
+     69                  (+) MspInitCallback    : SRAM MspInit.
+     70                  (+) MspDeInitCallback  : SRAM MspDeInit.
+     71                This function takes as parameters the HAL peripheral handle, the Callback ID
+     72                and a pointer to the user callback function.
+     73          
+     74                Use function @ref HAL_SRAM_UnRegisterCallback() to reset a callback to the default
+     75                weak (surcharged) function. It allows to reset following callbacks:
+     76                  (+) MspInitCallback    : SRAM MspInit.
+     77                  (+) MspDeInitCallback  : SRAM MspDeInit.
+     78                This function) takes as parameters the HAL peripheral handle and the Callback ID.
+     79          
+     80                By default, after the @ref HAL_SRAM_Init and if the state is HAL_SRAM_STATE_RESET
+     81                all callbacks are reset to the corresponding legacy weak (surcharged) functions.
+     82                Exception done for MspInit and MspDeInit callbacks that are respectively
+     83                reset to the legacy weak (surcharged) functions in the @ref HAL_SRAM_Init
+     84                and @ref  HAL_SRAM_DeInit only when these callbacks are null (not registered beforehand).
+     85                If not, MspInit or MspDeInit are not null, the @ref HAL_SRAM_Init and @ref HAL_SRAM_DeInit
+     86                keep and use the user MspInit/MspDeInit callbacks (registered beforehand)
+     87          
+     88                Callbacks can be registered/unregistered in READY state only.
+     89                Exception done for MspInit/MspDeInit callbacks that can be registered/unregistered
+     90                in READY or RESET state, thus registered (user) MspInit/DeInit callbacks can be used
+     91                during the Init/DeInit.
+     92                In that case first register the MspInit/MspDeInit user callbacks
+     93                using @ref HAL_SRAM_RegisterCallback before calling @ref HAL_SRAM_DeInit
+     94                or @ref HAL_SRAM_Init function.
+     95          
+     96                When The compilation define USE_HAL_SRAM_REGISTER_CALLBACKS is set to 0 or
+     97                not defined, the callback registering feature is not available
+     98                and weak (surcharged) callbacks are used.
+     99          
+    100            @endverbatim
+    101            ******************************************************************************
+    102            * @attention
+    103            *
+    104            * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+    105            * All rights reserved.</center></h2>
+    106            *
+    107            * This software component is licensed by ST under BSD 3-Clause license,
+    108            * the "License"; You may not use this file except in compliance with the
+    109            * License. You may obtain a copy of the License at:
+    110            *                        opensource.org/licenses/BSD-3-Clause
+    111            *
+    112            ******************************************************************************
+    113            */ 
+    114          
+    115          /* Includes ------------------------------------------------------------------*/
+    116          #include "stm32f4xx_hal.h"
+    117          
+    118          /** @addtogroup STM32F4xx_HAL_Driver
+    119            * @{
+    120            */
+    121          
+    122          /** @defgroup SRAM SRAM
+    123            * @brief SRAM driver modules
+    124            * @{
+    125            */
+    126          #ifdef HAL_SRAM_MODULE_ENABLED
+    127          
+    128          #if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx) ||\
+    129              defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) ||\
+    130              defined(STM32F446xx) || defined(STM32F469xx) || defined(STM32F479xx) || defined(STM32F412Zx) ||\
+    131              defined(STM32F412Vx) || defined(STM32F412Rx) || defined(STM32F413xx) || defined(STM32F423xx)
+    132          
+    133          /* Private typedef -----------------------------------------------------------*/
+    134          /* Private define ------------------------------------------------------------*/
+    135          /* Private macro -------------------------------------------------------------*/    
+    136          /* Private variables ---------------------------------------------------------*/
+    137          /* Private functions ---------------------------------------------------------*/
+    138          
+    139          /* Exported functions --------------------------------------------------------*/
+    140          /** @defgroup SRAM_Exported_Functions SRAM Exported Functions
+    141            * @{
+    142            */
+    143          /** @defgroup SRAM_Exported_Functions_Group1 Initialization and de-initialization functions 
+    144            * @brief    Initialization and Configuration functions 
+    145            *
+    146            @verbatim    
+    147            ==============================================================================
+    148                     ##### SRAM Initialization and de_initialization functions #####
+    149            ==============================================================================
+    150              [..]  This section provides functions allowing to initialize/de-initialize
+    151                    the SRAM memory
+    152            
+    153          @endverbatim
+    154            * @{
+    155            */
+    156          
+    157          /**
+    158            * @brief  Performs the SRAM device initialization sequence
+    159            * @param  hsram pointer to a SRAM_HandleTypeDef structure that contains
+    160            *                the configuration information for SRAM module.
+    161            * @param  Timing Pointer to SRAM control timing structure 
+    162            * @param  ExtTiming Pointer to SRAM extended mode timing structure  
+    163            * @retval HAL status
+    164            */
+
+   \                                 In section .text, align 2, keep-with-next
+    165          HAL_StatusTypeDef HAL_SRAM_Init(SRAM_HandleTypeDef *hsram, FMC_NORSRAM_TimingTypeDef *Timing, FMC_NORSRAM_TimingTypeDef *ExtTiming)
+    166          { 
+   \                     HAL_SRAM_Init: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x0004             MOVS     R4,R0
+   \        0x4   0x460D             MOV      R5,R1
+   \        0x6   0x4616             MOV      R6,R2
+    167            /* Check the SRAM handle parameter */
+    168            if(hsram == NULL)
+   \        0x8   0xD101             BNE.N    ??HAL_SRAM_Init_0
+    169            {
+    170               return HAL_ERROR;
+   \        0xA   0x2001             MOVS     R0,#+1
+   \        0xC   0xBD70             POP      {R4-R6,PC}
+    171            }
+    172            
+    173            if(hsram->State == HAL_SRAM_STATE_RESET)
+   \                     ??HAL_SRAM_Init_0: (+1)
+   \        0xE   0xF104 0x0148      ADD      R1,R4,#+72
+   \       0x12   0x7848             LDRB     R0,[R1, #+1]
+   \       0x14   0xB920             CBNZ.N   R0,??HAL_SRAM_Init_1
+    174            {  
+    175              /* Allocate lock resource and initialize it */
+    176              hsram->Lock = HAL_UNLOCKED;
+   \       0x16   0x2200             MOVS     R2,#+0
+   \       0x18   0x700A             STRB     R2,[R1, #+0]
+    177          
+    178          #if (USE_HAL_SRAM_REGISTER_CALLBACKS == 1)
+    179              if(hsram->MspInitCallback == NULL)
+    180              {
+    181                hsram->MspInitCallback = HAL_SRAM_MspInit;
+    182              }
+    183              hsram->DmaXferCpltCallback = HAL_SRAM_DMA_XferCpltCallback;
+    184              hsram->DmaXferErrorCallback = HAL_SRAM_DMA_XferErrorCallback;
+    185          
+    186              /* Init the low level hardware */
+    187              hsram->MspInitCallback(hsram);
+    188          #else
+    189              /* Initialize the low level hardware (MSP) */
+    190              HAL_SRAM_MspInit(hsram);
+   \       0x1A   0x4620             MOV      R0,R4
+   \       0x1C   0x....'....        BL       HAL_SRAM_MspInit
+    191          #endif
+    192            }
+    193            
+    194            /* Initialize SRAM control Interface */
+    195            FMC_NORSRAM_Init(hsram->Instance, &(hsram->Init));
+   \                     ??HAL_SRAM_Init_1: (+1)
+   \       0x20   0x6820             LDR      R0,[R4, #+0]
+   \       0x22   0xF104 0x0108      ADD      R1,R4,#+8
+   \       0x26   0x....'....        BL       FMC_NORSRAM_Init
+    196          
+    197            /* Initialize SRAM timing Interface */
+    198            FMC_NORSRAM_Timing_Init(hsram->Instance, Timing, hsram->Init.NSBank); 
+   \       0x2A   0x68A2             LDR      R2,[R4, #+8]
+   \       0x2C   0x6820             LDR      R0,[R4, #+0]
+   \       0x2E   0x4629             MOV      R1,R5
+   \       0x30   0x....'....        BL       FMC_NORSRAM_Timing_Init
+    199          
+    200            /* Initialize SRAM extended mode timing Interface */
+    201            FMC_NORSRAM_Extended_Timing_Init(hsram->Extended, ExtTiming, hsram->Init.NSBank,  hsram->Init.ExtendedMode);  
+   \       0x34   0x6B23             LDR      R3,[R4, #+48]
+   \       0x36   0x68A2             LDR      R2,[R4, #+8]
+   \       0x38   0x6860             LDR      R0,[R4, #+4]
+   \       0x3A   0x4631             MOV      R1,R6
+   \       0x3C   0x....'....        BL       FMC_NORSRAM_Extended_Timing_Init
+    202            
+    203            /* Enable the NORSRAM device */
+    204            __FMC_NORSRAM_ENABLE(hsram->Instance, hsram->Init.NSBank); 
+   \       0x40   0x6821             LDR      R1,[R4, #+0]
+   \       0x42   0x68A0             LDR      R0,[R4, #+8]
+   \       0x44   0xF851 0x2020      LDR      R2,[R1, R0, LSL #+2]
+   \       0x48   0xF042 0x0201      ORR      R2,R2,#0x1
+   \       0x4C   0xF841 0x2020      STR      R2,[R1, R0, LSL #+2]
+    205            
+    206            return HAL_OK;
+   \       0x50   0x2000             MOVS     R0,#+0
+   \       0x52   0xBD70             POP      {R4-R6,PC}       ;; return
+    207          }
+    208          
+    209          /**
+    210            * @brief  Performs the SRAM device De-initialization sequence.
+    211            * @param  hsram pointer to a SRAM_HandleTypeDef structure that contains
+    212            *                the configuration information for SRAM module.
+    213            * @retval HAL status
+    214            */
+
+   \                                 In section .text, align 2, keep-with-next
+    215          HAL_StatusTypeDef  HAL_SRAM_DeInit(SRAM_HandleTypeDef *hsram)
+    216          { 
+   \                     HAL_SRAM_DeInit: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   \        0x2   0x4604             MOV      R4,R0
+    217          #if (USE_HAL_SRAM_REGISTER_CALLBACKS == 1)
+    218            if(hsram->MspDeInitCallback == NULL)
+    219            {
+    220              hsram->MspDeInitCallback = HAL_SRAM_MspDeInit;
+    221            }
+    222          
+    223            /* DeInit the low level hardware */
+    224            hsram->MspDeInitCallback(hsram);
+    225          #else
+    226            /* De-Initialize the low level hardware (MSP) */
+    227            HAL_SRAM_MspDeInit(hsram);
+   \        0x4   0x....'....        BL       HAL_SRAM_MspDeInit
+    228          #endif
+    229          
+    230            /* Configure the SRAM registers with their reset values */
+    231            FMC_NORSRAM_DeInit(hsram->Instance, hsram->Extended, hsram->Init.NSBank);
+   \        0x8   0x68A2             LDR      R2,[R4, #+8]
+   \        0xA   0x6861             LDR      R1,[R4, #+4]
+   \        0xC   0x6820             LDR      R0,[R4, #+0]
+   \        0xE   0x....'....        BL       FMC_NORSRAM_DeInit
+    232          
+    233            hsram->State = HAL_SRAM_STATE_RESET;
+   \       0x12   0xF104 0x0048      ADD      R0,R4,#+72
+   \       0x16   0x2100             MOVS     R1,#+0
+   \       0x18   0x7041             STRB     R1,[R0, #+1]
+    234            
+    235            /* Release Lock */
+    236            __HAL_UNLOCK(hsram);
+   \       0x1A   0x7001             STRB     R1,[R0, #+0]
+    237          
+    238            return HAL_OK;
+   \       0x1C   0x2000             MOVS     R0,#+0
+   \       0x1E   0xBD10             POP      {R4,PC}          ;; return
+    239          }
+    240          
+    241          /**
+    242            * @brief  SRAM MSP Init.
+    243            * @param  hsram pointer to a SRAM_HandleTypeDef structure that contains
+    244            *                the configuration information for SRAM module.
+    245            * @retval None
+    246            */
+
+   \                                 In section .text, align 2
+    247          __weak void HAL_SRAM_MspInit(SRAM_HandleTypeDef *hsram)
+    248          {
+    249            /* Prevent unused argument(s) compilation warning */
+    250            UNUSED(hsram);
+    251              /* NOTE : This function Should not be modified, when the callback is needed,
+    252                      the HAL_SRAM_MspInit could be implemented in the user file
+    253             */ 
+    254          }
+   \                     HAL_SRAM_MspInit: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+    255          
+    256          /**
+    257            * @brief  SRAM MSP DeInit.
+    258            * @param  hsram pointer to a SRAM_HandleTypeDef structure that contains
+    259            *                the configuration information for SRAM module.
+    260            * @retval None
+    261            */
+
+   \                                 In section .text, align 2
+    262          __weak void HAL_SRAM_MspDeInit(SRAM_HandleTypeDef *hsram)
+    263          {
+    264            /* Prevent unused argument(s) compilation warning */
+    265            UNUSED(hsram);
+    266            /* NOTE : This function Should not be modified, when the callback is needed,
+    267                      the HAL_SRAM_MspDeInit could be implemented in the user file
+    268             */ 
+    269          }
+   \                     HAL_SRAM_MspDeInit: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+    270          
+    271          /**
+    272            * @brief  DMA transfer complete callback.
+    273            * @param  hdma pointer to a SRAM_HandleTypeDef structure that contains
+    274            *                the configuration information for SRAM module.
+    275            * @retval None
+    276            */
+
+   \                                 In section .text, align 2
+    277          __weak void HAL_SRAM_DMA_XferCpltCallback(DMA_HandleTypeDef *hdma)
+    278          {
+    279            /* Prevent unused argument(s) compilation warning */
+    280            UNUSED(hdma);
+    281            /* NOTE : This function Should not be modified, when the callback is needed,
+    282                      the HAL_SRAM_DMA_XferCpltCallback could be implemented in the user file
+    283             */ 
+    284          }
+   \                     HAL_SRAM_DMA_XferCpltCallback: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+    285          
+    286          /**
+    287            * @brief  DMA transfer complete error callback.
+    288            * @param  hdma pointer to a SRAM_HandleTypeDef structure that contains
+    289            *                the configuration information for SRAM module.
+    290            * @retval None
+    291            */
+
+   \                                 In section .text, align 2
+    292          __weak void HAL_SRAM_DMA_XferErrorCallback(DMA_HandleTypeDef *hdma)
+    293          {
+    294            /* Prevent unused argument(s) compilation warning */
+    295            UNUSED(hdma);
+    296              /* NOTE : This function Should not be modified, when the callback is needed,
+    297                      the HAL_SRAM_DMA_XferErrorCallback could be implemented in the user file
+    298             */ 
+    299          }
+   \                     HAL_SRAM_DMA_XferErrorCallback: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+    300          
+    301          /**
+    302            * @}
+    303            */
+    304          
+    305          /** @defgroup SRAM_Exported_Functions_Group2 Input and Output functions 
+    306            * @brief    Input Output and memory control functions 
+    307            *
+    308            @verbatim    
+    309            ==============================================================================
+    310                            ##### SRAM Input and Output functions #####
+    311            ==============================================================================
+    312            [..]  
+    313              This section provides functions allowing to use and control the SRAM memory
+    314            
+    315          @endverbatim
+    316            * @{
+    317            */
+    318          
+    319          /**
+    320            * @brief  Reads 8-bit buffer from SRAM memory. 
+    321            * @param  hsram pointer to a SRAM_HandleTypeDef structure that contains
+    322            *                the configuration information for SRAM module.
+    323            * @param  pAddress Pointer to read start address
+    324            * @param  pDstBuffer Pointer to destination buffer  
+    325            * @param  BufferSize Size of the buffer to read from memory
+    326            * @retval HAL status
+    327            */
+
+   \                                 In section .text, align 2, keep-with-next
+    328          HAL_StatusTypeDef HAL_SRAM_Read_8b(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint8_t *pDstBuffer, uint32_t BufferSize)
+    329          {
+   \                     HAL_SRAM_Read_8b: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+    330            __IO uint8_t * pSramAddress = (uint8_t *)pAddress;
+    331            
+    332            /* Process Locked */
+    333            __HAL_LOCK(hsram);
+   \        0x2   0xF810 0x4F48      LDRB     R4,[R0, #+72]!
+   \        0x6   0x2C01             CMP      R4,#+1
+   \        0x8   0xD101             BNE.N    ??HAL_SRAM_Read_8b_0
+   \        0xA   0x2002             MOVS     R0,#+2
+   \        0xC   0xBD30             POP      {R4,R5,PC}
+   \                     ??HAL_SRAM_Read_8b_0: (+1)
+   \        0xE   0x....'....        BL       ?Subroutine2
+    334            
+    335            /* Update the SRAM controller state */
+    336            hsram->State = HAL_SRAM_STATE_BUSY;  
+   \                     ??CrossCallReturnLabel_0: (+1)
+   \       0x12   0xE004             B.N      ??HAL_SRAM_Read_8b_1
+    337            
+    338            /* Read data from memory */
+    339            for(; BufferSize != 0U; BufferSize--)
+    340            {
+    341              *pDstBuffer = *(__IO uint8_t *)pSramAddress;
+   \                     ??HAL_SRAM_Read_8b_2: (+1)
+   \       0x14   0xF811 0x4B01      LDRB     R4,[R1], #+1
+   \       0x18   0xF802 0x4B01      STRB     R4,[R2], #+1
+    342              pDstBuffer++;
+    343              pSramAddress++;
+    344            }
+   \       0x1C   0x1E5B             SUBS     R3,R3,#+1
+   \                     ??HAL_SRAM_Read_8b_1: (+1)
+   \       0x1E   0xD1F9             BNE.N    ??HAL_SRAM_Read_8b_2
+    345            
+    346            /* Update the SRAM controller state */
+    347            hsram->State = HAL_SRAM_STATE_READY;    
+   \       0x20   0x....             B.N      ?Subroutine1
+    348          
+    349            /* Process unlocked */
+    350            __HAL_UNLOCK(hsram); 
+    351              
+    352            return HAL_OK;   
+    353          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine1: (+1)
+   \        0x0   0x2101             MOVS     R1,#+1
+   \        0x2   0x7041             STRB     R1,[R0, #+1]
+   \        0x4   0x2200             MOVS     R2,#+0
+   \        0x6   0x7002             STRB     R2,[R0, #+0]
+   \        0x8   0x2000             MOVS     R0,#+0
+   \        0xA   0xBD30             POP      {R4,R5,PC}       ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine2: (+1)
+   \        0x0   0x2401             MOVS     R4,#+1
+   \        0x2   0x7004             STRB     R4,[R0, #+0]
+   \        0x4   0x2502             MOVS     R5,#+2
+   \        0x6   0x7045             STRB     R5,[R0, #+1]
+   \        0x8   0x2B00             CMP      R3,#+0
+   \        0xA   0x4770             BX       LR
+    354          
+    355          /**
+    356            * @brief  Writes 8-bit buffer to SRAM memory. 
+    357            * @param  hsram pointer to a SRAM_HandleTypeDef structure that contains
+    358            *                the configuration information for SRAM module.
+    359            * @param  pAddress Pointer to write start address
+    360            * @param  pSrcBuffer Pointer to source buffer to write  
+    361            * @param  BufferSize Size of the buffer to write to memory
+    362            * @retval HAL status
+    363            */
+
+   \                                 In section .text, align 2, keep-with-next
+    364          HAL_StatusTypeDef HAL_SRAM_Write_8b(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint8_t *pSrcBuffer, uint32_t BufferSize)
+    365          {
+   \                     HAL_SRAM_Write_8b: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+    366            __IO uint8_t * pSramAddress = (uint8_t *)pAddress;
+    367            
+    368            /* Check the SRAM controller state */
+    369            if(hsram->State == HAL_SRAM_STATE_PROTECTED)
+   \        0x2   0x3048             ADDS     R0,R0,#+72
+   \        0x4   0x7844             LDRB     R4,[R0, #+1]
+   \        0x6   0x2C04             CMP      R4,#+4
+   \        0x8   0xD101             BNE.N    ??HAL_SRAM_Write_8b_0
+    370            {
+    371              return  HAL_ERROR; 
+   \        0xA   0x2001             MOVS     R0,#+1
+   \        0xC   0xBD30             POP      {R4,R5,PC}
+    372            }
+    373            
+    374            /* Process Locked */
+    375            __HAL_LOCK(hsram);
+   \                     ??HAL_SRAM_Write_8b_0: (+1)
+   \        0xE   0x7804             LDRB     R4,[R0, #+0]
+   \       0x10   0x2C01             CMP      R4,#+1
+   \       0x12   0xD101             BNE.N    ??HAL_SRAM_Write_8b_1
+   \       0x14   0x2002             MOVS     R0,#+2
+   \       0x16   0xBD30             POP      {R4,R5,PC}
+   \                     ??HAL_SRAM_Write_8b_1: (+1)
+   \       0x18   0x....'....        BL       ?Subroutine2
+    376            
+    377            /* Update the SRAM controller state */
+    378            hsram->State = HAL_SRAM_STATE_BUSY; 
+   \                     ??CrossCallReturnLabel_1: (+1)
+   \       0x1C   0xE004             B.N      ??HAL_SRAM_Write_8b_2
+    379          
+    380            /* Write data to memory */
+    381            for(; BufferSize != 0U; BufferSize--)
+    382            {
+    383              *(__IO uint8_t *)pSramAddress = *pSrcBuffer; 
+   \                     ??HAL_SRAM_Write_8b_3: (+1)
+   \       0x1E   0xF812 0x4B01      LDRB     R4,[R2], #+1
+   \       0x22   0xF801 0x4B01      STRB     R4,[R1], #+1
+    384              pSrcBuffer++;
+    385              pSramAddress++;    
+    386            }    
+   \       0x26   0x1E5B             SUBS     R3,R3,#+1
+   \                     ??HAL_SRAM_Write_8b_2: (+1)
+   \       0x28   0xD1F9             BNE.N    ??HAL_SRAM_Write_8b_3
+    387          
+    388            /* Update the SRAM controller state */
+    389            hsram->State = HAL_SRAM_STATE_READY; 
+   \       0x2A                      REQUIRE ?Subroutine1
+   \       0x2A                      ;; // Fall through to label ?Subroutine1
+    390            
+    391            /* Process unlocked */
+    392            __HAL_UNLOCK(hsram);
+    393              
+    394            return HAL_OK;   
+    395          }
+    396          
+    397          /**
+    398            * @brief  Reads 16-bit buffer from SRAM memory. 
+    399            * @param  hsram pointer to a SRAM_HandleTypeDef structure that contains
+    400            *                the configuration information for SRAM module.
+    401            * @param  pAddress Pointer to read start address
+    402            * @param  pDstBuffer Pointer to destination buffer  
+    403            * @param  BufferSize Size of the buffer to read from memory
+    404            * @retval HAL status
+    405            */
+
+   \                                 In section .text, align 2, keep-with-next
+    406          HAL_StatusTypeDef HAL_SRAM_Read_16b(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint16_t *pDstBuffer, uint32_t BufferSize)
+    407          {
+   \                     HAL_SRAM_Read_16b: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+    408            __IO uint16_t * pSramAddress = (uint16_t *)pAddress;
+    409            
+    410            /* Process Locked */
+    411            __HAL_LOCK(hsram);
+   \        0x2   0xF810 0x4F48      LDRB     R4,[R0, #+72]!
+   \        0x6   0x2C01             CMP      R4,#+1
+   \        0x8   0xD101             BNE.N    ??HAL_SRAM_Read_16b_0
+   \        0xA   0x2002             MOVS     R0,#+2
+   \        0xC   0xBD30             POP      {R4,R5,PC}
+   \                     ??HAL_SRAM_Read_16b_0: (+1)
+   \        0xE   0x....'....        BL       ?Subroutine2
+    412            
+    413            /* Update the SRAM controller state */
+    414            hsram->State = HAL_SRAM_STATE_BUSY;  
+   \                     ??CrossCallReturnLabel_2: (+1)
+   \       0x12   0xE004             B.N      ??HAL_SRAM_Read_16b_1
+    415            
+    416            /* Read data from memory */
+    417            for(; BufferSize != 0U; BufferSize--)
+    418            {
+    419              *pDstBuffer = *(__IO uint16_t *)pSramAddress;
+   \                     ??HAL_SRAM_Read_16b_2: (+1)
+   \       0x14   0xF831 0x4B02      LDRH     R4,[R1], #+2
+   \       0x18   0xF822 0x4B02      STRH     R4,[R2], #+2
+    420              pDstBuffer++;
+    421              pSramAddress++;
+    422            }
+   \       0x1C   0x1E5B             SUBS     R3,R3,#+1
+   \                     ??HAL_SRAM_Read_16b_1: (+1)
+   \       0x1E   0xD1F9             BNE.N    ??HAL_SRAM_Read_16b_2
+    423            
+    424            /* Update the SRAM controller state */
+    425            hsram->State = HAL_SRAM_STATE_READY;    
+   \       0x20   0x....             B.N      ?Subroutine1
+    426          
+    427            /* Process unlocked */
+    428            __HAL_UNLOCK(hsram); 
+    429              
+    430            return HAL_OK;  
+    431          }
+    432          
+    433          /**
+    434            * @brief  Writes 16-bit buffer to SRAM memory. 
+    435            * @param  hsram pointer to a SRAM_HandleTypeDef structure that contains
+    436            *                the configuration information for SRAM module.
+    437            * @param  pAddress Pointer to write start address
+    438            * @param  pSrcBuffer Pointer to source buffer to write  
+    439            * @param  BufferSize Size of the buffer to write to memory
+    440            * @retval HAL status
+    441            */
+
+   \                                 In section .text, align 2, keep-with-next
+    442          HAL_StatusTypeDef HAL_SRAM_Write_16b(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint16_t *pSrcBuffer, uint32_t BufferSize)
+    443          {
+   \                     HAL_SRAM_Write_16b: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+    444            __IO uint16_t * pSramAddress = (uint16_t *)pAddress; 
+    445            
+    446            /* Check the SRAM controller state */
+    447            if(hsram->State == HAL_SRAM_STATE_PROTECTED)
+   \        0x2   0x3048             ADDS     R0,R0,#+72
+   \        0x4   0x7844             LDRB     R4,[R0, #+1]
+   \        0x6   0x2C04             CMP      R4,#+4
+   \        0x8   0xD101             BNE.N    ??HAL_SRAM_Write_16b_0
+    448            {
+    449              return  HAL_ERROR; 
+   \        0xA   0x2001             MOVS     R0,#+1
+   \        0xC   0xBD30             POP      {R4,R5,PC}
+    450            }
+    451            
+    452            /* Process Locked */
+    453            __HAL_LOCK(hsram);
+   \                     ??HAL_SRAM_Write_16b_0: (+1)
+   \        0xE   0x7804             LDRB     R4,[R0, #+0]
+   \       0x10   0x2C01             CMP      R4,#+1
+   \       0x12   0xD101             BNE.N    ??HAL_SRAM_Write_16b_1
+   \       0x14   0x2002             MOVS     R0,#+2
+   \       0x16   0xBD30             POP      {R4,R5,PC}
+   \                     ??HAL_SRAM_Write_16b_1: (+1)
+   \       0x18   0x....'....        BL       ?Subroutine2
+    454            
+    455            /* Update the SRAM controller state */
+    456            hsram->State = HAL_SRAM_STATE_BUSY; 
+   \                     ??CrossCallReturnLabel_3: (+1)
+   \       0x1C   0xE004             B.N      ??HAL_SRAM_Write_16b_2
+    457          
+    458            /* Write data to memory */
+    459            for(; BufferSize != 0U; BufferSize--)
+    460            {
+    461              *(__IO uint16_t *)pSramAddress = *pSrcBuffer; 
+   \                     ??HAL_SRAM_Write_16b_3: (+1)
+   \       0x1E   0xF832 0x4B02      LDRH     R4,[R2], #+2
+   \       0x22   0xF821 0x4B02      STRH     R4,[R1], #+2
+    462              pSrcBuffer++;
+    463              pSramAddress++;    
+    464            }    
+   \       0x26   0x1E5B             SUBS     R3,R3,#+1
+   \                     ??HAL_SRAM_Write_16b_2: (+1)
+   \       0x28   0xD1F9             BNE.N    ??HAL_SRAM_Write_16b_3
+    465          
+    466            /* Update the SRAM controller state */
+    467            hsram->State = HAL_SRAM_STATE_READY; 
+   \       0x2A   0x....             B.N      ?Subroutine1
+    468            
+    469            /* Process unlocked */
+    470            __HAL_UNLOCK(hsram);
+    471              
+    472            return HAL_OK;  
+    473          }
+    474          
+    475          /**
+    476            * @brief  Reads 32-bit buffer from SRAM memory. 
+    477            * @param  hsram pointer to a SRAM_HandleTypeDef structure that contains
+    478            *                the configuration information for SRAM module.
+    479            * @param  pAddress Pointer to read start address
+    480            * @param  pDstBuffer Pointer to destination buffer  
+    481            * @param  BufferSize Size of the buffer to read from memory
+    482            * @retval HAL status
+    483            */
+
+   \                                 In section .text, align 2, keep-with-next
+    484          HAL_StatusTypeDef HAL_SRAM_Read_32b(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint32_t *pDstBuffer, uint32_t BufferSize)
+    485          {
+   \                     HAL_SRAM_Read_32b: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+    486            /* Process Locked */
+    487            __HAL_LOCK(hsram);
+   \        0x2   0xF810 0x4F48      LDRB     R4,[R0, #+72]!
+   \        0x6   0x2C01             CMP      R4,#+1
+   \        0x8   0xD101             BNE.N    ??HAL_SRAM_Read_32b_0
+   \        0xA   0x2002             MOVS     R0,#+2
+   \        0xC   0xBD30             POP      {R4,R5,PC}
+   \                     ??HAL_SRAM_Read_32b_0: (+1)
+   \        0xE   0x....'....        BL       ?Subroutine2
+    488            
+    489            /* Update the SRAM controller state */
+    490            hsram->State = HAL_SRAM_STATE_BUSY;  
+   \                     ??CrossCallReturnLabel_4: (+1)
+   \       0x12   0xE004             B.N      ??HAL_SRAM_Read_32b_1
+    491            
+    492            /* Read data from memory */
+    493            for(; BufferSize != 0U; BufferSize--)
+    494            {
+    495              *pDstBuffer = *(__IO uint32_t *)pAddress;
+   \                     ??HAL_SRAM_Read_32b_2: (+1)
+   \       0x14   0xF851 0x4B04      LDR      R4,[R1], #+4
+   \       0x18   0xF842 0x4B04      STR      R4,[R2], #+4
+    496              pDstBuffer++;
+    497              pAddress++;
+    498            }
+   \       0x1C   0x1E5B             SUBS     R3,R3,#+1
+   \                     ??HAL_SRAM_Read_32b_1: (+1)
+   \       0x1E   0xD1F9             BNE.N    ??HAL_SRAM_Read_32b_2
+    499            
+    500            /* Update the SRAM controller state */
+    501            hsram->State = HAL_SRAM_STATE_READY;    
+   \       0x20   0x....             B.N      ?Subroutine1
+    502          
+    503            /* Process unlocked */
+    504            __HAL_UNLOCK(hsram); 
+    505              
+    506            return HAL_OK;  
+    507          }
+    508          
+    509          /**
+    510            * @brief  Writes 32-bit buffer to SRAM memory. 
+    511            * @param  hsram pointer to a SRAM_HandleTypeDef structure that contains
+    512            *                the configuration information for SRAM module.
+    513            * @param  pAddress Pointer to write start address
+    514            * @param  pSrcBuffer Pointer to source buffer to write  
+    515            * @param  BufferSize Size of the buffer to write to memory
+    516            * @retval HAL status
+    517            */
+
+   \                                 In section .text, align 2, keep-with-next
+    518          HAL_StatusTypeDef HAL_SRAM_Write_32b(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint32_t *pSrcBuffer, uint32_t BufferSize)
+    519          {
+   \                     HAL_SRAM_Write_32b: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+    520            /* Check the SRAM controller state */
+    521            if(hsram->State == HAL_SRAM_STATE_PROTECTED)
+   \        0x2   0x3048             ADDS     R0,R0,#+72
+   \        0x4   0x7844             LDRB     R4,[R0, #+1]
+   \        0x6   0x2C04             CMP      R4,#+4
+   \        0x8   0xD101             BNE.N    ??HAL_SRAM_Write_32b_0
+    522            {
+    523              return  HAL_ERROR; 
+   \        0xA   0x2001             MOVS     R0,#+1
+   \        0xC   0xBD30             POP      {R4,R5,PC}
+    524            }
+    525            
+    526            /* Process Locked */
+    527            __HAL_LOCK(hsram);
+   \                     ??HAL_SRAM_Write_32b_0: (+1)
+   \        0xE   0x7804             LDRB     R4,[R0, #+0]
+   \       0x10   0x2C01             CMP      R4,#+1
+   \       0x12   0xD101             BNE.N    ??HAL_SRAM_Write_32b_1
+   \       0x14   0x2002             MOVS     R0,#+2
+   \       0x16   0xBD30             POP      {R4,R5,PC}
+   \                     ??HAL_SRAM_Write_32b_1: (+1)
+   \       0x18   0x....'....        BL       ?Subroutine2
+    528            
+    529            /* Update the SRAM controller state */
+    530            hsram->State = HAL_SRAM_STATE_BUSY; 
+   \                     ??CrossCallReturnLabel_5: (+1)
+   \       0x1C   0xE004             B.N      ??HAL_SRAM_Write_32b_2
+    531          
+    532            /* Write data to memory */
+    533            for(; BufferSize != 0U; BufferSize--)
+    534            {
+    535              *(__IO uint32_t *)pAddress = *pSrcBuffer; 
+   \                     ??HAL_SRAM_Write_32b_3: (+1)
+   \       0x1E   0xF852 0x4B04      LDR      R4,[R2], #+4
+   \       0x22   0xF841 0x4B04      STR      R4,[R1], #+4
+    536              pSrcBuffer++;
+    537              pAddress++;    
+    538            }    
+   \       0x26   0x1E5B             SUBS     R3,R3,#+1
+   \                     ??HAL_SRAM_Write_32b_2: (+1)
+   \       0x28   0xD1F9             BNE.N    ??HAL_SRAM_Write_32b_3
+    539          
+    540            /* Update the SRAM controller state */
+    541            hsram->State = HAL_SRAM_STATE_READY; 
+   \       0x2A   0x....             B.N      ?Subroutine1
+    542            
+    543            /* Process unlocked */
+    544            __HAL_UNLOCK(hsram);
+    545              
+    546            return HAL_OK;   
+    547          }
+    548          
+    549          /**
+    550            * @brief  Reads a Words data from the SRAM memory using DMA transfer.
+    551            * @param  hsram pointer to a SRAM_HandleTypeDef structure that contains
+    552            *                the configuration information for SRAM module.
+    553            * @param  pAddress Pointer to read start address
+    554            * @param  pDstBuffer Pointer to destination buffer  
+    555            * @param  BufferSize Size of the buffer to read from memory
+    556            * @retval HAL status
+    557            */
+
+   \                                 In section .text, align 2, keep-with-next
+    558          HAL_StatusTypeDef HAL_SRAM_Read_DMA(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint32_t *pDstBuffer, uint32_t BufferSize)
+    559          {
+   \                     HAL_SRAM_Read_DMA: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+    560            /* Process Locked */
+    561            __HAL_LOCK(hsram);  
+   \        0x2   0xF100 0x0448      ADD      R4,R0,#+72
+   \        0x6   0x7820             LDRB     R0,[R4, #+0]
+   \        0x8   0x2801             CMP      R0,#+1
+   \        0xA   0xD101             BNE.N    ??HAL_SRAM_Read_DMA_0
+   \        0xC   0x2002             MOVS     R0,#+2
+   \        0xE   0xBD70             POP      {R4-R6,PC}
+   \                     ??HAL_SRAM_Read_DMA_0: (+1)
+   \       0x10   0x2001             MOVS     R0,#+1
+   \       0x12   0x7020             STRB     R0,[R4, #+0]
+    562            
+    563            /* Update the SRAM controller state */
+    564            hsram->State = HAL_SRAM_STATE_BUSY;   
+   \       0x14   0x2502             MOVS     R5,#+2
+   \       0x16   0x7065             STRB     R5,[R4, #+1]
+    565            
+    566            /* Configure DMA user callbacks */
+    567            hsram->hdma->XferCpltCallback  = HAL_SRAM_DMA_XferCpltCallback;
+   \       0x18   0x6860             LDR      R0,[R4, #+4]
+   \       0x1A   0x....             LDR.N    R6,??DataTable2
+    568            hsram->hdma->XferErrorCallback = HAL_SRAM_DMA_XferErrorCallback;
+   \       0x1C   0x....             LDR.N    R5,??DataTable2_1
+   \       0x1E   0x63C6             STR      R6,[R0, #+60]
+   \       0x20   0x6860             LDR      R0,[R4, #+4]
+   \       0x22   0x64C5             STR      R5,[R0, #+76]
+    569          
+    570            /* Enable the DMA Stream */
+    571            HAL_DMA_Start_IT(hsram->hdma, (uint32_t)pAddress, (uint32_t)pDstBuffer, (uint32_t)BufferSize);
+   \       0x24   0x6860             LDR      R0,[R4, #+4]
+   \       0x26   0x....'....        BL       HAL_DMA_Start_IT
+    572            
+    573            /* Update the SRAM controller state */
+    574            hsram->State = HAL_SRAM_STATE_READY; 
+   \       0x2A   0x2001             MOVS     R0,#+1
+   \       0x2C   0x7060             STRB     R0,[R4, #+1]
+    575            
+    576            /* Process unlocked */
+    577            __HAL_UNLOCK(hsram);  
+   \       0x2E   0x2100             MOVS     R1,#+0
+   \       0x30   0x7021             STRB     R1,[R4, #+0]
+    578            
+    579            return HAL_OK; 
+   \       0x32   0x2000             MOVS     R0,#+0
+   \       0x34   0xBD70             POP      {R4-R6,PC}       ;; return
+    580          }
+    581          
+    582          /**
+    583            * @brief  Writes a Words data buffer to SRAM memory using DMA transfer.
+    584            * @param  hsram pointer to a SRAM_HandleTypeDef structure that contains
+    585            *                the configuration information for SRAM module.
+    586            * @param  pAddress Pointer to write start address
+    587            * @param  pSrcBuffer Pointer to source buffer to write  
+    588            * @param  BufferSize Size of the buffer to write to memory
+    589            * @retval HAL status
+    590            */
+
+   \                                 In section .text, align 2, keep-with-next
+    591          HAL_StatusTypeDef HAL_SRAM_Write_DMA(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint32_t *pSrcBuffer, uint32_t BufferSize)
+    592          {
+   \                     HAL_SRAM_Write_DMA: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+    593            /* Check the SRAM controller state */
+    594            if(hsram->State == HAL_SRAM_STATE_PROTECTED)
+   \        0x2   0xF100 0x0548      ADD      R5,R0,#+72
+   \        0x6   0x4614             MOV      R4,R2
+   \        0x8   0x7868             LDRB     R0,[R5, #+1]
+   \        0xA   0x2804             CMP      R0,#+4
+   \        0xC   0xD101             BNE.N    ??HAL_SRAM_Write_DMA_0
+    595            {
+    596              return  HAL_ERROR; 
+   \        0xE   0x2001             MOVS     R0,#+1
+   \       0x10   0xBD70             POP      {R4-R6,PC}
+    597            }
+    598            
+    599            /* Process Locked */
+    600            __HAL_LOCK(hsram);
+   \                     ??HAL_SRAM_Write_DMA_0: (+1)
+   \       0x12   0x7828             LDRB     R0,[R5, #+0]
+   \       0x14   0x2801             CMP      R0,#+1
+   \       0x16   0xD101             BNE.N    ??HAL_SRAM_Write_DMA_1
+   \       0x18   0x2002             MOVS     R0,#+2
+   \       0x1A   0xBD70             POP      {R4-R6,PC}
+   \                     ??HAL_SRAM_Write_DMA_1: (+1)
+   \       0x1C   0x2001             MOVS     R0,#+1
+   \       0x1E   0x7028             STRB     R0,[R5, #+0]
+    601            
+    602            /* Update the SRAM controller state */
+    603            hsram->State = HAL_SRAM_STATE_BUSY; 
+   \       0x20   0x2202             MOVS     R2,#+2
+   \       0x22   0x706A             STRB     R2,[R5, #+1]
+    604            
+    605            /* Configure DMA user callbacks */
+    606            hsram->hdma->XferCpltCallback  = HAL_SRAM_DMA_XferCpltCallback;
+    607            hsram->hdma->XferErrorCallback = HAL_SRAM_DMA_XferErrorCallback;
+    608          
+    609            /* Enable the DMA Stream */
+    610            HAL_DMA_Start_IT(hsram->hdma, (uint32_t)pSrcBuffer, (uint32_t)pAddress, (uint32_t)BufferSize);
+   \       0x24   0x460A             MOV      R2,R1
+   \       0x26   0x6868             LDR      R0,[R5, #+4]
+   \       0x28   0x....             LDR.N    R6,??DataTable2
+   \       0x2A   0x63C6             STR      R6,[R0, #+60]
+   \       0x2C   0x4621             MOV      R1,R4
+   \       0x2E   0x6868             LDR      R0,[R5, #+4]
+   \       0x30   0x....             LDR.N    R6,??DataTable2_1
+   \       0x32   0x64C6             STR      R6,[R0, #+76]
+   \       0x34   0x6868             LDR      R0,[R5, #+4]
+   \       0x36   0x....'....        BL       HAL_DMA_Start_IT
+    611            
+    612            /* Update the SRAM controller state */
+    613            hsram->State = HAL_SRAM_STATE_READY;  
+   \       0x3A   0x2001             MOVS     R0,#+1
+   \       0x3C   0x7068             STRB     R0,[R5, #+1]
+    614            
+    615            /* Process unlocked */
+    616            __HAL_UNLOCK(hsram);  
+   \       0x3E   0x2100             MOVS     R1,#+0
+   \       0x40   0x7029             STRB     R1,[R5, #+0]
+    617            
+    618            return HAL_OK;
+   \       0x42   0x2000             MOVS     R0,#+0
+   \       0x44   0xBD70             POP      {R4-R6,PC}       ;; return
+    619          }
+    620          
+    621          #if (USE_HAL_SRAM_REGISTER_CALLBACKS == 1)
+    622          /**
+    623            * @brief  Register a User SRAM Callback
+    624            *         To be used instead of the weak (surcharged) predefined callback
+    625            * @param hsram : SRAM handle
+    626            * @param CallbackId : ID of the callback to be registered
+    627            *        This parameter can be one of the following values:
+    628            *          @arg @ref HAL_SRAM_MSP_INIT_CB_ID       SRAM MspInit callback ID
+    629            *          @arg @ref HAL_SRAM_MSP_DEINIT_CB_ID     SRAM MspDeInit callback ID
+    630            * @param pCallback : pointer to the Callback function
+    631            * @retval status
+    632            */
+    633          HAL_StatusTypeDef HAL_SRAM_RegisterCallback (SRAM_HandleTypeDef *hsram, HAL_SRAM_CallbackIDTypeDef CallbackId, pSRAM_CallbackTypeDef pCallback)
+    634          {
+    635            HAL_StatusTypeDef status = HAL_OK;
+    636            HAL_SRAM_StateTypeDef state;
+    637          
+    638            if(pCallback == NULL)
+    639            {
+    640              return HAL_ERROR;
+    641            }
+    642          
+    643            /* Process locked */
+    644            __HAL_LOCK(hsram);
+    645          
+    646            state = hsram->State;
+    647            if((state == HAL_SRAM_STATE_READY) || (state == HAL_SRAM_STATE_RESET) || (state == HAL_SRAM_STATE_PROTECTED))
+    648            {
+    649              switch (CallbackId)
+    650              {
+    651              case HAL_SRAM_MSP_INIT_CB_ID :
+    652                hsram->MspInitCallback = pCallback;
+    653                break;
+    654              case HAL_SRAM_MSP_DEINIT_CB_ID :
+    655                hsram->MspDeInitCallback = pCallback;
+    656                break;
+    657              default :
+    658                /* update return status */
+    659                status =  HAL_ERROR;
+    660                break;
+    661              }
+    662            }
+    663            else
+    664            {
+    665              /* update return status */
+    666              status =  HAL_ERROR;
+    667            }
+    668          
+    669            /* Release Lock */
+    670            __HAL_UNLOCK(hsram);
+    671            return status;
+    672          }
+    673          
+    674          /**
+    675            * @brief  Unregister a User SRAM Callback
+    676            *         SRAM Callback is redirected to the weak (surcharged) predefined callback
+    677            * @param hsram : SRAM handle
+    678            * @param CallbackId : ID of the callback to be unregistered
+    679            *        This parameter can be one of the following values:
+    680            *          @arg @ref HAL_SRAM_MSP_INIT_CB_ID       SRAM MspInit callback ID
+    681            *          @arg @ref HAL_SRAM_MSP_DEINIT_CB_ID     SRAM MspDeInit callback ID
+    682            *          @arg @ref HAL_SRAM_DMA_XFER_CPLT_CB_ID  SRAM DMA Xfer Complete callback ID
+    683            *          @arg @ref HAL_SRAM_DMA_XFER_ERR_CB_ID   SRAM DMA Xfer Error callback ID
+    684            * @retval status
+    685            */
+    686          HAL_StatusTypeDef HAL_SRAM_UnRegisterCallback (SRAM_HandleTypeDef *hsram, HAL_SRAM_CallbackIDTypeDef CallbackId)
+    687          {
+    688            HAL_StatusTypeDef status = HAL_OK;
+    689            HAL_SRAM_StateTypeDef state;
+    690          
+    691            /* Process locked */
+    692            __HAL_LOCK(hsram);
+    693          
+    694            state = hsram->State;
+    695            if((state == HAL_SRAM_STATE_READY) || (state == HAL_SRAM_STATE_PROTECTED))
+    696            {
+    697              switch (CallbackId)
+    698              {
+    699              case HAL_SRAM_MSP_INIT_CB_ID :
+    700                hsram->MspInitCallback = HAL_SRAM_MspInit;
+    701                break;
+    702              case HAL_SRAM_MSP_DEINIT_CB_ID :
+    703                hsram->MspDeInitCallback = HAL_SRAM_MspDeInit;
+    704                break;
+    705              case HAL_SRAM_DMA_XFER_CPLT_CB_ID :
+    706                hsram->DmaXferCpltCallback = HAL_SRAM_DMA_XferCpltCallback;
+    707                break;
+    708              case HAL_SRAM_DMA_XFER_ERR_CB_ID :
+    709                hsram->DmaXferErrorCallback = HAL_SRAM_DMA_XferErrorCallback;
+    710                break;
+    711              default :
+    712                /* update return status */
+    713                status =  HAL_ERROR;
+    714                break;
+    715              }
+    716            }
+    717            else if(state == HAL_SRAM_STATE_RESET)
+    718            {
+    719              switch (CallbackId)
+    720              {
+    721              case HAL_SRAM_MSP_INIT_CB_ID :
+    722                hsram->MspInitCallback = HAL_SRAM_MspInit;
+    723                break;
+    724              case HAL_SRAM_MSP_DEINIT_CB_ID :
+    725                hsram->MspDeInitCallback = HAL_SRAM_MspDeInit;
+    726                break;
+    727              default :
+    728                /* update return status */
+    729                status =  HAL_ERROR;
+    730                break;
+    731              }
+    732            }
+    733            else
+    734            {
+    735              /* update return status */
+    736              status =  HAL_ERROR;
+    737            }
+    738          
+    739            /* Release Lock */
+    740            __HAL_UNLOCK(hsram);
+    741            return status;
+    742          }
+    743          
+    744          /**
+    745            * @brief  Register a User SRAM Callback for DMA transfers
+    746            *         To be used instead of the weak (surcharged) predefined callback
+    747            * @param hsram : SRAM handle
+    748            * @param CallbackId : ID of the callback to be registered
+    749            *        This parameter can be one of the following values:
+    750            *          @arg @ref HAL_SRAM_DMA_XFER_CPLT_CB_ID  SRAM DMA Xfer Complete callback ID
+    751            *          @arg @ref HAL_SRAM_DMA_XFER_ERR_CB_ID   SRAM DMA Xfer Error callback ID
+    752            * @param pCallback : pointer to the Callback function
+    753            * @retval status
+    754            */
+    755          HAL_StatusTypeDef HAL_SRAM_RegisterDmaCallback(SRAM_HandleTypeDef *hsram, HAL_SRAM_CallbackIDTypeDef CallbackId, pSRAM_DmaCallbackTypeDef pCallback)
+    756          {
+    757            HAL_StatusTypeDef status = HAL_OK;
+    758            HAL_SRAM_StateTypeDef state;
+    759          
+    760            if(pCallback == NULL)
+    761            {
+    762              return HAL_ERROR;
+    763            }
+    764          
+    765            /* Process locked */
+    766            __HAL_LOCK(hsram);
+    767          
+    768            state = hsram->State;
+    769            if((state == HAL_SRAM_STATE_READY) || (state == HAL_SRAM_STATE_PROTECTED))
+    770            {
+    771              switch (CallbackId)
+    772              {
+    773              case HAL_SRAM_DMA_XFER_CPLT_CB_ID :
+    774                hsram->DmaXferCpltCallback = pCallback;
+    775                break;
+    776              case HAL_SRAM_DMA_XFER_ERR_CB_ID :
+    777                hsram->DmaXferErrorCallback = pCallback;
+    778                break;
+    779              default :
+    780                /* update return status */
+    781                status =  HAL_ERROR;
+    782                break;
+    783              }
+    784            }
+    785            else
+    786            {
+    787              /* update return status */
+    788              status =  HAL_ERROR;
+    789            }
+    790          
+    791            /* Release Lock */
+    792            __HAL_UNLOCK(hsram);
+    793            return status;
+    794          }
+    795          #endif
+    796          /**
+    797            * @}
+    798            */
+    799            
+    800          /** @defgroup SRAM_Exported_Functions_Group3 Control functions 
+    801           *  @brief   management functions 
+    802           *
+    803          @verbatim   
+    804            ==============================================================================
+    805                                  ##### SRAM Control functions #####
+    806            ==============================================================================  
+    807            [..]
+    808              This subsection provides a set of functions allowing to control dynamically
+    809              the SRAM interface.
+    810          
+    811          @endverbatim
+    812            * @{
+    813            */
+    814              
+    815          /**
+    816            * @brief  Enables dynamically SRAM write operation.
+    817            * @param  hsram pointer to a SRAM_HandleTypeDef structure that contains
+    818            *                the configuration information for SRAM module.
+    819            * @retval HAL status
+    820            */
+
+   \                                 In section .text, align 2, keep-with-next
+    821          HAL_StatusTypeDef HAL_SRAM_WriteOperation_Enable(SRAM_HandleTypeDef *hsram)
+    822          {
+   \                     HAL_SRAM_WriteOperation_Enable: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    823            /* Process Locked */
+    824            __HAL_LOCK(hsram);
+   \        0x2   0xF100 0x0448      ADD      R4,R0,#+72
+   \        0x6   0x7821             LDRB     R1,[R4, #+0]
+   \        0x8   0x2901             CMP      R1,#+1
+   \        0xA   0xD101             BNE.N    ??HAL_SRAM_WriteOperation_Enable_0
+   \        0xC   0x2002             MOVS     R0,#+2
+   \        0xE   0xBD10             POP      {R4,PC}
+   \                     ??HAL_SRAM_WriteOperation_Enable_0: (+1)
+   \       0x10   0x2201             MOVS     R2,#+1
+   \       0x12   0x7022             STRB     R2,[R4, #+0]
+    825          
+    826            /* Enable write operation */
+    827            FMC_NORSRAM_WriteOperation_Enable(hsram->Instance, hsram->Init.NSBank); 
+   \       0x14   0x6881             LDR      R1,[R0, #+8]
+   \       0x16   0x6800             LDR      R0,[R0, #+0]
+   \       0x18   0x....'....        BL       FMC_NORSRAM_WriteOperation_Enable
+    828            
+    829            /* Update the SRAM controller state */
+    830            hsram->State = HAL_SRAM_STATE_READY;
+   \       0x1C   0x2001             MOVS     R0,#+1
+   \       0x1E   0x....             B.N      ?Subroutine0
+    831            
+    832            /* Process unlocked */
+    833            __HAL_UNLOCK(hsram); 
+    834            
+    835            return HAL_OK;  
+    836          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine0: (+1)
+   \        0x0   0x7060             STRB     R0,[R4, #+1]
+   \        0x2   0x2100             MOVS     R1,#+0
+   \        0x4   0x7021             STRB     R1,[R4, #+0]
+   \        0x6   0x2000             MOVS     R0,#+0
+   \        0x8   0xBD10             POP      {R4,PC}          ;; return
+    837          
+    838          /**
+    839            * @brief  Disables dynamically SRAM write operation.
+    840            * @param  hsram pointer to a SRAM_HandleTypeDef structure that contains
+    841            *                the configuration information for SRAM module.
+    842            * @retval HAL status
+    843            */
+
+   \                                 In section .text, align 2, keep-with-next
+    844          HAL_StatusTypeDef HAL_SRAM_WriteOperation_Disable(SRAM_HandleTypeDef *hsram)
+    845          {
+   \                     HAL_SRAM_WriteOperation_Disable: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    846            /* Process Locked */
+    847            __HAL_LOCK(hsram);
+   \        0x2   0xF100 0x0448      ADD      R4,R0,#+72
+   \        0x6   0x7821             LDRB     R1,[R4, #+0]
+   \        0x8   0x2901             CMP      R1,#+1
+   \        0xA   0xD101             BNE.N    ??HAL_SRAM_WriteOperation_Disable_0
+   \        0xC   0x2002             MOVS     R0,#+2
+   \        0xE   0xBD10             POP      {R4,PC}
+   \                     ??HAL_SRAM_WriteOperation_Disable_0: (+1)
+   \       0x10   0x2101             MOVS     R1,#+1
+   \       0x12   0x7021             STRB     R1,[R4, #+0]
+    848          
+    849            /* Update the SRAM controller state */
+    850            hsram->State = HAL_SRAM_STATE_BUSY;
+   \       0x14   0x2202             MOVS     R2,#+2
+   \       0x16   0x7062             STRB     R2,[R4, #+1]
+    851              
+    852            /* Disable write operation */
+    853            FMC_NORSRAM_WriteOperation_Disable(hsram->Instance, hsram->Init.NSBank); 
+   \       0x18   0x6881             LDR      R1,[R0, #+8]
+   \       0x1A   0x6800             LDR      R0,[R0, #+0]
+   \       0x1C   0x....'....        BL       FMC_NORSRAM_WriteOperation_Disable
+    854            
+    855            /* Update the SRAM controller state */
+    856            hsram->State = HAL_SRAM_STATE_PROTECTED;
+   \       0x20   0x2004             MOVS     R0,#+4
+   \       0x22                      REQUIRE ?Subroutine0
+   \       0x22                      ;; // Fall through to label ?Subroutine0
+    857            
+    858            /* Process unlocked */
+    859            __HAL_UNLOCK(hsram); 
+    860            
+    861            return HAL_OK;  
+    862          }
+    863          
+    864          /**
+    865            * @}
+    866            */
+    867          
+    868          /** @defgroup SRAM_Exported_Functions_Group4 State functions 
+    869           *  @brief   Peripheral State functions 
+    870           *
+    871          @verbatim   
+    872            ==============================================================================
+    873                                ##### SRAM State functions #####
+    874            ==============================================================================  
+    875            [..]
+    876              This subsection permits to get in run-time the status of the SRAM controller 
+    877              and the data flow.
+    878          
+    879          @endverbatim
+    880            * @{
+    881            */
+    882            
+    883          /**
+    884            * @brief  Returns the SRAM controller state
+    885            * @param  hsram pointer to a SRAM_HandleTypeDef structure that contains
+    886            *                the configuration information for SRAM module.
+    887            * @retval HAL state
+    888            */
+
+   \                                 In section .text, align 2, keep-with-next
+    889          HAL_SRAM_StateTypeDef HAL_SRAM_GetState(SRAM_HandleTypeDef *hsram)
+    890          {
+    891            return hsram->State;
+   \                     HAL_SRAM_GetState: (+1)
+   \        0x0   0xF890 0x0049      LDRB     R0,[R0, #+73]
+   \        0x4   0x4770             BX       LR               ;; return
+    892          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2:
+   \        0x0   0x....'....        DC32     HAL_SRAM_DMA_XferCpltCallback
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_1:
+   \        0x0   0x....'....        DC32     HAL_SRAM_DMA_XferErrorCallback
+    893          /**
+    894            * @}
+    895            */
+    896          
+    897          /**
+    898            * @}
+    899            */
+    900          #endif /* STM32F405xx || STM32F415xx || STM32F407xx || STM32F417xx || STM32F427xx || STM32F437xx ||\
+    901                    STM32F429xx || STM32F439xx || STM32F446xx || STM32F469xx || STM32F479xx || STM32F412Zx ||\
+    902                    STM32F412Vx || STM32F412Rx || STM32F412Cx || STM32F413xx || STM32F423xx */
+    903          #endif /* HAL_SRAM_MODULE_ENABLED */
+    904          /**
+    905            * @}
+    906            */
+    907          
+    908          /**
+    909            * @}
+    910            */
+    911          
+    912          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   HAL_SRAM_DMA_XferCpltCallback
+       0   HAL_SRAM_DMA_XferErrorCallback
+       8   HAL_SRAM_DeInit
+         8   -> FMC_NORSRAM_DeInit
+         8   -> HAL_SRAM_MspDeInit
+       0   HAL_SRAM_GetState
+      16   HAL_SRAM_Init
+        16   -> FMC_NORSRAM_Extended_Timing_Init
+        16   -> FMC_NORSRAM_Init
+        16   -> FMC_NORSRAM_Timing_Init
+        16   -> HAL_SRAM_MspInit
+       0   HAL_SRAM_MspDeInit
+       0   HAL_SRAM_MspInit
+      12   HAL_SRAM_Read_16b
+      12   HAL_SRAM_Read_32b
+      12   HAL_SRAM_Read_8b
+      16   HAL_SRAM_Read_DMA
+        16   -> HAL_DMA_Start_IT
+       8   HAL_SRAM_WriteOperation_Disable
+         8   -> FMC_NORSRAM_WriteOperation_Disable
+       8   HAL_SRAM_WriteOperation_Enable
+         8   -> FMC_NORSRAM_WriteOperation_Enable
+      12   HAL_SRAM_Write_16b
+      12   HAL_SRAM_Write_32b
+      12   HAL_SRAM_Write_8b
+      16   HAL_SRAM_Write_DMA
+        16   -> HAL_DMA_Start_IT
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+      10  ?Subroutine0
+      12  ?Subroutine1
+      12  ?Subroutine2
+       2  HAL_SRAM_DMA_XferCpltCallback
+       2  HAL_SRAM_DMA_XferErrorCallback
+      32  HAL_SRAM_DeInit
+       6  HAL_SRAM_GetState
+      84  HAL_SRAM_Init
+       2  HAL_SRAM_MspDeInit
+       2  HAL_SRAM_MspInit
+      34  HAL_SRAM_Read_16b
+      34  HAL_SRAM_Read_32b
+      34  HAL_SRAM_Read_8b
+      54  HAL_SRAM_Read_DMA
+      34  HAL_SRAM_WriteOperation_Disable
+      32  HAL_SRAM_WriteOperation_Enable
+      44  HAL_SRAM_Write_16b
+      44  HAL_SRAM_Write_32b
+      42  HAL_SRAM_Write_8b
+      70  HAL_SRAM_Write_DMA
+
+ 
+ 594 bytes in section .text
+ 
+ 586 bytes of CODE memory (+ 8 bytes shared)
+
+Errors: none
+Warnings: none

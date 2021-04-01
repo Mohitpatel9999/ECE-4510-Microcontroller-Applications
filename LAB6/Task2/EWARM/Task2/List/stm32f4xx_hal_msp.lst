@@ -1,0 +1,491 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         17/Feb/2020  18:42:18
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\Src\stm32f4xx_hal_msp.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EWF474.tmp
+#        ("C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\Src\stm32f4xx_hal_msp.c" -D USE_HAL_DRIVER -D
+#        STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM\Task2\List" -o
+#        "C:\Users\mohit\Desktop\Microapps projects\LAB6\Task2\EWARM\Task2\Obj"
+#        --debug --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.4\arm\inc\c\DLib_Config_Full.h" -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM\Task2\List\stm32f4xx_hal_msp.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM\Task2\Obj\stm32f4xx_hal_msp.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\LAB6\Task2\Src\stm32f4xx_hal_msp.c
+      1          /* USER CODE BEGIN Header */
+      2          /**
+      3            ******************************************************************************
+      4            * File Name          : stm32f4xx_hal_msp.c
+      5            * Description        : This file provides code for the MSP Initialization 
+      6            *                      and de-Initialization codes.
+      7            ******************************************************************************
+      8            * @attention
+      9            *
+     10            * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+     11            * All rights reserved.</center></h2>
+     12            *
+     13            * This software component is licensed by ST under BSD 3-Clause license,
+     14            * the "License"; You may not use this file except in compliance with the
+     15            * License. You may obtain a copy of the License at:
+     16            *                        opensource.org/licenses/BSD-3-Clause
+     17            *
+     18            ******************************************************************************
+     19            */
+     20          /* USER CODE END Header */
+     21          
+     22          /* Includes ------------------------------------------------------------------*/
+     23          #include "main.h"
+     24          /* USER CODE BEGIN Includes */
+     25          
+     26          /* USER CODE END Includes */
+     27          
+     28          /* Private typedef -----------------------------------------------------------*/
+     29          /* USER CODE BEGIN TD */
+     30          
+     31          /* USER CODE END TD */
+     32          
+     33          /* Private define ------------------------------------------------------------*/
+     34          /* USER CODE BEGIN Define */
+     35           
+     36          /* USER CODE END Define */
+     37          
+     38          /* Private macro -------------------------------------------------------------*/
+     39          /* USER CODE BEGIN Macro */
+     40          
+     41          /* USER CODE END Macro */
+     42          
+     43          /* Private variables ---------------------------------------------------------*/
+     44          /* USER CODE BEGIN PV */
+     45          
+     46          /* USER CODE END PV */
+     47          
+     48          /* Private function prototypes -----------------------------------------------*/
+     49          /* USER CODE BEGIN PFP */
+     50          
+     51          /* USER CODE END PFP */
+     52          
+     53          /* External functions --------------------------------------------------------*/
+     54          /* USER CODE BEGIN ExternalFunctions */
+     55          
+     56          /* USER CODE END ExternalFunctions */
+     57          
+     58          /* USER CODE BEGIN 0 */
+     59          
+     60          /* USER CODE END 0 */
+     61          /**
+     62            * Initializes the Global MSP.
+     63            */
+
+   \                                 In section .text, align 2, keep-with-next
+     64          void HAL_MspInit(void)
+     65          {
+   \                     HAL_MspInit: (+1)
+   \        0x0   0xB081             SUB      SP,SP,#+4
+     66            /* USER CODE BEGIN MspInit 0 */
+     67          
+     68            /* USER CODE END MspInit 0 */
+     69          
+     70            __HAL_RCC_SYSCFG_CLK_ENABLE();
+   \        0x2   0x2000             MOVS     R0,#+0
+   \        0x4   0x9000             STR      R0,[SP, #+0]
+     71            __HAL_RCC_PWR_CLK_ENABLE();
+   \        0x6   0x2200             MOVS     R2,#+0
+   \        0x8   0x....             LDR.N    R0,??DataTable2  ;; 0x40023840
+   \        0xA   0x6841             LDR      R1,[R0, #+4]
+   \        0xC   0xF441 0x4180      ORR      R1,R1,#0x4000
+   \       0x10   0x6041             STR      R1,[R0, #+4]
+   \       0x12   0x6841             LDR      R1,[R0, #+4]
+   \       0x14   0xF401 0x4180      AND      R1,R1,#0x4000
+   \       0x18   0x9100             STR      R1,[SP, #+0]
+   \       0x1A   0x9900             LDR      R1,[SP, #+0]
+   \       0x1C   0x9200             STR      R2,[SP, #+0]
+   \       0x1E   0x6803             LDR      R3,[R0, #+0]
+   \       0x20   0xF043 0x5380      ORR      R3,R3,#0x10000000
+   \       0x24   0x6003             STR      R3,[R0, #+0]
+   \       0x26   0x6800             LDR      R0,[R0, #+0]
+   \       0x28   0xF000 0x5080      AND      R0,R0,#0x10000000
+   \       0x2C   0x9000             STR      R0,[SP, #+0]
+   \       0x2E   0x9800             LDR      R0,[SP, #+0]
+     72          
+     73            /* System interrupt init*/
+     74          
+     75            /* USER CODE BEGIN MspInit 1 */
+     76          
+     77            /* USER CODE END MspInit 1 */
+     78          }
+   \       0x30   0xB001             ADD      SP,SP,#+4
+   \       0x32   0x4770             BX       LR               ;; return
+     79          
+
+   \                                 In section .bss, align 4
+     80          static uint32_t FMC_Initialized = 0;
+   \                     FMC_Initialized:
+   \        0x0                      DS8 4
+     81          
+     82          static void HAL_FMC_MspInit(void){
+     83            /* USER CODE BEGIN FMC_MspInit 0 */
+     84          
+     85            /* USER CODE END FMC_MspInit 0 */
+     86            GPIO_InitTypeDef GPIO_InitStruct ={0};
+     87            if (FMC_Initialized) {
+     88              return;
+     89            }
+     90            FMC_Initialized = 1;
+     91          
+     92            /* Peripheral clock enable */
+     93            __HAL_RCC_FMC_CLK_ENABLE();
+     94            
+     95            /** FMC GPIO Configuration  
+     96            PF0   ------> FMC_A0
+     97            PF1   ------> FMC_A1
+     98            PF2   ------> FMC_A2
+     99            PF3   ------> FMC_A3
+    100            PF4   ------> FMC_A4
+    101            PF5   ------> FMC_A5
+    102            PF12   ------> FMC_A6
+    103            PF13   ------> FMC_A7
+    104            PF14   ------> FMC_A8
+    105            PF15   ------> FMC_A9
+    106            PE7   ------> FMC_D4
+    107            PE8   ------> FMC_D5
+    108            PE9   ------> FMC_D6
+    109            PE10   ------> FMC_D7
+    110            PD14   ------> FMC_D0
+    111            PD15   ------> FMC_D1
+    112            PD0   ------> FMC_D2
+    113            PD1   ------> FMC_D3
+    114            PD4   ------> FMC_NOE
+    115            PD5   ------> FMC_NWE
+    116            PG10   ------> FMC_NE3
+    117            */
+    118            GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3 
+    119                                    |GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_12|GPIO_PIN_13 
+    120                                    |GPIO_PIN_14|GPIO_PIN_15;
+    121            GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    122            GPIO_InitStruct.Pull = GPIO_NOPULL;
+    123            GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    124            GPIO_InitStruct.Alternate = GPIO_AF12_FMC;
+    125            HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+    126          
+    127            GPIO_InitStruct.Pin = GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10;
+    128            GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    129            GPIO_InitStruct.Pull = GPIO_NOPULL;
+    130            GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    131            GPIO_InitStruct.Alternate = GPIO_AF12_FMC;
+    132            HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+    133          
+    134            GPIO_InitStruct.Pin = GPIO_PIN_14|GPIO_PIN_15|GPIO_PIN_0|GPIO_PIN_1 
+    135                                    |GPIO_PIN_4|GPIO_PIN_5;
+    136            GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    137            GPIO_InitStruct.Pull = GPIO_NOPULL;
+    138            GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    139            GPIO_InitStruct.Alternate = GPIO_AF12_FMC;
+    140            HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+    141          
+    142            GPIO_InitStruct.Pin = GPIO_PIN_10;
+    143            GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    144            GPIO_InitStruct.Pull = GPIO_NOPULL;
+    145            GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    146            GPIO_InitStruct.Alternate = GPIO_AF12_FMC;
+    147            HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+    148          
+    149            /* USER CODE BEGIN FMC_MspInit 1 */
+    150          
+    151            /* USER CODE END FMC_MspInit 1 */
+    152          }
+    153          
+
+   \                                 In section .text, align 2, keep-with-next
+    154          void HAL_SRAM_MspInit(SRAM_HandleTypeDef* hsram){
+   \                     HAL_SRAM_MspInit: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+   \        0x2   0xB086             SUB      SP,SP,#+24
+    155            /* USER CODE BEGIN SRAM_MspInit 0 */
+    156          
+    157            /* USER CODE END SRAM_MspInit 0 */
+    158            HAL_FMC_MspInit();
+   \        0x4   0x2214             MOVS     R2,#+20
+   \        0x6   0x2100             MOVS     R1,#+0
+   \        0x8   0x4668             MOV      R0,SP
+   \        0xA   0x....'....        BL       memset
+   \        0xE   0x....             LDR.N    R1,??DataTable2_1
+   \       0x10   0x6808             LDR      R0,[R1, #+0]
+   \       0x12   0x2800             CMP      R0,#+0
+   \       0x14   0xD136             BNE.N    ??HAL_SRAM_MspInit_0
+   \       0x16   0x2201             MOVS     R2,#+1
+   \       0x18   0x600A             STR      R2,[R1, #+0]
+   \       0x1A   0x9005             STR      R0,[SP, #+20]
+   \       0x1C   0x2202             MOVS     R2,#+2
+   \       0x1E   0x....             LDR.N    R0,??DataTable2_2  ;; 0x40023838
+   \       0x20   0x6801             LDR      R1,[R0, #+0]
+   \       0x22   0xF041 0x0101      ORR      R1,R1,#0x1
+   \       0x26   0x6001             STR      R1,[R0, #+0]
+   \       0x28   0xF24F 0x013F      MOVW     R1,#+61503
+   \       0x2C   0x6800             LDR      R0,[R0, #+0]
+   \       0x2E   0xF000 0x0001      AND      R0,R0,#0x1
+   \       0x32   0x9005             STR      R0,[SP, #+20]
+   \       0x34   0x9805             LDR      R0,[SP, #+20]
+   \       0x36   0x....             LDR.N    R0,??DataTable2_3  ;; 0x40021400
+   \       0x38   0x9100             STR      R1,[SP, #+0]
+   \       0x3A   0x9201             STR      R2,[SP, #+4]
+   \       0x3C   0x2100             MOVS     R1,#+0
+   \       0x3E   0x9102             STR      R1,[SP, #+8]
+   \       0x40   0x2203             MOVS     R2,#+3
+   \       0x42   0x210C             MOVS     R1,#+12
+   \       0x44   0x9104             STR      R1,[SP, #+16]
+   \       0x46   0x9203             STR      R2,[SP, #+12]
+   \       0x48   0x4669             MOV      R1,SP
+   \       0x4A   0x....'....        BL       HAL_GPIO_Init
+   \       0x4E   0x....'....        BL       ?Subroutine1
+   \                     ??CrossCallReturnLabel_3: (+1)
+   \       0x52   0xF44F 0x60F0      MOV      R0,#+1920
+   \       0x56   0x....'....        BL       ?Subroutine0
+   \                     ??CrossCallReturnLabel_0: (+1)
+   \       0x5A   0x....             LDR.N    R0,??DataTable2_4  ;; 0x40021000
+   \       0x5C   0x....'....        BL       HAL_GPIO_Init
+   \       0x60   0x....'....        BL       ?Subroutine1
+   \                     ??CrossCallReturnLabel_4: (+1)
+   \       0x64   0xF24C 0x0033      MOVW     R0,#+49203
+   \       0x68   0x....'....        BL       ?Subroutine0
+   \                     ??CrossCallReturnLabel_1: (+1)
+   \       0x6C   0x....             LDR.N    R0,??DataTable2_5  ;; 0x40020c00
+   \       0x6E   0x....'....        BL       HAL_GPIO_Init
+   \       0x72   0x....'....        BL       ?Subroutine1
+   \                     ??CrossCallReturnLabel_5: (+1)
+   \       0x76   0xF44F 0x6080      MOV      R0,#+1024
+   \       0x7A   0x....'....        BL       ?Subroutine0
+   \                     ??CrossCallReturnLabel_2: (+1)
+   \       0x7E   0x....             LDR.N    R0,??DataTable2_6  ;; 0x40021800
+   \       0x80   0x....'....        BL       HAL_GPIO_Init
+    159            /* USER CODE BEGIN SRAM_MspInit 1 */
+    160          
+    161            /* USER CODE END SRAM_MspInit 1 */
+    162          }
+   \                     ??HAL_SRAM_MspInit_0: (+1)
+   \       0x84   0xB007             ADD      SP,SP,#+28
+   \       0x86   0xBD00             POP      {PC}             ;; return
+    163          
+
+   \                                 In section .bss, align 4
+    164          static uint32_t FMC_DeInitialized = 0;
+   \                     FMC_DeInitialized:
+   \        0x0                      DS8 4
+    165          
+    166          static void HAL_FMC_MspDeInit(void){
+    167            /* USER CODE BEGIN FMC_MspDeInit 0 */
+    168          
+    169            /* USER CODE END FMC_MspDeInit 0 */
+    170            if (FMC_DeInitialized) {
+    171              return;
+    172            }
+    173            FMC_DeInitialized = 1;
+    174            /* Peripheral clock enable */
+    175            __HAL_RCC_FMC_CLK_DISABLE();
+    176            
+    177            /** FMC GPIO Configuration  
+    178            PF0   ------> FMC_A0
+    179            PF1   ------> FMC_A1
+    180            PF2   ------> FMC_A2
+    181            PF3   ------> FMC_A3
+    182            PF4   ------> FMC_A4
+    183            PF5   ------> FMC_A5
+    184            PF12   ------> FMC_A6
+    185            PF13   ------> FMC_A7
+    186            PF14   ------> FMC_A8
+    187            PF15   ------> FMC_A9
+    188            PE7   ------> FMC_D4
+    189            PE8   ------> FMC_D5
+    190            PE9   ------> FMC_D6
+    191            PE10   ------> FMC_D7
+    192            PD14   ------> FMC_D0
+    193            PD15   ------> FMC_D1
+    194            PD0   ------> FMC_D2
+    195            PD1   ------> FMC_D3
+    196            PD4   ------> FMC_NOE
+    197            PD5   ------> FMC_NWE
+    198            PG10   ------> FMC_NE3
+    199            */
+    200            HAL_GPIO_DeInit(GPIOF, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3 
+    201                                    |GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_12|GPIO_PIN_13 
+    202                                    |GPIO_PIN_14|GPIO_PIN_15);
+    203          
+    204            HAL_GPIO_DeInit(GPIOE, GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10);
+    205          
+    206            HAL_GPIO_DeInit(GPIOD, GPIO_PIN_14|GPIO_PIN_15|GPIO_PIN_0|GPIO_PIN_1 
+    207                                    |GPIO_PIN_4|GPIO_PIN_5);
+    208          
+    209            HAL_GPIO_DeInit(GPIOG, GPIO_PIN_10);
+    210          
+    211            /* USER CODE BEGIN FMC_MspDeInit 1 */
+    212          
+    213            /* USER CODE END FMC_MspDeInit 1 */
+    214          }
+    215          
+
+   \                                 In section .text, align 2, keep-with-next
+    216          void HAL_SRAM_MspDeInit(SRAM_HandleTypeDef* hsram){
+   \                     HAL_SRAM_MspDeInit: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable2_7
+   \        0x2   0x6808             LDR      R0,[R1, #+0]
+   \        0x4   0x2800             CMP      R0,#+0
+   \        0x6   0xD000             BEQ.N    ??HAL_SRAM_MspDeInit_0
+   \        0x8   0x4770             BX       LR
+   \                     ??HAL_SRAM_MspDeInit_0: (+1)
+   \        0xA   0xB580             PUSH     {R7,LR}
+    217            /* USER CODE BEGIN SRAM_MspDeInit 0 */
+    218          
+    219            /* USER CODE END SRAM_MspDeInit 0 */
+    220            HAL_FMC_MspDeInit();
+   \        0xC   0x2201             MOVS     R2,#+1
+   \        0xE   0x....             LDR.N    R0,??DataTable2_2  ;; 0x40023838
+   \       0x10   0x600A             STR      R2,[R1, #+0]
+   \       0x12   0x6801             LDR      R1,[R0, #+0]
+   \       0x14   0x0849             LSRS     R1,R1,#+1
+   \       0x16   0x0049             LSLS     R1,R1,#+1
+   \       0x18   0x6001             STR      R1,[R0, #+0]
+   \       0x1A   0xF24F 0x013F      MOVW     R1,#+61503
+   \       0x1E   0x....             LDR.N    R0,??DataTable2_3  ;; 0x40021400
+   \       0x20   0x....'....        BL       HAL_GPIO_DeInit
+   \       0x24   0xF44F 0x61F0      MOV      R1,#+1920
+   \       0x28   0x....             LDR.N    R0,??DataTable2_4  ;; 0x40021000
+   \       0x2A   0x....'....        BL       HAL_GPIO_DeInit
+   \       0x2E   0xF24C 0x0133      MOVW     R1,#+49203
+   \       0x32   0x....             LDR.N    R0,??DataTable2_5  ;; 0x40020c00
+   \       0x34   0x....'....        BL       HAL_GPIO_DeInit
+   \       0x38   0xE8BD 0x4004      POP      {R2,LR}
+   \       0x3C   0xF44F 0x6180      MOV      R1,#+1024
+   \       0x40   0x....             LDR.N    R0,??DataTable2_6  ;; 0x40021800
+   \       0x42   0x....'....        B.W      HAL_GPIO_DeInit
+    221            /* USER CODE BEGIN SRAM_MspDeInit 1 */
+    222          
+    223            /* USER CODE END SRAM_MspDeInit 1 */
+    224          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine1: (+1)
+   \        0x0   0x2102             MOVS     R1,#+2
+   \        0x2   0x9101             STR      R1,[SP, #+4]
+   \        0x4   0x2200             MOVS     R2,#+0
+   \        0x6   0x9202             STR      R2,[SP, #+8]
+   \        0x8   0x4770             BX       LR
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine0: (+1)
+   \        0x0   0x2103             MOVS     R1,#+3
+   \        0x2   0x9000             STR      R0,[SP, #+0]
+   \        0x4   0x9103             STR      R1,[SP, #+12]
+   \        0x6   0x220C             MOVS     R2,#+12
+   \        0x8   0x9204             STR      R2,[SP, #+16]
+   \        0xA   0x4669             MOV      R1,SP
+   \        0xC   0x4770             BX       LR
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2:
+   \        0x0   0x4002'3840        DC32     0x40023840
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_1:
+   \        0x0   0x....'....        DC32     FMC_Initialized
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_2:
+   \        0x0   0x4002'3838        DC32     0x40023838
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_3:
+   \        0x0   0x4002'1400        DC32     0x40021400
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_4:
+   \        0x0   0x4002'1000        DC32     0x40021000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_5:
+   \        0x0   0x4002'0C00        DC32     0x40020c00
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_6:
+   \        0x0   0x4002'1800        DC32     0x40021800
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_7:
+   \        0x0   0x....'....        DC32     FMC_DeInitialized
+    225          
+    226          /* USER CODE BEGIN 1 */
+    227          
+    228          /* USER CODE END 1 */
+    229          
+    230          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       4   HAL_MspInit
+       8   HAL_SRAM_MspDeInit
+         0   -> HAL_GPIO_DeInit
+         8   -> HAL_GPIO_DeInit
+      32   HAL_SRAM_MspInit
+        32   -> HAL_GPIO_Init
+        32   -> memset
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_2
+       4  ??DataTable2_3
+       4  ??DataTable2_4
+       4  ??DataTable2_5
+       4  ??DataTable2_6
+       4  ??DataTable2_7
+      14  ?Subroutine0
+      10  ?Subroutine1
+       4  FMC_DeInitialized
+       4  FMC_Initialized
+      52  HAL_MspInit
+      70  HAL_SRAM_MspDeInit
+     136  HAL_SRAM_MspInit
+
+ 
+   8 bytes in section .bss
+ 314 bytes in section .text
+ 
+ 314 bytes of CODE memory
+   8 bytes of DATA memory
+
+Errors: none
+Warnings: none

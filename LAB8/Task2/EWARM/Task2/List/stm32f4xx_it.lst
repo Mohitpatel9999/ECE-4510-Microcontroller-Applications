@@ -1,0 +1,509 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         07/Mar/2020  11:45:01
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task2\Src\stm32f4xx_it.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EW4748.tmp
+#        ("C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task2\Src\stm32f4xx_it.c" -D USE_HAL_DRIVER -D
+#        STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task2\EWARM\Task2\List" -o
+#        "C:\Users\mohit\Desktop\Microapps projects\LAB8\Task2\EWARM\Task2\Obj"
+#        --debug --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.4\arm\inc\c\DLib_Config_Full.h" -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task2\EWARM/../Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task2\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task2\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task2\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task2\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task2\EWARM\Task2\List\stm32f4xx_it.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task2\EWARM\Task2\Obj\stm32f4xx_it.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\LAB8\Task2\Src\stm32f4xx_it.c
+      1          /* USER CODE BEGIN Header */
+      2          /**
+      3            ******************************************************************************
+      4            * @file    stm32f4xx_it.c
+      5            * @brief   Interrupt Service Routines.
+      6            ******************************************************************************
+      7            * @attention
+      8            *
+      9            * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+     10            * All rights reserved.</center></h2>
+     11            *
+     12            * This software component is licensed by ST under BSD 3-Clause license,
+     13            * the "License"; You may not use this file except in compliance with the
+     14            * License. You may obtain a copy of the License at:
+     15            *                        opensource.org/licenses/BSD-3-Clause
+     16            *
+     17            ******************************************************************************
+     18            */
+     19          /* USER CODE END Header */
+     20          
+     21          /* Includes ------------------------------------------------------------------*/
+     22          #include "main.h"
+     23          #include "stm32f4xx_it.h"
+     24          /* Private includes ----------------------------------------------------------*/
+     25          /* USER CODE BEGIN Includes */
+     26          /* USER CODE END Includes */
+     27          
+     28          /* Private typedef -----------------------------------------------------------*/
+     29          /* USER CODE BEGIN TD */
+     30          
+     31          /* USER CODE END TD */
+     32          
+     33          /* Private define ------------------------------------------------------------*/
+     34          /* USER CODE BEGIN PD */
+     35           
+     36          /* USER CODE END PD */
+     37          
+     38          /* Private macro -------------------------------------------------------------*/
+     39          /* USER CODE BEGIN PM */
+     40          
+     41          /* USER CODE END PM */
+     42          
+     43          /* Private variables ---------------------------------------------------------*/
+     44          /* USER CODE BEGIN PV */
+
+   \                                 In section .data, align 4
+     45          __IO uint32_t raw_temp= 0;
+     46          __IO uint16_t input = 0;
+     47          __IO float temp = 0;
+     48          char temp_array[5] = { 0x30, 0x30, 0xDF, 0x43, '\0' };
+   \                     temp_array:
+   \        0x0   0x30 0x30          DC8 48, 48, 223, 67, 0, 0, 0, 0
+
+   \              0xDF 0x43    
+
+   \              0x00 0x00    
+
+   \              0x00 0x00
+   \                     input:
+   \        0x8   0x0000             DC16 0
+     49          uint16_t int_temp;
+   \                     int_temp:
+   \        0xA   0x00 0x00          DC8 0, 0
+   \                     raw_temp:
+   \        0xC   0x0000'0000        DC32 0
+   \                     temp:
+   \       0x10   0x0000'0000        DC32 0x0
+     50          /* USER CODE END PV */
+     51          
+     52          /* Private function prototypes -----------------------------------------------*/
+     53          /* USER CODE BEGIN PFP */
+     54          
+     55          /* USER CODE END PFP */
+     56          
+     57          /* Private user code ---------------------------------------------------------*/
+     58          /* USER CODE BEGIN 0 */
+     59          
+     60          /* USER CODE END 0 */
+     61          
+     62          /* External variables --------------------------------------------------------*/
+     63          extern ADC_HandleTypeDef hadc2;
+     64          extern TIM_HandleTypeDef htim2;
+     65          /* USER CODE BEGIN EV */
+     66          
+     67          /* USER CODE END EV */
+     68          
+     69          /******************************************************************************/
+     70          /*           Cortex-M4 Processor Interruption and Exception Handlers          */ 
+     71          /******************************************************************************/
+     72          /**
+     73            * @brief This function handles Non maskable interrupt.
+     74            */
+
+   \                                 In section .text, align 2, keep-with-next
+     75          void NMI_Handler(void)
+     76          {
+     77            /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
+     78          
+     79            /* USER CODE END NonMaskableInt_IRQn 0 */
+     80            /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
+     81          
+     82            /* USER CODE END NonMaskableInt_IRQn 1 */
+     83          }
+   \                     NMI_Handler: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+     84          
+     85          /**
+     86            * @brief This function handles Hard fault interrupt.
+     87            */
+
+   \                                 In section .text, align 2, keep-with-next
+     88          void HardFault_Handler(void)
+     89          {
+     90            /* USER CODE BEGIN HardFault_IRQn 0 */
+     91          
+     92            /* USER CODE END HardFault_IRQn 0 */
+     93            while (1)
+   \                     HardFault_Handler: (+1)
+   \                     ??HardFault_Handler_0: (+1)
+   \        0x0   0xE7FE             B.N      ??HardFault_Handler_0
+     94            {
+     95              /* USER CODE BEGIN W1_HardFault_IRQn 0 */
+     96              /* USER CODE END W1_HardFault_IRQn 0 */
+     97            }
+     98          }
+     99          
+    100          /**
+    101            * @brief This function handles Memory management fault.
+    102            */
+
+   \                                 In section .text, align 2, keep-with-next
+    103          void MemManage_Handler(void)
+    104          {
+    105            /* USER CODE BEGIN MemoryManagement_IRQn 0 */
+    106          
+    107            /* USER CODE END MemoryManagement_IRQn 0 */
+    108            while (1)
+   \                     MemManage_Handler: (+1)
+   \                     ??MemManage_Handler_0: (+1)
+   \        0x0   0xE7FE             B.N      ??MemManage_Handler_0
+    109            {
+    110              /* USER CODE BEGIN W1_MemoryManagement_IRQn 0 */
+    111              /* USER CODE END W1_MemoryManagement_IRQn 0 */
+    112            }
+    113          }
+    114          
+    115          /**
+    116            * @brief This function handles Pre-fetch fault, memory access fault.
+    117            */
+
+   \                                 In section .text, align 2, keep-with-next
+    118          void BusFault_Handler(void)
+    119          {
+    120            /* USER CODE BEGIN BusFault_IRQn 0 */
+    121          
+    122            /* USER CODE END BusFault_IRQn 0 */
+    123            while (1)
+   \                     BusFault_Handler: (+1)
+   \                     ??BusFault_Handler_0: (+1)
+   \        0x0   0xE7FE             B.N      ??BusFault_Handler_0
+    124            {
+    125              /* USER CODE BEGIN W1_BusFault_IRQn 0 */
+    126              /* USER CODE END W1_BusFault_IRQn 0 */
+    127            }
+    128          }
+    129          
+    130          /**
+    131            * @brief This function handles Undefined instruction or illegal state.
+    132            */
+
+   \                                 In section .text, align 2, keep-with-next
+    133          void UsageFault_Handler(void)
+    134          {
+    135            /* USER CODE BEGIN UsageFault_IRQn 0 */
+    136          
+    137            /* USER CODE END UsageFault_IRQn 0 */
+    138            while (1)
+   \                     UsageFault_Handler: (+1)
+   \                     ??UsageFault_Handler_0: (+1)
+   \        0x0   0xE7FE             B.N      ??UsageFault_Handler_0
+    139            {
+    140              /* USER CODE BEGIN W1_UsageFault_IRQn 0 */
+    141              /* USER CODE END W1_UsageFault_IRQn 0 */
+    142            }
+    143          }
+    144          
+    145          /**
+    146            * @brief This function handles System service call via SWI instruction.
+    147            */
+
+   \                                 In section .text, align 2, keep-with-next
+    148          void SVC_Handler(void)
+    149          {
+    150            /* USER CODE BEGIN SVCall_IRQn 0 */
+    151          
+    152            /* USER CODE END SVCall_IRQn 0 */
+    153            /* USER CODE BEGIN SVCall_IRQn 1 */
+    154          
+    155            /* USER CODE END SVCall_IRQn 1 */
+    156          }
+   \                     SVC_Handler: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+    157          
+    158          /**
+    159            * @brief This function handles Debug monitor.
+    160            */
+
+   \                                 In section .text, align 2, keep-with-next
+    161          void DebugMon_Handler(void)
+    162          {
+    163            /* USER CODE BEGIN DebugMonitor_IRQn 0 */
+    164          
+    165            /* USER CODE END DebugMonitor_IRQn 0 */
+    166            /* USER CODE BEGIN DebugMonitor_IRQn 1 */
+    167          
+    168            /* USER CODE END DebugMonitor_IRQn 1 */
+    169          }
+   \                     DebugMon_Handler: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+    170          
+    171          /**
+    172            * @brief This function handles Pendable request for system service.
+    173            */
+
+   \                                 In section .text, align 2, keep-with-next
+    174          void PendSV_Handler(void)
+    175          {
+    176            /* USER CODE BEGIN PendSV_IRQn 0 */
+    177          
+    178            /* USER CODE END PendSV_IRQn 0 */
+    179            /* USER CODE BEGIN PendSV_IRQn 1 */
+    180          
+    181            /* USER CODE END PendSV_IRQn 1 */
+    182          }
+   \                     PendSV_Handler: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+    183          
+    184          /**
+    185            * @brief This function handles System tick timer.
+    186            */
+
+   \                                 In section .text, align 2, keep-with-next
+    187          void SysTick_Handler(void)
+    188          {
+    189            /* USER CODE BEGIN SysTick_IRQn 0 */
+    190          
+    191            /* USER CODE END SysTick_IRQn 0 */
+    192            HAL_IncTick();
+   \                     SysTick_Handler: (+1)
+   \        0x0   0x....'....        B.W      HAL_IncTick
+    193            /* USER CODE BEGIN SysTick_IRQn 1 */
+    194          
+    195            /* USER CODE END SysTick_IRQn 1 */
+    196          }
+    197          
+    198          /******************************************************************************/
+    199          /* STM32F4xx Peripheral Interrupt Handlers                                    */
+    200          /* Add here the Interrupt Handlers for the used peripherals.                  */
+    201          /* For the available peripheral interrupt handler names,                      */
+    202          /* please refer to the startup file (startup_stm32f4xx.s).                    */
+    203          /******************************************************************************/
+    204          
+    205          /**
+    206            * @brief This function handles ADC1, ADC2 and ADC3 global interrupts.
+    207            */
+
+   \                                 In section .text, align 2, keep-with-next
+    208          void ADC_IRQHandler(void)
+    209          {
+   \                     ADC_IRQHandler: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    210            /* USER CODE BEGIN ADC_IRQn 0 */
+    211            raw_temp = (HAL_ADC_GetValue(&hadc2) / 100 ) - 16;
+   \        0x2   0x....             LDR.N    R4,??DataTable2
+   \        0x4   0x4620             MOV      R0,R4
+   \        0x6   0x....'....        BL       HAL_ADC_GetValue
+   \        0xA   0x2164             MOVS     R1,#+100
+   \        0xC   0xFBB0 0xF1F1      UDIV     R1,R0,R1
+   \       0x10   0x....             LDR.N    R0,??DataTable2_1
+   \       0x12   0x3910             SUBS     R1,R1,#+16
+   \       0x14   0x60C1             STR      R1,[R0, #+12]
+    212            /* USER CODE END ADC_IRQn 0 */
+    213            HAL_ADC_IRQHandler(&hadc2);
+   \       0x16   0x4620             MOV      R0,R4
+   \       0x18   0xE8BD 0x4010      POP      {R4,LR}
+   \       0x1C   0x....'....        B.W      HAL_ADC_IRQHandler
+    214            /* USER CODE BEGIN ADC_IRQn 1 */
+    215          
+    216            /* USER CODE END ADC_IRQn 1 */
+    217          }
+    218          /**
+    219            * @brief This function handles TIM2 global interrupt.
+    220            */
+
+   \                                 In section .text, align 2, keep-with-next
+    221          void TIM2_IRQHandler(void)
+    222          {
+   \                     TIM2_IRQHandler: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+    223            /* USER CODE BEGIN TIM2_IRQn 0 */
+    224          
+    225            /* USER CODE END TIM2_IRQn 0 */
+    226            HAL_TIM_IRQHandler(&htim2);
+   \        0x2   0x....             LDR.N    R0,??DataTable2_2
+   \        0x4   0x....             LDR.N    R4,??DataTable2_1
+   \        0x6   0x....'....        BL       HAL_TIM_IRQHandler
+    227            /* USER CODE BEGIN TIM2_IRQn 1 */
+    228            input = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_2);
+   \        0xA   0x2104             MOVS     R1,#+4
+   \        0xC   0x....             LDR.N    R0,??DataTable2_3  ;; 0x40020000
+   \        0xE   0x....'....        BL       HAL_GPIO_ReadPin
+   \       0x12   0x8120             STRH     R0,[R4, #+8]
+    229              
+    230              if(input == 1) {
+   \       0x14   0x8920             LDRH     R0,[R4, #+8]
+   \       0x16   0x2801             CMP      R0,#+1
+   \       0x18   0xD10F             BNE.N    ??TIM2_IRQHandler_0
+    231                // temp is fahrenheit
+    232                temp = (raw_temp * 1.8) + 32;
+   \       0x1A   0x68E0             LDR      R0,[R4, #+12]
+   \       0x1C   0x....'....        BL       __aeabi_ui2d
+   \       0x20   0x....             LDR.N    R2,??DataTable2_4  ;; 0xcccccccd
+   \       0x22   0x....             LDR.N    R3,??DataTable2_5  ;; 0x3ffccccc
+   \       0x24   0x....'....        BL       __aeabi_dmul
+   \       0x28   0x2200             MOVS     R2,#+0
+   \       0x2A   0x....             LDR.N    R3,??DataTable2_6  ;; 0x40400000
+   \       0x2C   0x....'....        BL       __aeabi_dadd
+   \       0x30   0x....'....        BL       __aeabi_d2f
+   \       0x34   0x6120             STR      R0,[R4, #+16]
+    233                temp_array[3] = 0x46;   // Character "F"
+   \       0x36   0x2046             MOVS     R0,#+70
+   \       0x38   0xE006             B.N      ??TIM2_IRQHandler_1
+    234                
+    235              }
+    236              else {
+    237                // temp is celcius
+    238                temp = raw_temp;
+   \                     ??TIM2_IRQHandler_0: (+1)
+   \       0x3A   0xED94 0x0A03      VLDR     S0,[R4, #+12]
+   \       0x3E   0xEEB8 0x0A40      VCVT.F32.U32 S0,S0
+   \       0x42   0xED84 0x0A04      VSTR     S0,[R4, #+16]
+    239                temp_array[3] = 0x43;  // Character "C"
+   \       0x46   0x2043             MOVS     R0,#+67
+   \                     ??TIM2_IRQHandler_1: (+1)
+   \       0x48   0x70E0             STRB     R0,[R4, #+3]
+    240              } 
+    241            int_temp = (uint16_t)temp;
+    242            temp_array[0] = ((int_temp /10) % 10) | 0x30;
+   \       0x4A   0x220A             MOVS     R2,#+10
+   \       0x4C   0xED94 0x0A04      VLDR     S0,[R4, #+16]
+   \       0x50   0xEEBD 0x0AC0      VCVT.S32.F32 S0,S0
+   \       0x54   0xEE10 0x0A10      VMOV     R0,S0
+   \       0x58   0xB281             UXTH     R1,R0
+   \       0x5A   0xFB91 0xF2F2      SDIV     R2,R1,R2
+   \       0x5E   0x250A             MOVS     R5,#+10
+   \       0x60   0x230A             MOVS     R3,#+10
+   \       0x62   0xFB92 0xF5F5      SDIV     R5,R2,R5
+   \       0x66   0xFB03 0x2515      MLS      R5,R3,R5,R2
+   \       0x6A   0xF045 0x0530      ORR      R5,R5,#0x30
+    243            temp_array[1] = (int_temp % 10) | 0x30;
+   \       0x6E   0xFB03 0x1112      MLS      R1,R3,R2,R1
+   \       0x72   0x7025             STRB     R5,[R4, #+0]
+   \       0x74   0xF041 0x0130      ORR      R1,R1,#0x30
+    244            /* USER CODE END TIM2_IRQn 1 */
+    245          }
+   \       0x78   0x8160             STRH     R0,[R4, #+10]
+   \       0x7A   0x7061             STRB     R1,[R4, #+1]
+   \       0x7C   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2:
+   \        0x0   0x....'....        DC32     hadc2
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_1:
+   \        0x0   0x....'....        DC32     temp_array
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_2:
+   \        0x0   0x....'....        DC32     htim2
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_3:
+   \        0x0   0x4002'0000        DC32     0x40020000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_4:
+   \        0x0   0xCCCC'CCCD        DC32     0xcccccccd
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_5:
+   \        0x0   0x3FFC'CCCC        DC32     0x3ffccccc
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_6:
+   \        0x0   0x4040'0000        DC32     0x40400000
+    246          
+    247          /* USER CODE BEGIN 1 */
+    248          
+    249          /* USER CODE END 1 */
+    250          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   ADC_IRQHandler
+         8   -> HAL_ADC_GetValue
+         0   -> HAL_ADC_IRQHandler
+       0   BusFault_Handler
+       0   DebugMon_Handler
+       0   HardFault_Handler
+       0   MemManage_Handler
+       0   NMI_Handler
+       0   PendSV_Handler
+       0   SVC_Handler
+       0   SysTick_Handler
+         0   -> HAL_IncTick
+      16   TIM2_IRQHandler
+        16   -> HAL_GPIO_ReadPin
+        16   -> HAL_TIM_IRQHandler
+        16   -> __aeabi_d2f
+        16   -> __aeabi_dadd
+        16   -> __aeabi_dmul
+        16   -> __aeabi_ui2d
+       0   UsageFault_Handler
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_2
+       4  ??DataTable2_3
+       4  ??DataTable2_4
+       4  ??DataTable2_5
+       4  ??DataTable2_6
+      32  ADC_IRQHandler
+       2  BusFault_Handler
+       2  DebugMon_Handler
+       2  HardFault_Handler
+       2  MemManage_Handler
+       2  NMI_Handler
+       2  PendSV_Handler
+       2  SVC_Handler
+       4  SysTick_Handler
+     126  TIM2_IRQHandler
+       2  UsageFault_Handler
+      20  temp_array
+          input
+          int_temp
+          raw_temp
+          temp
+
+ 
+  20 bytes in section .data
+ 206 bytes in section .text
+ 
+ 206 bytes of CODE memory
+  20 bytes of DATA memory
+
+Errors: none
+Warnings: none

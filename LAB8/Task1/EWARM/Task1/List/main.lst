@@ -1,0 +1,897 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         10/Mar/2020  20:38:17
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps projects\LAB8\Task1\Src\main.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EWC675.tmp
+#        ("C:\Users\mohit\Desktop\Microapps projects\LAB8\Task1\Src\main.c" -D
+#        USE_HAL_DRIVER -D STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task1\EWARM\Task1\List" -o
+#        "C:\Users\mohit\Desktop\Microapps projects\LAB8\Task1\EWARM\Task1\Obj"
+#        --debug --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.4\arm\inc\c\DLib_Config_Full.h" -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task1\EWARM/../Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task1\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task1\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task1\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task1\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task1\EWARM\Task1\List\main.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB8\Task1\EWARM\Task1\Obj\main.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\LAB8\Task1\Src\main.c
+      1          /* USER CODE BEGIN Header */
+      2          /**
+      3            ******************************************************************************
+      4            * @file           : main.c
+      5            * @brief          : Main program body
+      6            ******************************************************************************
+      7            * @attention
+      8            *
+      9            * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+     10            * All rights reserved.</center></h2>
+     11            *
+     12            * This software component is licensed by ST under BSD 3-Clause license,
+     13            * the "License"; You may not use this file except in compliance with the
+     14            * License. You may obtain a copy of the License at:
+     15            *                        opensource.org/licenses/BSD-3-Clause
+     16            *
+     17            ******************************************************************************
+     18            */
+     19          /* USER CODE END Header */
+     20          
+     21          /* Includes ------------------------------------------------------------------*/
+     22          #include "main.h"
+     23          
+     24          /* Private includes ----------------------------------------------------------*/
+     25          /* USER CODE BEGIN Includes */
+     26          
+     27          /* USER CODE END Includes */
+     28          
+     29          /* Private typedef -----------------------------------------------------------*/
+     30          /* USER CODE BEGIN PTD */
+     31          
+     32          /* USER CODE END PTD */
+     33          
+     34          /* Private define ------------------------------------------------------------*/
+     35          /* USER CODE BEGIN PD */
+     36          /* USER CODE END PD */
+     37          
+     38          /* Private macro -------------------------------------------------------------*/
+     39          /* USER CODE BEGIN PM */
+     40          
+     41          /* USER CODE END PM */
+     42          
+     43          /* Private variables ---------------------------------------------------------*/
+
+   \                                 In section .bss, align 4
+     44          ADC_HandleTypeDef hadc2;
+   \                     hadc2:
+   \        0x0                      DS8 72
+     45          
+     46          /* USER CODE BEGIN PV */
+     47          
+     48          /* USER CODE END PV */
+     49          
+     50          /* Private function prototypes -----------------------------------------------*/
+     51          void SystemClock_Config(void);
+     52          static void MX_GPIO_Init(void);
+     53          static void MX_ADC2_Init(void);
+     54          /* USER CODE BEGIN PFP */
+     55          
+     56          /* USER CODE END PFP */
+     57          
+     58          /* Private user code ---------------------------------------------------------*/
+     59          /* USER CODE BEGIN 0 */
+
+   \                                 In section .text, align 2, keep-with-next
+     60          void command(char i)
+     61          {
+   \                     command: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+     62           GPIOD-> ODR = i; //put data on output Port
+   \        0x2   0x....'....        BL       ?Subroutine2
+     63           HAL_GPIO_WritePin(GPIOA,GPIO_PIN_0, GPIO_PIN_RESET); // D/I=LOW : send instruction
+   \                     ??CrossCallReturnLabel_5: (+1)
+   \        0x6   0x6018             STR      R0,[R3, #+0]
+   \        0x8   0x2200             MOVS     R2,#+0
+   \        0xA   0x....             B.N      ??Subroutine0_0
+     64           HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1, GPIO_PIN_SET); // E-> HIGH
+     65           HAL_Delay(1);
+     66           HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1, GPIO_PIN_RESET); // E-> LOW
+     67          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine2: (+1)
+   \        0x0   0x....             LDR.N    R3,??DataTable5  ;; 0x40020c14
+   \        0x2   0x....             LDR.N    R4,??DataTable5_1  ;; 0x40020000
+   \        0x4   0x4770             BX       LR
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine0: (+1)
+   \        0x0   0x6018             STR      R0,[R3, #+0]
+   \        0x2   0x2201             MOVS     R2,#+1
+   \                     ??Subroutine0_0: (+1)
+   \        0x4   0x2101             MOVS     R1,#+1
+   \        0x6   0x4620             MOV      R0,R4
+   \        0x8   0x....'....        BL       HAL_GPIO_WritePin
+   \        0xC   0x2201             MOVS     R2,#+1
+   \        0xE   0x2102             MOVS     R1,#+2
+   \       0x10   0x4620             MOV      R0,R4
+   \       0x12   0x....'....        BL       HAL_GPIO_WritePin
+   \       0x16   0x2001             MOVS     R0,#+1
+   \       0x18   0x....'....        BL       HAL_Delay
+   \       0x1C   0x4620             MOV      R0,R4
+   \       0x1E   0xE8BD 0x4010      POP      {R4,LR}
+   \       0x22   0x2200             MOVS     R2,#+0
+   \       0x24   0x2102             MOVS     R1,#+2
+   \       0x26   0x....'....        B.W      HAL_GPIO_WritePin
+     68          /**********************************************************/
+
+   \                                 In section .text, align 2, keep-with-next
+     69          void write(char i)
+     70          {
+   \                     write: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+     71           GPIOD-> ODR = i; //put data on output Port
+   \        0x2   0x....'....        BL       ?Subroutine2
+     72           HAL_GPIO_WritePin(GPIOA,GPIO_PIN_0, GPIO_PIN_SET); // D/I=high : send data
+   \                     ??CrossCallReturnLabel_6: (+1)
+   \        0x6   0x....             B.N      ?Subroutine0
+     73           HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1, GPIO_PIN_SET); // E-> HIGH
+     74           HAL_Delay(1);
+     75           HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1, GPIO_PIN_RESET); // E-> LOW
+     76          }
+     77          /**********************************************************/
+
+   \                                 In section .text, align 2, keep-with-next
+     78          void init()
+     79          {
+   \                     init: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+     80           HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1, GPIO_PIN_RESET); // E-> LOW
+   \        0x2   0x2200             MOVS     R2,#+0
+   \        0x4   0x2102             MOVS     R1,#+2
+   \        0x6   0x....             LDR.N    R0,??DataTable5_1  ;; 0x40020000
+   \        0x8   0x....'....        BL       HAL_GPIO_WritePin
+     81           HAL_Delay(100); //Wait >40 msec after power is applied
+   \        0xC   0x2064             MOVS     R0,#+100
+   \        0xE   0x....'....        BL       HAL_Delay
+     82           command(0x30); //command 0x30 = Wake up
+   \       0x12   0x2030             MOVS     R0,#+48
+   \       0x14   0x....'....        BL       command
+     83           HAL_Delay(30); //must wait 5ms, busy flag not available
+   \       0x18   0x201E             MOVS     R0,#+30
+   \       0x1A   0x....'....        BL       HAL_Delay
+     84           command(0x30); //command 0x30 = Wake up #2
+   \       0x1E   0x2030             MOVS     R0,#+48
+   \       0x20   0x....'....        BL       command
+     85           HAL_Delay(10); //must wait 160us, busy flag not available
+   \       0x24   0x....'....        BL       ?Subroutine1
+     86           command(0x30); //command 0x30 = Wake up #3
+   \                     ??CrossCallReturnLabel_4: (+1)
+   \       0x28   0x2030             MOVS     R0,#+48
+   \       0x2A   0x....'....        BL       command
+     87           HAL_Delay(10); //must wait 160us, busy flag not available
+   \       0x2E   0x....'....        BL       ?Subroutine1
+     88           command(0x38); //Function set: 8-bit/2-line
+   \                     ??CrossCallReturnLabel_3: (+1)
+   \       0x32   0x2038             MOVS     R0,#+56
+   \       0x34   0x....'....        BL       command
+     89           HAL_Delay(10); //must wait 160us, busy flag not available
+   \       0x38   0x....'....        BL       ?Subroutine1
+     90           command(0x10); //Set cursor
+   \                     ??CrossCallReturnLabel_2: (+1)
+   \       0x3C   0x2010             MOVS     R0,#+16
+   \       0x3E   0x....'....        BL       command
+     91           HAL_Delay(10); //must wait 160us, busy flag not available
+   \       0x42   0x....'....        BL       ?Subroutine1
+     92           command(0x0c); //Display ON; Cursor ON
+   \                     ??CrossCallReturnLabel_1: (+1)
+   \       0x46   0x200C             MOVS     R0,#+12
+   \       0x48   0x....'....        BL       command
+     93           HAL_Delay(10); //must wait 160us, busy flag not available
+   \       0x4C   0x....'....        BL       ?Subroutine1
+     94           command(0x06); //Entry mode set
+   \                     ??CrossCallReturnLabel_0: (+1)
+   \       0x50   0xE8BD 0x4002      POP      {R1,LR}
+   \       0x54   0x2006             MOVS     R0,#+6
+   \       0x56   0x....             B.N      command
+     95          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine1: (+1)
+   \        0x0   0x200A             MOVS     R0,#+10
+   \        0x2   0x....'....        B.W      HAL_Delay
+
+   \                                 In section .text, align 2, keep-with-next
+     96          void clear(void) {
+   \                     clear: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+     97           GPIOD->ODR = 0x0000;
+   \        0x2   0x....'....        BL       ?Subroutine2
+     98           HAL_GPIO_WritePin(GPIOA,GPIO_PIN_0, GPIO_PIN_SET); // D/I=high : send data
+   \                     ??CrossCallReturnLabel_7: (+1)
+   \        0x6   0x2000             MOVS     R0,#+0
+   \        0x8                      REQUIRE ?Subroutine0
+   \        0x8                      ;; // Fall through to label ?Subroutine0
+     99           HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1, GPIO_PIN_SET); // E-> HIGH
+    100           HAL_Delay(1);
+    101           HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1, GPIO_PIN_RESET); // E-> LOW
+    102          }
+    103          /**********************************************************/
+
+   \                                 In section .text, align 2, keep-with-next
+    104          void write_string(char *display_string) {
+   \                     write_string: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x4604             MOV      R4,R0
+    105            clear();
+   \        0x4   0x....'....        BL       clear
+    106            uint8_t flag = 0;
+   \        0x8   0x2500             MOVS     R5,#+0
+    107            for(uint8_t i = 0; i < 16; i++){
+   \        0xA   0x2600             MOVS     R6,#+0
+    108              if(flag == 0){
+    109                write(display_string[i]);
+   \                     ??write_string_0: (+1)
+   \        0xC   0x5DA0             LDRB     R0,[R4, R6]
+   \        0xE   0xE002             B.N      ??write_string_1
+    110              }
+   \                     ??write_string_2: (+1)
+   \       0x10   0x0028             MOVS     R0,R5
+   \       0x12   0xD0FB             BEQ.N    ??write_string_0
+    111              else {
+    112                write(0x00);
+   \       0x14   0x2000             MOVS     R0,#+0
+   \                     ??write_string_1: (+1)
+   \       0x16   0x....'....        BL       write
+    113              }
+    114              if(display_string[i] == '\0'){
+   \       0x1A   0x5DA0             LDRB     R0,[R4, R6]
+   \       0x1C   0xB900             CBNZ.N   R0,??write_string_3
+    115                flag = 1;
+   \       0x1E   0x2501             MOVS     R5,#+1
+    116              }
+    117            }
+   \                     ??write_string_3: (+1)
+   \       0x20   0x1C76             ADDS     R6,R6,#+1
+   \       0x22   0x2E10             CMP      R6,#+16
+   \       0x24   0xDBF4             BLT.N    ??write_string_2
+    118          }
+   \       0x26   0xBD70             POP      {R4-R6,PC}       ;; return
+    119          /* USER CODE END 0 */
+    120          
+    121          /**
+    122            * @brief  The application entry point.
+    123            * @retval int
+    124            */
+
+   \                                 In section .text, align 4, keep-with-next
+    125          int main(void)
+    126          {
+   \                     main: (+1)
+   \        0x0   0xE92D 0x43F8      PUSH     {R3-R9,LR}
+   \        0x4   0xB086             SUB      SP,SP,#+24
+    127            /* USER CODE BEGIN 1 */
+    128            /* USER CODE END 1 */
+    129            
+    130          
+    131            /* MCU Configuration--------------------------------------------------------*/
+    132          
+    133            /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+    134            HAL_Init();
+   \        0x6   0x....'....        BL       HAL_Init
+    135          
+    136            /* USER CODE BEGIN Init */
+    137            /* USER CODE END Init */
+    138          
+    139            /* Configure the system clock */
+    140            SystemClock_Config();
+   \        0xA   0x....'....        BL       SystemClock_Config
+    141          
+    142            /* USER CODE BEGIN SysInit */
+    143            /* USER CODE END SysInit */
+    144          
+    145            /* Initialize all configured peripherals */
+    146            MX_GPIO_Init();
+   \        0xE   0x....'....        BL       ?Subroutine3
+   \                     ??CrossCallReturnLabel_8: (+1)
+   \       0x12   0x2000             MOVS     R0,#+0
+   \       0x14   0x9000             STR      R0,[SP, #+0]
+   \       0x16   0x....             LDR.N    R5,??DataTable5_1  ;; 0x40020000
+   \       0x18   0x....             LDR.N    R0,??DataTable5_2  ;; 0x40023830
+   \       0x1A   0x....             LDR.N    R4,??DataTable5_3  ;; 0x40020c00
+   \       0x1C   0x6801             LDR      R1,[R0, #+0]
+   \       0x1E   0xF041 0x0180      ORR      R1,R1,#0x80
+   \       0x22   0x6001             STR      R1,[R0, #+0]
+   \       0x24   0x6802             LDR      R2,[R0, #+0]
+   \       0x26   0xF002 0x0280      AND      R2,R2,#0x80
+   \       0x2A   0x9200             STR      R2,[SP, #+0]
+   \       0x2C   0x2200             MOVS     R2,#+0
+   \       0x2E   0x9900             LDR      R1,[SP, #+0]
+   \       0x30   0x9200             STR      R2,[SP, #+0]
+   \       0x32   0x6803             LDR      R3,[R0, #+0]
+   \       0x34   0xF043 0x0304      ORR      R3,R3,#0x4
+   \       0x38   0x6003             STR      R3,[R0, #+0]
+   \       0x3A   0x6801             LDR      R1,[R0, #+0]
+   \       0x3C   0xF001 0x0104      AND      R1,R1,#0x4
+   \       0x40   0x9100             STR      R1,[SP, #+0]
+   \       0x42   0x9900             LDR      R1,[SP, #+0]
+   \       0x44   0x9200             STR      R2,[SP, #+0]
+   \       0x46   0x6803             LDR      R3,[R0, #+0]
+   \       0x48   0xF043 0x0301      ORR      R3,R3,#0x1
+   \       0x4C   0x6003             STR      R3,[R0, #+0]
+   \       0x4E   0x6801             LDR      R1,[R0, #+0]
+   \       0x50   0xF001 0x0101      AND      R1,R1,#0x1
+   \       0x54   0x9100             STR      R1,[SP, #+0]
+   \       0x56   0x9900             LDR      R1,[SP, #+0]
+   \       0x58   0x9200             STR      R2,[SP, #+0]
+   \       0x5A   0x2103             MOVS     R1,#+3
+   \       0x5C   0x6803             LDR      R3,[R0, #+0]
+   \       0x5E   0xF043 0x0308      ORR      R3,R3,#0x8
+   \       0x62   0x6003             STR      R3,[R0, #+0]
+   \       0x64   0x6800             LDR      R0,[R0, #+0]
+   \       0x66   0xF000 0x0008      AND      R0,R0,#0x8
+   \       0x6A   0x9000             STR      R0,[SP, #+0]
+   \       0x6C   0x9800             LDR      R0,[SP, #+0]
+   \       0x6E   0x4628             MOV      R0,R5
+   \       0x70   0x....'....        BL       HAL_GPIO_WritePin
+   \       0x74   0x2200             MOVS     R2,#+0
+   \       0x76   0x21FF             MOVS     R1,#+255
+   \       0x78   0x4620             MOV      R0,R4
+   \       0x7A   0x....'....        BL       HAL_GPIO_WritePin
+   \       0x7E   0x2103             MOVS     R1,#+3
+   \       0x80   0x9101             STR      R1,[SP, #+4]
+   \       0x82   0x2201             MOVS     R2,#+1
+   \       0x84   0x9202             STR      R2,[SP, #+8]
+   \       0x86   0x2100             MOVS     R1,#+0
+   \       0x88   0x9103             STR      R1,[SP, #+12]
+   \       0x8A   0x2203             MOVS     R2,#+3
+   \       0x8C   0x9204             STR      R2,[SP, #+16]
+   \       0x8E   0xA901             ADD      R1,SP,#+4
+   \       0x90   0x4628             MOV      R0,R5
+   \       0x92   0x....'....        BL       HAL_GPIO_Init
+   \       0x96   0x21FF             MOVS     R1,#+255
+   \       0x98   0x9101             STR      R1,[SP, #+4]
+   \       0x9A   0x2201             MOVS     R2,#+1
+   \       0x9C   0x2100             MOVS     R1,#+0
+   \       0x9E   0x9103             STR      R1,[SP, #+12]
+   \       0xA0   0x9104             STR      R1,[SP, #+16]
+   \       0xA2   0x9202             STR      R2,[SP, #+8]
+   \       0xA4   0xA901             ADD      R1,SP,#+4
+   \       0xA6   0x4620             MOV      R0,R4
+   \       0xA8   0x....'....        BL       HAL_GPIO_Init
+    147            MX_ADC2_Init();
+   \       0xAC   0x2210             MOVS     R2,#+16
+   \       0xAE   0x2100             MOVS     R1,#+0
+   \       0xB0   0x4668             MOV      R0,SP
+   \       0xB2   0x....'....        BL       memset
+   \       0xB6   0x....             LDR.N    R4,??DataTable5_4
+   \       0xB8   0x....             LDR.N    R0,??DataTable5_5  ;; 0x40012100
+   \       0xBA   0x6020             STR      R0,[R4, #+0]
+   \       0xBC   0xF44F 0x3180      MOV      R1,#+65536
+   \       0xC0   0x....             LDR.N    R0,??DataTable5_6  ;; 0xf000001
+   \       0xC2   0x62A0             STR      R0,[R4, #+40]
+   \       0xC4   0x6061             STR      R1,[R4, #+4]
+   \       0xC6   0x2001             MOVS     R0,#+1
+   \       0xC8   0x2200             MOVS     R2,#+0
+   \       0xCA   0x2101             MOVS     R1,#+1
+   \       0xCC   0x61E0             STR      R0,[R4, #+28]
+   \       0xCE   0x6160             STR      R0,[R4, #+20]
+   \       0xD0   0x60A2             STR      R2,[R4, #+8]
+   \       0xD2   0x6122             STR      R2,[R4, #+16]
+   \       0xD4   0x7621             STRB     R1,[R4, #+24]
+   \       0xD6   0xF884 0x2020      STRB     R2,[R4, #+32]
+   \       0xDA   0x62E2             STR      R2,[R4, #+44]
+   \       0xDC   0x60E2             STR      R2,[R4, #+12]
+   \       0xDE   0xF884 0x2030      STRB     R2,[R4, #+48]
+   \       0xE2   0x4620             MOV      R0,R4
+   \       0xE4   0x....'....        BL       HAL_ADC_Init
+   \       0xE8   0x200A             MOVS     R0,#+10
+   \       0xEA   0x2101             MOVS     R1,#+1
+   \       0xEC   0x9000             STR      R0,[SP, #+0]
+   \       0xEE   0x9101             STR      R1,[SP, #+4]
+   \       0xF0   0x2200             MOVS     R2,#+0
+   \       0xF2   0x9202             STR      R2,[SP, #+8]
+   \       0xF4   0x4669             MOV      R1,SP
+   \       0xF6   0x4620             MOV      R0,R4
+   \       0xF8   0x....'....        BL       HAL_ADC_ConfigChannel
+    148            /* USER CODE BEGIN 2 */
+    149            init();
+   \       0xFC   0x....'....        BL       init
+    150            write_string("Lab8\0");
+   \      0x100   0x....             ADR.N    R0,?_0
+   \      0x102   0x....'....        BL       write_string
+    151            HAL_Delay(200);
+   \      0x106   0x20C8             MOVS     R0,#+200
+   \      0x108   0x....'....        BL       HAL_Delay
+    152            clear();
+   \      0x10C   0x....'....        BL       clear
+    153            /* USER CODE END 2 */
+    154           
+    155           
+    156          
+    157            /* Infinite loop */
+    158            /* USER CODE BEGIN WHILE */
+    159            while (1)
+    160            {
+    161              
+    162              
+    163            char data_array[4] = { 0x30, 0x30, 0x30, '\0' };
+   \                     ??main_0: (+1)
+   \      0x110   0x2730             MOVS     R7,#+48
+   \      0x112   0x2530             MOVS     R5,#+48
+   \      0x114   0x2630             MOVS     R6,#+48
+    164            for(uint8_t i = 0; i < 10; i++) {
+   \      0x116   0xF04F 0x090A      MOV      R9,#+10
+   \      0x11A   0xE016             B.N      ??main_1
+    165              if(data_array[0] == 0x3A) {
+    166                data_array[0] = 0x30;
+    167              }
+    168              for(uint8_t j = 0; j < 10; j++) {
+    169                if(data_array[1] == 0x3A) {
+    170                data_array[1] = 0x30;
+    171                }
+    172                for(uint8_t k = 0; k < 10; k++) {
+    173                  if(data_array[2] == 0x3A) {
+    174                    data_array[2] = 0x30;
+    175                  }
+    176                  //write_string(data_array);
+    177                  write(data_array[2]);
+    178                  data_array[2]++;
+    179                  HAL_Delay(1000); // 1 second delay
+    180                  
+    181                  if(data_array[0] == 0x32 && data_array[1] == 0x31 && data_array[2] == 0x32){
+    182                    return;
+                                 ^
+Warning[Pe117]: non-void function "main" should return a value
+    183                  }
+    184                  clear();
+   \                     ??main_2: (+1)
+   \      0x11C   0x....'....        BL       clear
+   \      0x120   0xF1B8 0x0801      SUBS     R8,R8,#+1
+   \      0x124   0xD117             BNE.N    ??main_3
+    185                }
+    186                write(data_array[1]);
+   \      0x126   0x4628             MOV      R0,R5
+   \      0x128   0x....'....        BL       write
+    187                data_array[1]++;
+   \      0x12C   0x1C6D             ADDS     R5,R5,#+1
+   \      0x12E   0x1E64             SUBS     R4,R4,#+1
+   \      0x130   0xB2ED             UXTB     R5,R5
+   \      0x132   0xD10B             BNE.N    ??main_4
+    188              }
+    189              write(data_array[0]);
+   \      0x134   0x4638             MOV      R0,R7
+   \      0x136   0x....'....        BL       write
+    190              data_array[0]++;
+   \      0x13A   0x1C7F             ADDS     R7,R7,#+1
+   \      0x13C   0xF1B9 0x0901      SUBS     R9,R9,#+1
+   \      0x140   0xB2FF             UXTB     R7,R7
+   \      0x142   0xD0E5             BEQ.N    ??main_0
+   \      0x144   0x2F3A             CMP      R7,#+58
+   \      0x146   0xBF08             IT       EQ
+   \      0x148   0x2730             MOVEQ    R7,#+48
+   \                     ??main_1: (+1)
+   \      0x14A   0x240A             MOVS     R4,#+10
+   \                     ??main_4: (+1)
+   \      0x14C   0x2D3A             CMP      R5,#+58
+   \      0x14E   0xBF08             IT       EQ
+   \      0x150   0x2530             MOVEQ    R5,#+48
+   \      0x152   0xF04F 0x080A      MOV      R8,#+10
+   \                     ??main_3: (+1)
+   \      0x156   0xB2F0             UXTB     R0,R6
+   \      0x158   0x283A             CMP      R0,#+58
+   \      0x15A   0xBF08             IT       EQ
+   \      0x15C   0x2630             MOVEQ    R6,#+48
+   \      0x15E   0xB2F0             UXTB     R0,R6
+   \      0x160   0x....'....        BL       write
+   \      0x164   0xF44F 0x707A      MOV      R0,#+1000
+   \      0x168   0x....'....        BL       HAL_Delay
+   \      0x16C   0x1C76             ADDS     R6,R6,#+1
+   \      0x16E   0x2F32             CMP      R7,#+50
+   \      0x170   0xBF02             ITTT     EQ
+   \      0x172   0x2D31             CMPEQ    R5,#+49
+   \      0x174   0xB2F0             UXTBEQ   R0,R6
+   \      0x176   0x2832             CMPEQ    R0,#+50
+   \      0x178   0xD1D0             BNE.N    ??main_2
+   \      0x17A   0x2000             MOVS     R0,#+0
+   \      0x17C   0xB007             ADD      SP,SP,#+28
+   \      0x17E   0xE8BD 0x83F0      POP      {R4-R9,PC}       ;; return
+    191            } 
+    192              /* USER CODE END WHILE */
+    193          
+    194              /* USER CODE BEGIN 3 */
+    195            }
+    196            /* USER CODE END 3 */
+    197          }
+    198          
+    199          /**
+    200            * @brief System Clock Configuration
+    201            * @retval None
+    202            */
+
+   \                                 In section .text, align 2, keep-with-next
+    203          void SystemClock_Config(void)
+    204          {
+   \                     SystemClock_Config: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+   \        0x2   0xB092             SUB      SP,SP,#+72
+   \        0x4   0x2230             MOVS     R2,#+48
+   \        0x6   0x2100             MOVS     R1,#+0
+   \        0x8   0xA806             ADD      R0,SP,#+24
+   \        0xA   0x....'....        BL       memset
+   \        0xE   0x....'....        BL       ?Subroutine3
+    205            RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+    206            RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+    207          
+    208            /** Configure the main internal regulator output voltage 
+    209            */
+    210            __HAL_RCC_PWR_CLK_ENABLE();
+   \                     ??CrossCallReturnLabel_9: (+1)
+   \       0x12   0x2000             MOVS     R0,#+0
+   \       0x14   0x9000             STR      R0,[SP, #+0]
+    211            __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+    212            /** Initializes the CPU, AHB and APB busses clocks 
+    213            */
+    214            RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+    215            RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+   \       0x16   0xF44F 0x3380      MOV      R3,#+65536
+   \       0x1A   0x....             LDR.N    R0,??DataTable5_7  ;; 0x40023840
+   \       0x1C   0x6801             LDR      R1,[R0, #+0]
+   \       0x1E   0xF041 0x5180      ORR      R1,R1,#0x10000000
+   \       0x22   0x6001             STR      R1,[R0, #+0]
+   \       0x24   0x2100             MOVS     R1,#+0
+   \       0x26   0x6800             LDR      R0,[R0, #+0]
+   \       0x28   0xF000 0x5080      AND      R0,R0,#0x10000000
+   \       0x2C   0x9000             STR      R0,[SP, #+0]
+   \       0x2E   0x9800             LDR      R0,[SP, #+0]
+   \       0x30   0x....             LDR.N    R0,??DataTable5_8  ;; 0x40007000
+   \       0x32   0x9100             STR      R1,[SP, #+0]
+   \       0x34   0x6802             LDR      R2,[R0, #+0]
+   \       0x36   0xF442 0x4240      ORR      R2,R2,#0xC000
+   \       0x3A   0x6002             STR      R2,[R0, #+0]
+   \       0x3C   0x2201             MOVS     R2,#+1
+   \       0x3E   0x6800             LDR      R0,[R0, #+0]
+   \       0x40   0xF400 0x4040      AND      R0,R0,#0xC000
+   \       0x44   0x9000             STR      R0,[SP, #+0]
+    216            RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+    217            RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+    218            RCC_OscInitStruct.PLL.PLLM = 4;
+    219            RCC_OscInitStruct.PLL.PLLN = 168;
+    220            RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+    221            RCC_OscInitStruct.PLL.PLLQ = 4;
+    222            if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+   \       0x46   0xA806             ADD      R0,SP,#+24
+   \       0x48   0x9900             LDR      R1,[SP, #+0]
+   \       0x4A   0x9206             STR      R2,[SP, #+24]
+   \       0x4C   0x2102             MOVS     R1,#+2
+   \       0x4E   0xF44F 0x0280      MOV      R2,#+4194304
+   \       0x52   0x910C             STR      R1,[SP, #+48]
+   \       0x54   0x920D             STR      R2,[SP, #+52]
+   \       0x56   0x2104             MOVS     R1,#+4
+   \       0x58   0x22A8             MOVS     R2,#+168
+   \       0x5A   0x910E             STR      R1,[SP, #+56]
+   \       0x5C   0x920F             STR      R2,[SP, #+60]
+   \       0x5E   0x2102             MOVS     R1,#+2
+   \       0x60   0x2204             MOVS     R2,#+4
+   \       0x62   0x9307             STR      R3,[SP, #+28]
+   \       0x64   0x9110             STR      R1,[SP, #+64]
+   \       0x66   0x9211             STR      R2,[SP, #+68]
+   \       0x68   0x....'....        BL       HAL_RCC_OscConfig
+    223            {
+    224              Error_Handler();
+    225            }
+    226            /** Initializes the CPU, AHB and APB busses clocks 
+    227            */
+    228            RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+    229                                        |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+    230            RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+   \       0x6C   0x2102             MOVS     R1,#+2
+   \       0x6E   0x9102             STR      R1,[SP, #+8]
+    231            RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+   \       0x70   0x2200             MOVS     R2,#+0
+   \       0x72   0x9203             STR      R2,[SP, #+12]
+   \       0x74   0x200F             MOVS     R0,#+15
+    232            RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+   \       0x76   0xF44F 0x51A0      MOV      R1,#+5120
+   \       0x7A   0x9001             STR      R0,[SP, #+4]
+   \       0x7C   0x9104             STR      R1,[SP, #+16]
+    233            RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+   \       0x7E   0xF44F 0x5280      MOV      R2,#+4096
+   \       0x82   0x9205             STR      R2,[SP, #+20]
+    234          
+    235            if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
+   \       0x84   0x2105             MOVS     R1,#+5
+   \       0x86   0xA801             ADD      R0,SP,#+4
+   \       0x88   0x....'....        BL       HAL_RCC_ClockConfig
+    236            {
+    237              Error_Handler();
+    238            }
+    239          }
+   \       0x8C   0xB013             ADD      SP,SP,#+76
+   \       0x8E   0xBD00             POP      {PC}             ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine3: (+1)
+   \        0x0   0x2214             MOVS     R2,#+20
+   \        0x2   0x2100             MOVS     R1,#+0
+   \        0x4   0xA801             ADD      R0,SP,#+4
+   \        0x6   0x....'....        B.W      memset
+    240          
+    241          /**
+    242            * @brief ADC2 Initialization Function
+    243            * @param None
+    244            * @retval None
+    245            */
+    246          static void MX_ADC2_Init(void)
+    247          {
+    248          
+    249            /* USER CODE BEGIN ADC2_Init 0 */
+    250          
+    251            /* USER CODE END ADC2_Init 0 */
+    252          
+    253            ADC_ChannelConfTypeDef sConfig = {0};
+    254          
+    255            /* USER CODE BEGIN ADC2_Init 1 */
+    256          
+    257            /* USER CODE END ADC2_Init 1 */
+    258            /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) 
+    259            */
+    260            hadc2.Instance = ADC2;
+    261            hadc2.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+    262            hadc2.Init.Resolution = ADC_RESOLUTION_12B;
+    263            hadc2.Init.ScanConvMode = DISABLE;
+    264            hadc2.Init.ContinuousConvMode = ENABLE;
+    265            hadc2.Init.DiscontinuousConvMode = DISABLE;
+    266            hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+    267            hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+    268            hadc2.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+    269            hadc2.Init.NbrOfConversion = 1;
+    270            hadc2.Init.DMAContinuousRequests = DISABLE;
+    271            hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+    272            if (HAL_ADC_Init(&hadc2) != HAL_OK)
+    273            {
+    274              Error_Handler();
+    275            }
+    276            /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
+    277            */
+    278            sConfig.Channel = ADC_CHANNEL_10;
+    279            sConfig.Rank = 1;
+    280            sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+    281            if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
+    282            {
+    283              Error_Handler();
+    284            }
+    285            /* USER CODE BEGIN ADC2_Init 2 */
+    286          
+    287            /* USER CODE END ADC2_Init 2 */
+    288          
+    289          }
+    290          
+    291          /**
+    292            * @brief GPIO Initialization Function
+    293            * @param None
+    294            * @retval None
+    295            */
+    296          static void MX_GPIO_Init(void)
+    297          {
+    298            GPIO_InitTypeDef GPIO_InitStruct = {0};
+    299          
+    300            /* GPIO Ports Clock Enable */
+    301            __HAL_RCC_GPIOH_CLK_ENABLE();
+    302            __HAL_RCC_GPIOC_CLK_ENABLE();
+    303            __HAL_RCC_GPIOA_CLK_ENABLE();
+    304            __HAL_RCC_GPIOD_CLK_ENABLE();
+    305          
+    306            /*Configure GPIO pin Output Level */
+    307            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0|GPIO_PIN_1, GPIO_PIN_RESET);
+    308          
+    309            /*Configure GPIO pin Output Level */
+    310            HAL_GPIO_WritePin(GPIOD, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3 
+    311                                    |GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7, GPIO_PIN_RESET);
+    312          
+    313            /*Configure GPIO pins : PA0 PA1 */
+    314            GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
+    315            GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    316            GPIO_InitStruct.Pull = GPIO_NOPULL;
+    317            GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    318            HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    319          
+    320            /*Configure GPIO pins : PD0 PD1 PD2 PD3 
+    321                                     PD4 PD5 PD6 PD7 */
+    322            GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3 
+    323                                    |GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7;
+    324            GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    325            GPIO_InitStruct.Pull = GPIO_NOPULL;
+    326            GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    327            HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+    328          
+    329          }
+    330          
+    331          /* USER CODE BEGIN 4 */
+    332          
+    333          /* USER CODE END 4 */
+    334          
+    335          /**
+    336            * @brief  This function is executed in case of error occurrence.
+    337            * @retval None
+    338            */
+
+   \                                 In section .text, align 2, keep-with-next
+    339          void Error_Handler(void)
+    340          {
+    341            /* USER CODE BEGIN Error_Handler_Debug */
+    342            /* User can add his own implementation to report the HAL error return state */
+    343          
+    344            /* USER CODE END Error_Handler_Debug */
+    345          }
+   \                     Error_Handler: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5:
+   \        0x0   0x4002'0C14        DC32     0x40020c14
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_1:
+   \        0x0   0x4002'0000        DC32     0x40020000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_2:
+   \        0x0   0x4002'3830        DC32     0x40023830
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_3:
+   \        0x0   0x4002'0C00        DC32     0x40020c00
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_4:
+   \        0x0   0x....'....        DC32     hadc2
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_5:
+   \        0x0   0x4001'2100        DC32     0x40012100
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_6:
+   \        0x0   0x0F00'0001        DC32     0xf000001
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_7:
+   \        0x0   0x4002'3840        DC32     0x40023840
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_8:
+   \        0x0   0x4000'7000        DC32     0x40007000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ?_0:
+   \        0x0   0x4C 0x61          DC8 0x4C, 0x61, 0x62, 0x38, 0, 0
+
+   \              0x62 0x38    
+
+   \              0x00 0x00
+   \        0x6   0x00 0x00          DC8 0, 0
+    346          
+    347          #ifdef  USE_FULL_ASSERT
+    348          /**
+    349            * @brief  Reports the name of the source file and the source line number
+    350            *         where the assert_param error has occurred.
+    351            * @param  file: pointer to the source file name
+    352            * @param  line: assert_param error line source number
+    353            * @retval None
+    354            */
+    355          void assert_failed(uint8_t *file, uint32_t line)
+    356          { 
+    357            /* USER CODE BEGIN 6 */
+    358            /* User can add his own implementation to report the file name and line number,
+    359               tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+    360            /* USER CODE END 6 */
+    361          }
+    362          #endif /* USE_FULL_ASSERT */
+    363          
+    364          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   Error_Handler
+      80   SystemClock_Config
+        80   -> HAL_RCC_ClockConfig
+        80   -> HAL_RCC_OscConfig
+        80   -> memset
+       8   clear
+         8   -> HAL_Delay
+         0   -> HAL_GPIO_WritePin
+         8   -> HAL_GPIO_WritePin
+       8   command
+         8   -> HAL_Delay
+         0   -> HAL_GPIO_WritePin
+         8   -> HAL_GPIO_WritePin
+       8   init
+         8   -> HAL_Delay
+         8   -> HAL_GPIO_WritePin
+         0   -> command
+         8   -> command
+      56   main
+        56   -> HAL_ADC_ConfigChannel
+        56   -> HAL_ADC_Init
+        56   -> HAL_Delay
+        56   -> HAL_GPIO_Init
+        56   -> HAL_GPIO_WritePin
+        56   -> HAL_Init
+        56   -> SystemClock_Config
+        56   -> clear
+        56   -> init
+        56   -> memset
+        56   -> write
+        56   -> write_string
+       8   write
+         8   -> HAL_Delay
+         0   -> HAL_GPIO_WritePin
+         8   -> HAL_GPIO_WritePin
+      16   write_string
+        16   -> clear
+        16   -> write
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable5
+       4  ??DataTable5_1
+       4  ??DataTable5_2
+       4  ??DataTable5_3
+       4  ??DataTable5_4
+       4  ??DataTable5_5
+       4  ??DataTable5_6
+       4  ??DataTable5_7
+       4  ??DataTable5_8
+      42  ?Subroutine0
+       6  ?Subroutine1
+       6  ?Subroutine2
+      10  ?Subroutine3
+       8  ?_0
+       2  Error_Handler
+     144  SystemClock_Config
+       8  clear
+      12  command
+      72  hadc2
+      88  init
+     386  main
+       8  write
+      40  write_string
+
+ 
+  72 bytes in section .bss
+ 796 bytes in section .text
+ 
+ 796 bytes of CODE memory
+  72 bytes of DATA memory
+
+Errors: none
+Warnings: 1

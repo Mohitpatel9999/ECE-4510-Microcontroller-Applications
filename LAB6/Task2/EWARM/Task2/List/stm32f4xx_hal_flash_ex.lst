@@ -1,0 +1,2016 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         17/Feb/2020  18:42:18
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ex.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EWF3A6.tmp
+#        ("C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ex.c"
+#        -D USE_HAL_DRIVER -D STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM\Task2\List" -o
+#        "C:\Users\mohit\Desktop\Microapps projects\LAB6\Task2\EWARM\Task2\Obj"
+#        --debug --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.4\arm\inc\c\DLib_Config_Full.h" -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM\Task2\List\stm32f4xx_hal_flash_ex.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB6\Task2\EWARM\Task2\Obj\stm32f4xx_hal_flash_ex.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\LAB6\Task2\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ex.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    stm32f4xx_hal_flash_ex.c
+      4            * @author  MCD Application Team
+      5            * @brief   Extended FLASH HAL module driver.
+      6            *          This file provides firmware functions to manage the following 
+      7            *          functionalities of the FLASH extension peripheral:
+      8            *           + Extended programming operations functions
+      9            *  
+     10            @verbatim
+     11            ==============================================================================
+     12                             ##### Flash Extension features #####
+     13            ==============================================================================
+     14                     
+     15            [..] Comparing to other previous devices, the FLASH interface for STM32F427xx/437xx and 
+     16                 STM32F429xx/439xx devices contains the following additional features 
+     17                 
+     18                 (+) Capacity up to 2 Mbyte with dual bank architecture supporting read-while-write
+     19                     capability (RWW)
+     20                 (+) Dual bank memory organization       
+     21                 (+) PCROP protection for all banks
+     22             
+     23                                ##### How to use this driver #####
+     24            ==============================================================================
+     25            [..] This driver provides functions to configure and program the FLASH memory 
+     26                 of all STM32F427xx/437xx, STM32F429xx/439xx, STM32F469xx/479xx and STM32F446xx 
+     27                 devices. It includes
+     28                (#) FLASH Memory Erase functions: 
+     29                     (++) Lock and Unlock the FLASH interface using HAL_FLASH_Unlock() and 
+     30                          HAL_FLASH_Lock() functions
+     31                     (++) Erase function: Erase sector, erase all sectors
+     32                     (++) There are two modes of erase :
+     33                       (+++) Polling Mode using HAL_FLASHEx_Erase()
+     34                       (+++) Interrupt Mode using HAL_FLASHEx_Erase_IT()
+     35                       
+     36                (#) Option Bytes Programming functions: Use HAL_FLASHEx_OBProgram() to :
+     37                     (++) Set/Reset the write protection
+     38                     (++) Set the Read protection Level
+     39                     (++) Set the BOR level
+     40                     (++) Program the user Option Bytes
+     41                (#) Advanced Option Bytes Programming functions: Use HAL_FLASHEx_AdvOBProgram() to :  
+     42                 (++) Extended space (bank 2) erase function
+     43                 (++) Full FLASH space (2 Mo) erase (bank 1 and bank 2)
+     44                 (++) Dual Boot activation
+     45                 (++) Write protection configuration for bank 2
+     46                 (++) PCROP protection configuration and control for both banks
+     47            
+     48            @endverbatim
+     49            ******************************************************************************
+     50            * @attention
+     51            *
+     52            * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+     53            * All rights reserved.</center></h2>
+     54            *
+     55            * This software component is licensed by ST under BSD 3-Clause license,
+     56            * the "License"; You may not use this file except in compliance with the
+     57            * License. You may obtain a copy of the License at:
+     58            *                        opensource.org/licenses/BSD-3-Clause
+     59            *
+     60            ******************************************************************************
+     61            */ 
+     62          
+     63          /* Includes ------------------------------------------------------------------*/
+     64          #include "stm32f4xx_hal.h"
+     65          
+     66          /** @addtogroup STM32F4xx_HAL_Driver
+     67            * @{
+     68            */
+     69          
+     70          /** @defgroup FLASHEx FLASHEx
+     71            * @brief FLASH HAL Extension module driver
+     72            * @{
+     73            */
+     74          
+     75          #ifdef HAL_FLASH_MODULE_ENABLED
+     76          
+     77          /* Private typedef -----------------------------------------------------------*/
+     78          /* Private define ------------------------------------------------------------*/
+     79          /** @addtogroup FLASHEx_Private_Constants
+     80            * @{
+     81            */    
+     82          #define FLASH_TIMEOUT_VALUE       50000U /* 50 s */
+     83          /**
+     84            * @}
+     85            */
+     86              
+     87          /* Private macro -------------------------------------------------------------*/
+     88          /* Private variables ---------------------------------------------------------*/
+     89          /** @addtogroup FLASHEx_Private_Variables
+     90            * @{
+     91            */    
+     92          extern FLASH_ProcessTypeDef pFlash;
+     93          /**
+     94            * @}
+     95            */
+     96          
+     97          /* Private function prototypes -----------------------------------------------*/
+     98          /** @addtogroup FLASHEx_Private_Functions
+     99            * @{
+    100            */
+    101          /* Option bytes control */
+    102          static void               FLASH_MassErase(uint8_t VoltageRange, uint32_t Banks);
+    103          static HAL_StatusTypeDef  FLASH_OB_EnableWRP(uint32_t WRPSector, uint32_t Banks);
+    104          static HAL_StatusTypeDef  FLASH_OB_DisableWRP(uint32_t WRPSector, uint32_t Banks);
+    105          static HAL_StatusTypeDef  FLASH_OB_RDP_LevelConfig(uint8_t Level);
+    106          static HAL_StatusTypeDef  FLASH_OB_UserConfig(uint8_t Iwdg, uint8_t Stop, uint8_t Stdby);
+    107          static HAL_StatusTypeDef  FLASH_OB_BOR_LevelConfig(uint8_t Level);
+    108          static uint8_t            FLASH_OB_GetUser(void);
+    109          static uint16_t           FLASH_OB_GetWRP(void);
+    110          static uint8_t            FLASH_OB_GetRDP(void);
+    111          static uint8_t            FLASH_OB_GetBOR(void);
+    112          
+    113          #if defined(STM32F401xC) || defined(STM32F401xE) || defined(STM32F410Tx) || defined(STM32F410Cx) || defined(STM32F410Rx) || defined(STM32F411xE) ||\
+    114              defined(STM32F446xx) || defined(STM32F412Zx) || defined(STM32F412Vx) || defined(STM32F412Rx) || defined(STM32F412Cx) || defined(STM32F413xx) ||\
+    115              defined(STM32F423xx)
+    116          static HAL_StatusTypeDef  FLASH_OB_EnablePCROP(uint32_t Sector);
+    117          static HAL_StatusTypeDef  FLASH_OB_DisablePCROP(uint32_t Sector);
+    118          #endif /* STM32F401xC || STM32F401xE || STM32F410xx || STM32F411xE || STM32F446xx || STM32F412Zx || STM32F412Vx || STM32F412Rx || STM32F412Cx
+    119                    STM32F413xx || STM32F423xx */
+    120          
+    121          #if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx)|| defined(STM32F439xx) || defined(STM32F469xx) || defined(STM32F479xx) 
+    122          static HAL_StatusTypeDef FLASH_OB_EnablePCROP(uint32_t SectorBank1, uint32_t SectorBank2, uint32_t Banks);
+    123          static HAL_StatusTypeDef FLASH_OB_DisablePCROP(uint32_t SectorBank1, uint32_t SectorBank2, uint32_t Banks);
+    124          static HAL_StatusTypeDef FLASH_OB_BootConfig(uint8_t BootConfig);
+    125          #endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F469xx || STM32F479xx */
+    126          
+    127          extern HAL_StatusTypeDef         FLASH_WaitForLastOperation(uint32_t Timeout);
+    128          /**
+    129            * @}
+    130            */
+    131          
+    132          /* Exported functions --------------------------------------------------------*/
+    133          /** @defgroup FLASHEx_Exported_Functions FLASHEx Exported Functions
+    134            * @{
+    135            */
+    136          
+    137          /** @defgroup FLASHEx_Exported_Functions_Group1 Extended IO operation functions
+    138           *  @brief   Extended IO operation functions 
+    139           *
+    140          @verbatim   
+    141           ===============================================================================
+    142                          ##### Extended programming operation functions #####
+    143           ===============================================================================  
+    144              [..]
+    145              This subsection provides a set of functions allowing to manage the Extension FLASH 
+    146              programming operations.
+    147          
+    148          @endverbatim
+    149            * @{
+    150            */
+    151          /**
+    152            * @brief  Perform a mass erase or erase the specified FLASH memory sectors 
+    153            * @param[in]  pEraseInit pointer to an FLASH_EraseInitTypeDef structure that
+    154            *         contains the configuration information for the erasing.
+    155            * 
+    156            * @param[out]  SectorError pointer to variable  that
+    157            *         contains the configuration information on faulty sector in case of error 
+    158            *         (0xFFFFFFFFU means that all the sectors have been correctly erased)
+    159            * 
+    160            * @retval HAL Status
+    161            */
+
+   \                                 In section .text, align 2, keep-with-next
+    162          HAL_StatusTypeDef HAL_FLASHEx_Erase(FLASH_EraseInitTypeDef *pEraseInit, uint32_t *SectorError)
+    163          {
+   \                     HAL_FLASHEx_Erase: (+1)
+   \        0x0   0xE92D 0x47F0      PUSH     {R4-R10,LR}
+    164            HAL_StatusTypeDef status = HAL_ERROR;
+    165            uint32_t index = 0U;
+    166            
+    167            /* Process Locked */
+    168            __HAL_LOCK(&pFlash);
+   \        0x4   0x....'....        LDR.W    R4,??DataTable11
+   \        0x8   0x4605             MOV      R5,R0
+   \        0xA   0x7E20             LDRB     R0,[R4, #+24]
+   \        0xC   0x2801             CMP      R0,#+1
+   \        0xE   0x4689             MOV      R9,R1
+   \       0x10   0xBF08             IT       EQ
+   \       0x12   0x2002             MOVEQ    R0,#+2
+   \       0x14   0xD03D             BEQ.N    ??HAL_FLASHEx_Erase_0
+   \       0x16   0x2001             MOVS     R0,#+1
+   \       0x18   0x7620             STRB     R0,[R4, #+24]
+    169          
+    170            /* Check the parameters */
+    171            assert_param(IS_FLASH_TYPEERASE(pEraseInit->TypeErase));
+    172          
+    173            /* Wait for last operation to be completed */
+    174            status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+   \       0x1A   0xF24C 0x3850      MOVW     R8,#+50000
+   \       0x1E   0x....'....        BL       ?Subroutine1
+   \                     ??CrossCallReturnLabel_5: (+1)
+   \       0x22   0xEA5F 0x0A00      MOVS     R10,R0
+    175          
+    176            if(status == HAL_OK)
+   \       0x26   0xD131             BNE.N    ??HAL_FLASHEx_Erase_1
+    177            {
+    178              /*Initialization of SectorError variable*/
+    179              *SectorError = 0xFFFFFFFFU;
+   \       0x28   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x2C   0xF8C9 0x0000      STR      R0,[R9, #+0]
+    180              
+    181              if(pEraseInit->TypeErase == FLASH_TYPEERASE_MASSERASE)
+   \       0x30   0x6829             LDR      R1,[R5, #+0]
+   \       0x32   0x....'....        LDR.W    R6,??DataTable11_1  ;; 0x40023c10
+   \       0x36   0x2901             CMP      R1,#+1
+   \       0x38   0xD10D             BNE.N    ??HAL_FLASHEx_Erase_2
+    182              {
+    183                /*Mass erase to be done*/
+    184                FLASH_MassErase((uint8_t) pEraseInit->VoltageRange, pEraseInit->Banks);
+   \       0x3A   0x6928             LDR      R0,[R5, #+16]
+   \       0x3C   0x6869             LDR      R1,[R5, #+4]
+   \       0x3E   0xB2C0             UXTB     R0,R0
+   \       0x40   0x....'....        BL       FLASH_MassErase
+    185          
+    186                /* Wait for last operation to be completed */
+    187                status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+   \       0x44   0x....'....        BL       ?Subroutine1
+   \                     ??CrossCallReturnLabel_4: (+1)
+   \       0x48   0x4682             MOV      R10,R0
+    188                
+    189                /* if the erase operation is completed, disable the MER Bit */
+    190                FLASH->CR &= (~FLASH_MER_BIT);
+   \       0x4A   0x6831             LDR      R1,[R6, #+0]
+   \       0x4C   0x....'....        LDR.W    R0,??DataTable11_2  ;; 0xffff7ffb
+   \       0x50   0x4001             ANDS     R1,R0,R1
+   \       0x52   0x6031             STR      R1,[R6, #+0]
+   \       0x54   0xE018             B.N      ??HAL_FLASHEx_Erase_3
+    191              }
+    192              else
+    193              {
+    194                /* Check the parameters */
+    195                assert_param(IS_FLASH_NBSECTORS(pEraseInit->NbSectors + pEraseInit->Sector));
+    196          
+    197                /* Erase by sector by sector to be done*/
+    198                for(index = pEraseInit->Sector; index < (pEraseInit->NbSectors + pEraseInit->Sector); index++)
+   \                     ??HAL_FLASHEx_Erase_2: (+1)
+   \       0x56   0x68AF             LDR      R7,[R5, #+8]
+   \       0x58   0xE000             B.N      ??HAL_FLASHEx_Erase_4
+   \                     ??HAL_FLASHEx_Erase_5: (+1)
+   \       0x5A   0x1C7F             ADDS     R7,R7,#+1
+   \                     ??HAL_FLASHEx_Erase_4: (+1)
+   \       0x5C   0x68E8             LDR      R0,[R5, #+12]
+   \       0x5E   0x68A9             LDR      R1,[R5, #+8]
+   \       0x60   0x1808             ADDS     R0,R1,R0
+   \       0x62   0x4287             CMP      R7,R0
+   \       0x64   0xD210             BCS.N    ??HAL_FLASHEx_Erase_3
+    199                {
+    200                  FLASH_Erase_Sector(index, (uint8_t) pEraseInit->VoltageRange);
+   \       0x66   0x6929             LDR      R1,[R5, #+16]
+   \       0x68   0xB2C9             UXTB     R1,R1
+   \       0x6A   0x4638             MOV      R0,R7
+   \       0x6C   0x....'....        BL       FLASH_Erase_Sector
+    201          
+    202                  /* Wait for last operation to be completed */
+    203                  status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+   \       0x70   0x....'....        BL       ?Subroutine1
+   \                     ??CrossCallReturnLabel_3: (+1)
+   \       0x74   0x4682             MOV      R10,R0
+    204                  
+    205                  /* If the erase operation is completed, disable the SER and SNB Bits */
+    206                  CLEAR_BIT(FLASH->CR, (FLASH_CR_SER | FLASH_CR_SNB));
+   \       0x76   0x6830             LDR      R0,[R6, #+0]
+   \       0x78   0xF020 0x00FA      BIC      R0,R0,#0xFA
+    207          
+    208                  if(status != HAL_OK) 
+   \       0x7C   0xEA5F 0x010A      MOVS     R1,R10
+   \       0x80   0x6030             STR      R0,[R6, #+0]
+   \       0x82   0xD0EA             BEQ.N    ??HAL_FLASHEx_Erase_5
+    209                  {
+    210                    /* In case of error, stop erase procedure and return the faulty sector*/
+    211                    *SectorError = index;
+   \       0x84   0xF8C9 0x7000      STR      R7,[R9, #+0]
+    212                    break;
+    213                  }
+    214                }
+    215              }
+    216              /* Flush the caches to be sure of the data consistency */
+    217              FLASH_FlushCaches();    
+   \                     ??HAL_FLASHEx_Erase_3: (+1)
+   \       0x88   0x....'....        BL       FLASH_FlushCaches
+    218            }
+    219          
+    220            /* Process Unlocked */
+    221            __HAL_UNLOCK(&pFlash);
+   \                     ??HAL_FLASHEx_Erase_1: (+1)
+   \       0x8C   0x2000             MOVS     R0,#+0
+   \       0x8E   0x7620             STRB     R0,[R4, #+24]
+    222          
+    223            return status;
+   \       0x90   0x4650             MOV      R0,R10
+   \                     ??HAL_FLASHEx_Erase_0: (+1)
+   \       0x92   0xE8BD 0x87F0      POP      {R4-R10,PC}      ;; return
+    224          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine1: (+1)
+   \        0x0   0x4640             MOV      R0,R8
+   \        0x2   0x....'....        B.W      FLASH_WaitForLastOperation
+    225          
+    226          /**
+    227            * @brief  Perform a mass erase or erase the specified FLASH memory sectors  with interrupt enabled
+    228            * @param  pEraseInit pointer to an FLASH_EraseInitTypeDef structure that
+    229            *         contains the configuration information for the erasing.
+    230            * 
+    231            * @retval HAL Status
+    232            */
+
+   \                                 In section .text, align 2, keep-with-next
+    233          HAL_StatusTypeDef HAL_FLASHEx_Erase_IT(FLASH_EraseInitTypeDef *pEraseInit)
+    234          {
+   \                     HAL_FLASHEx_Erase_IT: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    235            HAL_StatusTypeDef status = HAL_OK;
+    236          
+    237            /* Process Locked */
+    238            __HAL_LOCK(&pFlash);
+   \        0x2   0x....'....        LDR.W    R1,??DataTable11
+   \        0x6   0x7E0A             LDRB     R2,[R1, #+24]
+   \        0x8   0x2A01             CMP      R2,#+1
+   \        0xA   0xD101             BNE.N    ??HAL_FLASHEx_Erase_IT_0
+   \        0xC   0x2002             MOVS     R0,#+2
+   \        0xE   0xBD10             POP      {R4,PC}
+   \                     ??HAL_FLASHEx_Erase_IT_0: (+1)
+   \       0x10   0x2201             MOVS     R2,#+1
+   \       0x12   0x760A             STRB     R2,[R1, #+24]
+    239          
+    240            /* Check the parameters */
+    241            assert_param(IS_FLASH_TYPEERASE(pEraseInit->TypeErase));
+    242          
+    243            /* Enable End of FLASH Operation interrupt */
+    244            __HAL_FLASH_ENABLE_IT(FLASH_IT_EOP);
+    245            
+    246            /* Enable Error source interrupt */
+    247            __HAL_FLASH_ENABLE_IT(FLASH_IT_ERR);
+    248            
+    249            /* Clear pending flags (if any) */  
+    250            __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP    | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |\
+    251                                   FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR| FLASH_FLAG_PGSERR);  
+   \       0x14   0x24F3             MOVS     R4,#+243
+   \       0x16   0x....'....        LDR.W    R2,??DataTable11_3  ;; 0x40023c0c
+   \       0x1A   0x6853             LDR      R3,[R2, #+4]
+   \       0x1C   0xF043 0x7380      ORR      R3,R3,#0x1000000
+   \       0x20   0x6053             STR      R3,[R2, #+4]
+   \       0x22   0x6853             LDR      R3,[R2, #+4]
+   \       0x24   0xF043 0x7300      ORR      R3,R3,#0x2000000
+   \       0x28   0x6053             STR      R3,[R2, #+4]
+   \       0x2A   0x6014             STR      R4,[R2, #+0]
+    252            
+    253            if(pEraseInit->TypeErase == FLASH_TYPEERASE_MASSERASE)
+   \       0x2C   0x6802             LDR      R2,[R0, #+0]
+   \       0x2E   0x2A01             CMP      R2,#+1
+   \       0x30   0xD109             BNE.N    ??HAL_FLASHEx_Erase_IT_1
+    254            {
+    255              /*Mass erase to be done*/
+    256              pFlash.ProcedureOnGoing = FLASH_PROC_MASSERASE;
+   \       0x32   0x2302             MOVS     R3,#+2
+   \       0x34   0x700B             STRB     R3,[R1, #+0]
+    257              pFlash.Bank = pEraseInit->Banks;
+   \       0x36   0x6842             LDR      R2,[R0, #+4]
+   \       0x38   0x610A             STR      R2,[R1, #+16]
+    258              FLASH_MassErase((uint8_t) pEraseInit->VoltageRange, pEraseInit->Banks);
+   \       0x3A   0x6841             LDR      R1,[R0, #+4]
+   \       0x3C   0x6900             LDR      R0,[R0, #+16]
+   \       0x3E   0xB2C0             UXTB     R0,R0
+   \       0x40   0x....'....        BL       FLASH_MassErase
+   \       0x44   0xE00C             B.N      ??HAL_FLASHEx_Erase_IT_2
+    259            }
+    260            else
+    261            {
+    262              /* Erase by sector to be done*/
+    263          
+    264              /* Check the parameters */
+    265              assert_param(IS_FLASH_NBSECTORS(pEraseInit->NbSectors + pEraseInit->Sector));
+    266          
+    267              pFlash.ProcedureOnGoing = FLASH_PROC_SECTERASE;
+   \                     ??HAL_FLASHEx_Erase_IT_1: (+1)
+   \       0x46   0x2201             MOVS     R2,#+1
+   \       0x48   0x700A             STRB     R2,[R1, #+0]
+    268              pFlash.NbSectorsToErase = pEraseInit->NbSectors;
+   \       0x4A   0x68C3             LDR      R3,[R0, #+12]
+   \       0x4C   0x604B             STR      R3,[R1, #+4]
+    269              pFlash.Sector = pEraseInit->Sector;
+   \       0x4E   0x6882             LDR      R2,[R0, #+8]
+   \       0x50   0x60CA             STR      R2,[R1, #+12]
+    270              pFlash.VoltageForErase = (uint8_t)pEraseInit->VoltageRange;
+   \       0x52   0x6903             LDR      R3,[R0, #+16]
+   \       0x54   0x720B             STRB     R3,[R1, #+8]
+    271          
+    272              /*Erase 1st sector and wait for IT*/
+    273              FLASH_Erase_Sector(pEraseInit->Sector, pEraseInit->VoltageRange);
+   \       0x56   0x6901             LDR      R1,[R0, #+16]
+   \       0x58   0x6880             LDR      R0,[R0, #+8]
+   \       0x5A   0xB2C9             UXTB     R1,R1
+   \       0x5C   0x....'....        BL       FLASH_Erase_Sector
+    274            }
+    275          
+    276            return status;
+   \                     ??HAL_FLASHEx_Erase_IT_2: (+1)
+   \       0x60   0x2000             MOVS     R0,#+0
+   \       0x62   0xBD10             POP      {R4,PC}          ;; return
+    277          }
+    278          
+    279          /**
+    280            * @brief   Program option bytes
+    281            * @param  pOBInit pointer to an FLASH_OBInitStruct structure that
+    282            *         contains the configuration information for the programming.
+    283            * 
+    284            * @retval HAL Status
+    285            */
+
+   \                                 In section .text, align 2, keep-with-next
+    286          HAL_StatusTypeDef HAL_FLASHEx_OBProgram(FLASH_OBProgramInitTypeDef *pOBInit)
+    287          {
+   \                     HAL_FLASHEx_OBProgram: (+1)
+   \        0x0   0xE92D 0x4FF8      PUSH     {R3-R11,LR}
+    288            HAL_StatusTypeDef status = HAL_ERROR;
+    289            
+    290            /* Process Locked */
+    291            __HAL_LOCK(&pFlash);
+   \        0x4   0x....'....        LDR.W    R8,??DataTable11
+   \        0x8   0xF898 0x1018      LDRB     R1,[R8, #+24]
+   \        0xC   0x4605             MOV      R5,R0
+   \        0xE   0x2001             MOVS     R0,#+1
+   \       0x10   0x2901             CMP      R1,#+1
+   \       0x12   0xBF08             IT       EQ
+   \       0x14   0x2002             MOVEQ    R0,#+2
+   \       0x16   0xF000 0x808D      BEQ.W    ??HAL_FLASHEx_OBProgram_0
+   \       0x1A   0xF888 0x0018      STRB     R0,[R8, #+24]
+    292          
+    293            /* Check the parameters */
+    294            assert_param(IS_OPTIONBYTE(pOBInit->OptionType));
+    295          
+    296            /*Write protection configuration*/
+    297            if((pOBInit->OptionType & OPTIONBYTE_WRP) == OPTIONBYTE_WRP)
+   \       0x1E   0xF24C 0x3950      MOVW     R9,#+50000
+   \       0x22   0x7829             LDRB     R1,[R5, #+0]
+   \       0x24   0x....             LDR.N    R6,??DataTable11_4  ;; 0x40023c14
+   \       0x26   0x07CA             LSLS     R2,R1,#+31
+   \       0x28   0xD556             BPL.N    ??HAL_FLASHEx_OBProgram_1
+    298            {
+    299              assert_param(IS_WRPSTATE(pOBInit->WRPState));
+    300              if(pOBInit->WRPState == OB_WRPSTATE_ENABLE)
+   \       0x2A   0x6868             LDR      R0,[R5, #+4]
+   \       0x2C   0xF8D5 0xA008      LDR      R10,[R5, #+8]
+   \       0x30   0x68EF             LDR      R7,[R5, #+12]
+   \       0x32   0x....             LDR.N    R4,??DataTable11_5  ;; 0xfff000
+   \       0x34   0x2801             CMP      R0,#+1
+   \       0x36   0x4648             MOV      R0,R9
+   \       0x38   0xD125             BNE.N    ??HAL_FLASHEx_OBProgram_2
+    301              {
+    302                /*Enable of Write protection on the selected Sector*/
+    303                status = FLASH_OB_EnableWRP(pOBInit->WRPSector, pOBInit->Banks);
+   \       0x3A   0x....'....        BL       FLASH_WaitForLastOperation
+   \       0x3E   0x0001             MOVS     R1,R0
+   \       0x40   0xD14A             BNE.N    ??HAL_FLASHEx_OBProgram_1
+   \       0x42   0x45A2             CMP      R10,R4
+   \       0x44   0xD108             BNE.N    ??HAL_FLASHEx_OBProgram_3
+   \       0x46   0x2F01             CMP      R7,#+1
+   \       0x48   0xBF18             IT       NE
+   \       0x4A   0x2F03             CMPNE    R7,#+3
+   \       0x4C   0xD10B             BNE.N    ??HAL_FLASHEx_OBProgram_4
+   \       0x4E   0x8871             LDRH     R1,[R6, #+2]
+   \       0x50   0xF401 0x4170      AND      R1,R1,#0xF000
+   \       0x54   0x8071             STRH     R1,[R6, #+2]
+   \       0x56   0xE00C             B.N      ??HAL_FLASHEx_OBProgram_5
+   \                     ??HAL_FLASHEx_OBProgram_3: (+1)
+   \       0x58   0xF5BA 0x5F80      CMP      R10,#+4096
+   \       0x5C   0xD203             BCS.N    ??HAL_FLASHEx_OBProgram_4
+   \       0x5E   0x8871             LDRH     R1,[R6, #+2]
+   \       0x60   0xEA21 0x010A      BIC      R1,R1,R10
+   \       0x64   0xE026             B.N      ??HAL_FLASHEx_OBProgram_6
+   \                     ??HAL_FLASHEx_OBProgram_4: (+1)
+   \       0x66   0x88F1             LDRH     R1,[R6, #+6]
+   \       0x68   0xEA21 0x311A      BIC      R1,R1,R10, LSR #+12
+   \       0x6C   0x45A2             CMP      R10,R4
+   \       0x6E   0x80F1             STRH     R1,[R6, #+6]
+   \       0x70   0xD132             BNE.N    ??HAL_FLASHEx_OBProgram_1
+   \                     ??HAL_FLASHEx_OBProgram_5: (+1)
+   \       0x72   0x2F03             CMP      R7,#+3
+   \       0x74   0xD130             BNE.N    ??HAL_FLASHEx_OBProgram_1
+   \       0x76   0x....'....        BL       ?Subroutine2
+   \                     ??CrossCallReturnLabel_9: (+1)
+   \       0x7A   0x0001             MOVS     R1,R0
+   \       0x7C   0xD12C             BNE.N    ??HAL_FLASHEx_OBProgram_1
+   \       0x7E   0x88F1             LDRH     R1,[R6, #+6]
+   \       0x80   0xF401 0x4170      AND      R1,R1,#0xF000
+   \       0x84   0xE027             B.N      ??HAL_FLASHEx_OBProgram_7
+    304              }
+    305              else
+    306              {
+    307                /*Disable of Write protection on the selected Sector*/
+    308                status = FLASH_OB_DisableWRP(pOBInit->WRPSector, pOBInit->Banks);
+   \                     ??HAL_FLASHEx_OBProgram_2: (+1)
+   \       0x86   0x....'....        BL       FLASH_WaitForLastOperation
+   \       0x8A   0x0001             MOVS     R1,R0
+   \       0x8C   0xD124             BNE.N    ??HAL_FLASHEx_OBProgram_1
+   \       0x8E   0x45A2             CMP      R10,R4
+   \       0x90   0xF640 0x7BFF      MOVW     R11,#+4095
+   \       0x94   0xD108             BNE.N    ??HAL_FLASHEx_OBProgram_8
+   \       0x96   0x2F01             CMP      R7,#+1
+   \       0x98   0xBF18             IT       NE
+   \       0x9A   0x2F03             CMPNE    R7,#+3
+   \       0x9C   0xD10C             BNE.N    ??HAL_FLASHEx_OBProgram_9
+   \       0x9E   0x8871             LDRH     R1,[R6, #+2]
+   \       0xA0   0xEA4B 0x0101      ORR      R1,R11,R1
+   \       0xA4   0x8071             STRH     R1,[R6, #+2]
+   \       0xA6   0xE00D             B.N      ??HAL_FLASHEx_OBProgram_10
+   \                     ??HAL_FLASHEx_OBProgram_8: (+1)
+   \       0xA8   0xF5BA 0x5F80      CMP      R10,#+4096
+   \       0xAC   0xD204             BCS.N    ??HAL_FLASHEx_OBProgram_9
+   \       0xAE   0x8871             LDRH     R1,[R6, #+2]
+   \       0xB0   0xEA4A 0x0101      ORR      R1,R10,R1
+   \                     ??HAL_FLASHEx_OBProgram_6: (+1)
+   \       0xB4   0x8071             STRH     R1,[R6, #+2]
+   \       0xB6   0xE00F             B.N      ??HAL_FLASHEx_OBProgram_1
+   \                     ??HAL_FLASHEx_OBProgram_9: (+1)
+   \       0xB8   0x88F1             LDRH     R1,[R6, #+6]
+   \       0xBA   0xEA41 0x311A      ORR      R1,R1,R10, LSR #+12
+   \       0xBE   0x45A2             CMP      R10,R4
+   \       0xC0   0x80F1             STRH     R1,[R6, #+6]
+   \       0xC2   0xD109             BNE.N    ??HAL_FLASHEx_OBProgram_1
+   \                     ??HAL_FLASHEx_OBProgram_10: (+1)
+   \       0xC4   0x2F03             CMP      R7,#+3
+   \       0xC6   0xD107             BNE.N    ??HAL_FLASHEx_OBProgram_1
+   \       0xC8   0x....'....        BL       ?Subroutine2
+   \                     ??CrossCallReturnLabel_8: (+1)
+   \       0xCC   0x0001             MOVS     R1,R0
+   \       0xCE   0xD103             BNE.N    ??HAL_FLASHEx_OBProgram_1
+   \       0xD0   0x88F1             LDRH     R1,[R6, #+6]
+   \       0xD2   0xEA4B 0x0101      ORR      R1,R11,R1
+   \                     ??HAL_FLASHEx_OBProgram_7: (+1)
+   \       0xD6   0x80F1             STRH     R1,[R6, #+6]
+    309              }
+    310            }
+    311          
+    312            /*Read protection configuration*/
+    313            if((pOBInit->OptionType & OPTIONBYTE_RDP) == OPTIONBYTE_RDP)
+   \                     ??HAL_FLASHEx_OBProgram_1: (+1)
+   \       0xD8   0x782A             LDRB     R2,[R5, #+0]
+   \       0xDA   0x0791             LSLS     R1,R2,#+30
+   \       0xDC   0xD505             BPL.N    ??HAL_FLASHEx_OBProgram_11
+    314            {
+    315              status = FLASH_OB_RDP_LevelConfig(pOBInit->RDPLevel);
+   \       0xDE   0x692C             LDR      R4,[R5, #+16]
+   \       0xE0   0x....'....        BL       ?Subroutine2
+   \                     ??CrossCallReturnLabel_7: (+1)
+   \       0xE4   0x0001             MOVS     R1,R0
+   \       0xE6   0xBF08             IT       EQ
+   \       0xE8   0x7074             STRBEQ   R4,[R6, #+1]
+    316            }
+    317          
+    318            /*USER  configuration*/
+    319            if((pOBInit->OptionType & OPTIONBYTE_USER) == OPTIONBYTE_USER)
+   \                     ??HAL_FLASHEx_OBProgram_11: (+1)
+   \       0xEA   0x7829             LDRB     R1,[R5, #+0]
+   \       0xEC   0x074A             LSLS     R2,R1,#+29
+   \       0xEE   0xD512             BPL.N    ??HAL_FLASHEx_OBProgram_12
+    320            {
+    321              status = FLASH_OB_UserConfig(pOBInit->USERConfig&OB_IWDG_SW, 
+    322                                               pOBInit->USERConfig&OB_STOP_NO_RST,
+    323                                               pOBInit->USERConfig&OB_STDBY_NO_RST);
+   \       0xF0   0x7E28             LDRB     R0,[R5, #+24]
+   \       0xF2   0xF000 0x0480      AND      R4,R0,#0x80
+   \       0xF6   0xF000 0x0740      AND      R7,R0,#0x40
+   \       0xFA   0xF000 0x0A20      AND      R10,R0,#0x20
+   \       0xFE   0x....'....        BL       ?Subroutine2
+   \                     ??CrossCallReturnLabel_6: (+1)
+   \      0x102   0x0001             MOVS     R1,R0
+   \      0x104   0xD107             BNE.N    ??HAL_FLASHEx_OBProgram_12
+   \      0x106   0x7831             LDRB     R1,[R6, #+0]
+   \      0x108   0xEA44 0x040A      ORR      R4,R4,R10
+   \      0x10C   0x433C             ORRS     R4,R7,R4
+   \      0x10E   0xF001 0x011F      AND      R1,R1,#0x1F
+   \      0x112   0x430C             ORRS     R4,R1,R4
+   \      0x114   0x7034             STRB     R4,[R6, #+0]
+    324            }
+    325          
+    326            /*BOR Level  configuration*/
+    327            if((pOBInit->OptionType & OPTIONBYTE_BOR) == OPTIONBYTE_BOR)
+   \                     ??HAL_FLASHEx_OBProgram_12: (+1)
+   \      0x116   0x7829             LDRB     R1,[R5, #+0]
+   \      0x118   0x070A             LSLS     R2,R1,#+28
+   \      0x11A   0xD508             BPL.N    ??HAL_FLASHEx_OBProgram_13
+    328            {
+    329              status = FLASH_OB_BOR_LevelConfig(pOBInit->BORLevel);
+   \      0x11C   0x6968             LDR      R0,[R5, #+20]
+   \      0x11E   0x7831             LDRB     R1,[R6, #+0]
+   \      0x120   0xF001 0x01F3      AND      R1,R1,#0xF3
+   \      0x124   0x7031             STRB     R1,[R6, #+0]
+   \      0x126   0x7832             LDRB     R2,[R6, #+0]
+   \      0x128   0x4310             ORRS     R0,R0,R2
+   \      0x12A   0x7030             STRB     R0,[R6, #+0]
+    330            }
+   \      0x12C   0x2000             MOVS     R0,#+0
+    331          
+    332            /* Process Unlocked */
+    333            __HAL_UNLOCK(&pFlash);
+   \                     ??HAL_FLASHEx_OBProgram_13: (+1)
+   \      0x12E   0x2100             MOVS     R1,#+0
+   \      0x130   0xF888 0x1018      STRB     R1,[R8, #+24]
+    334          
+    335            return status;
+   \                     ??HAL_FLASHEx_OBProgram_0: (+1)
+   \      0x134   0xE8BD 0x8FF2      POP      {R1,R4-R11,PC}   ;; return
+    336          }
+    337          
+    338          /**
+    339            * @brief   Get the Option byte configuration
+    340            * @param  pOBInit pointer to an FLASH_OBInitStruct structure that
+    341            *         contains the configuration information for the programming.
+    342            * 
+    343            * @retval None
+    344            */
+
+   \                                 In section .text, align 2, keep-with-next
+    345          void HAL_FLASHEx_OBGetConfig(FLASH_OBProgramInitTypeDef *pOBInit)
+    346          {
+    347            pOBInit->OptionType = OPTIONBYTE_WRP | OPTIONBYTE_RDP | OPTIONBYTE_USER | OPTIONBYTE_BOR;
+   \                     HAL_FLASHEx_OBGetConfig: (+1)
+   \        0x0   0x210F             MOVS     R1,#+15
+   \        0x2   0x6001             STR      R1,[R0, #+0]
+    348          
+    349            /*Get WRP*/
+    350            pOBInit->WRPSector = (uint32_t)FLASH_OB_GetWRP();
+   \        0x4   0x....             LDR.N    R1,??DataTable11_4  ;; 0x40023c14
+   \        0x6   0x884A             LDRH     R2,[R1, #+2]
+   \        0x8   0x6082             STR      R2,[R0, #+8]
+    351          
+    352            /*Get RDP Level*/
+    353            pOBInit->RDPLevel = (uint32_t)FLASH_OB_GetRDP();
+   \        0xA   0x22AA             MOVS     R2,#+170
+   \        0xC   0x784B             LDRB     R3,[R1, #+1]
+   \        0xE   0x2BCC             CMP      R3,#+204
+   \       0x10   0xBF08             IT       EQ
+   \       0x12   0x22CC             MOVEQ    R2,#+204
+   \       0x14   0xD003             BEQ.N    ??HAL_FLASHEx_OBGetConfig_0
+   \       0x16   0x784B             LDRB     R3,[R1, #+1]
+   \       0x18   0x2BAA             CMP      R3,#+170
+   \       0x1A   0xBF18             IT       NE
+   \       0x1C   0x2255             MOVNE    R2,#+85
+   \                     ??HAL_FLASHEx_OBGetConfig_0: (+1)
+   \       0x1E   0x6102             STR      R2,[R0, #+16]
+    354          
+    355            /*Get USER*/
+    356            pOBInit->USERConfig = (uint8_t)FLASH_OB_GetUser();
+   \       0x20   0x680A             LDR      R2,[R1, #+0]
+   \       0x22   0xF002 0x02E0      AND      R2,R2,#0xE0
+   \       0x26   0x7602             STRB     R2,[R0, #+24]
+    357          
+    358            /*Get BOR Level*/
+    359            pOBInit->BORLevel = (uint32_t)FLASH_OB_GetBOR();
+   \       0x28   0x7809             LDRB     R1,[R1, #+0]
+   \       0x2A   0xF001 0x010C      AND      R1,R1,#0xC
+   \       0x2E   0x6141             STR      R1,[R0, #+20]
+    360          }
+   \       0x30   0x4770             BX       LR               ;; return
+    361          
+    362          #if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) ||\
+    363              defined(STM32F401xC) || defined(STM32F401xE) || defined(STM32F410Tx) || defined(STM32F410Cx) ||\
+    364              defined(STM32F410Rx) || defined(STM32F411xE) || defined(STM32F446xx) || defined(STM32F469xx) ||\
+    365              defined(STM32F479xx) || defined(STM32F412Zx) || defined(STM32F412Vx) || defined(STM32F412Rx) ||\
+    366              defined(STM32F412Cx) || defined(STM32F413xx) || defined(STM32F423xx)
+    367          /**
+    368            * @brief   Program option bytes
+    369            * @param  pAdvOBInit pointer to an FLASH_AdvOBProgramInitTypeDef structure that
+    370            *         contains the configuration information for the programming.
+    371            * 
+    372            * @retval HAL Status
+    373            */
+
+   \                                 In section .text, align 2, keep-with-next
+    374          HAL_StatusTypeDef HAL_FLASHEx_AdvOBProgram (FLASH_AdvOBProgramInitTypeDef *pAdvOBInit)
+    375          {
+   \                     HAL_FLASHEx_AdvOBProgram: (+1)
+   \        0x0   0xE92D 0x43F8      PUSH     {R3-R9,LR}
+   \        0x4   0x4606             MOV      R6,R0
+    376            HAL_StatusTypeDef status = HAL_ERROR;
+   \        0x6   0x2001             MOVS     R0,#+1
+    377            
+    378            /* Check the parameters */
+    379            assert_param(IS_OBEX(pAdvOBInit->OptionType));
+    380          
+    381            /*Program PCROP option byte*/
+    382            if(((pAdvOBInit->OptionType) & OPTIONBYTE_PCROP) == OPTIONBYTE_PCROP)
+   \        0x8   0x7831             LDRB     R1,[R6, #+0]
+   \        0xA   0x....             LDR.N    R7,??DataTable11_4  ;; 0x40023c14
+   \        0xC   0x07CA             LSLS     R2,R1,#+31
+   \        0xE   0xF24C 0x3850      MOVW     R8,#+50000
+   \       0x12   0xD532             BPL.N    ??HAL_FLASHEx_AdvOBProgram_0
+    383            {
+    384              /* Check the parameters */
+    385              assert_param(IS_PCROPSTATE(pAdvOBInit->PCROPState));
+    386              if((pAdvOBInit->PCROPState) == OB_PCROP_STATE_ENABLE)
+   \       0x14   0x6870             LDR      R0,[R6, #+4]
+   \       0x16   0xF8B6 0x900C      LDRH     R9,[R6, #+12]
+   \       0x1A   0x89F5             LDRH     R5,[R6, #+14]
+   \       0x1C   0x68B4             LDR      R4,[R6, #+8]
+   \       0x1E   0x2801             CMP      R0,#+1
+   \       0x20   0x4640             MOV      R0,R8
+   \       0x22   0xD114             BNE.N    ??HAL_FLASHEx_AdvOBProgram_1
+    387              {
+    388                /*Enable of Write protection on the selected Sector*/
+    389          #if defined(STM32F401xC) || defined(STM32F401xE) || defined(STM32F410Tx) || defined(STM32F410Cx) || defined(STM32F410Rx) ||\
+    390              defined(STM32F411xE) || defined(STM32F446xx) || defined(STM32F412Zx) || defined(STM32F412Vx) || defined(STM32F412Rx) ||\
+    391              defined(STM32F412Cx) || defined(STM32F413xx) || defined(STM32F423xx)
+    392                status = FLASH_OB_EnablePCROP(pAdvOBInit->Sectors);
+    393          #else  /* STM32F427xx || STM32F437xx || STM32F429xx|| STM32F439xx || STM32F469xx || STM32F479xx */
+    394                status = FLASH_OB_EnablePCROP(pAdvOBInit->SectorsBank1, pAdvOBInit->SectorsBank2, pAdvOBInit->Banks);
+   \       0x24   0x....'....        BL       FLASH_WaitForLastOperation
+   \       0x28   0x0001             MOVS     R1,R0
+   \       0x2A   0xD126             BNE.N    ??HAL_FLASHEx_AdvOBProgram_0
+   \       0x2C   0x2C01             CMP      R4,#+1
+   \       0x2E   0xBF18             IT       NE
+   \       0x30   0x2C03             CMPNE    R4,#+3
+   \       0x32   0xD109             BNE.N    ??HAL_FLASHEx_AdvOBProgram_2
+   \       0x34   0x8879             LDRH     R1,[R7, #+2]
+   \       0x36   0xEA49 0x0101      ORR      R1,R9,R1
+   \       0x3A   0x2C03             CMP      R4,#+3
+   \       0x3C   0x8079             STRH     R1,[R7, #+2]
+   \       0x3E   0xD11C             BNE.N    ??HAL_FLASHEx_AdvOBProgram_0
+   \       0x40   0x....'....        BL       ?Subroutine1
+   \                     ??CrossCallReturnLabel_2: (+1)
+   \       0x44   0x0001             MOVS     R1,R0
+   \       0x46   0xD118             BNE.N    ??HAL_FLASHEx_AdvOBProgram_0
+   \                     ??HAL_FLASHEx_AdvOBProgram_2: (+1)
+   \       0x48   0x88F9             LDRH     R1,[R7, #+6]
+   \       0x4A   0x430D             ORRS     R5,R5,R1
+   \       0x4C   0xE014             B.N      ??HAL_FLASHEx_AdvOBProgram_3
+    395          #endif /* STM32F401xC || STM32F401xE || STM32F410xx || STM32F411xE || STM32F446xx || STM32F412Zx || STM32F412Vx || STM32F412Rx || STM32F412Cx ||
+    396                    STM32F413xx || STM32F423xx */
+    397              }
+    398              else
+    399              {
+    400                /*Disable of Write protection on the selected Sector*/
+    401          #if defined(STM32F401xC) || defined(STM32F401xE) || defined(STM32F410Tx) || defined(STM32F410Cx) || defined(STM32F410Rx) ||\
+    402              defined(STM32F411xE) || defined(STM32F446xx) || defined(STM32F412Zx) || defined(STM32F412Vx) || defined(STM32F412Rx) ||\
+    403              defined(STM32F412Cx) || defined(STM32F413xx) || defined(STM32F423xx)
+    404                status = FLASH_OB_DisablePCROP(pAdvOBInit->Sectors);
+    405          #else /* STM32F427xx || STM32F437xx || STM32F429xx|| STM32F439xx || STM32F469xx || STM32F479xx */
+    406                status = FLASH_OB_DisablePCROP(pAdvOBInit->SectorsBank1, pAdvOBInit->SectorsBank2, pAdvOBInit->Banks);
+   \                     ??HAL_FLASHEx_AdvOBProgram_1: (+1)
+   \       0x4E   0x....'....        BL       FLASH_WaitForLastOperation
+   \       0x52   0x0001             MOVS     R1,R0
+   \       0x54   0xD111             BNE.N    ??HAL_FLASHEx_AdvOBProgram_0
+   \       0x56   0x43ED             MVNS     R5,R5
+   \       0x58   0x2C01             CMP      R4,#+1
+   \       0x5A   0xBF18             IT       NE
+   \       0x5C   0x2C03             CMPNE    R4,#+3
+   \       0x5E   0xD109             BNE.N    ??HAL_FLASHEx_AdvOBProgram_4
+   \       0x60   0x8879             LDRH     R1,[R7, #+2]
+   \       0x62   0xEA21 0x0109      BIC      R1,R1,R9
+   \       0x66   0x2C03             CMP      R4,#+3
+   \       0x68   0x8079             STRH     R1,[R7, #+2]
+   \       0x6A   0xD106             BNE.N    ??HAL_FLASHEx_AdvOBProgram_0
+   \       0x6C   0x....'....        BL       ?Subroutine1
+   \                     ??CrossCallReturnLabel_1: (+1)
+   \       0x70   0x0001             MOVS     R1,R0
+   \       0x72   0xD102             BNE.N    ??HAL_FLASHEx_AdvOBProgram_0
+   \                     ??HAL_FLASHEx_AdvOBProgram_4: (+1)
+   \       0x74   0x88F9             LDRH     R1,[R7, #+6]
+   \       0x76   0x400D             ANDS     R5,R5,R1
+   \                     ??HAL_FLASHEx_AdvOBProgram_3: (+1)
+   \       0x78   0x80FD             STRH     R5,[R7, #+6]
+    407          #endif /* STM32F401xC || STM32F401xE || STM32F410xx || STM32F411xE || STM32F446xx || STM32F412Zx || STM32F412Vx || STM32F412Rx || STM32F412Cx ||
+    408                    STM32F413xx || STM32F423xx */
+    409              }
+    410            }
+    411             
+    412          #if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || defined(STM32F469xx) || defined(STM32F479xx)
+    413            /*Program BOOT config option byte*/
+    414            if(((pAdvOBInit->OptionType) & OPTIONBYTE_BOOTCONFIG) == OPTIONBYTE_BOOTCONFIG)
+   \                     ??HAL_FLASHEx_AdvOBProgram_0: (+1)
+   \       0x7A   0x7832             LDRB     R2,[R6, #+0]
+   \       0x7C   0x0791             LSLS     R1,R2,#+30
+   \       0x7E   0xD50B             BPL.N    ??HAL_FLASHEx_AdvOBProgram_5
+    415            {
+    416              status = FLASH_OB_BootConfig(pAdvOBInit->BootConfig);
+   \       0x80   0x7C34             LDRB     R4,[R6, #+16]
+   \       0x82   0x....'....        BL       ?Subroutine1
+   \                     ??CrossCallReturnLabel_0: (+1)
+   \       0x86   0x0001             MOVS     R1,R0
+   \       0x88   0xD106             BNE.N    ??HAL_FLASHEx_AdvOBProgram_5
+   \       0x8A   0x7839             LDRB     R1,[R7, #+0]
+   \       0x8C   0xF001 0x01EF      AND      R1,R1,#0xEF
+   \       0x90   0x7039             STRB     R1,[R7, #+0]
+   \       0x92   0x783A             LDRB     R2,[R7, #+0]
+   \       0x94   0x4314             ORRS     R4,R4,R2
+   \       0x96   0x703C             STRB     R4,[R7, #+0]
+    417            }
+    418          #endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F469xx || STM32F479xx */
+    419          
+    420            return status;
+   \                     ??HAL_FLASHEx_AdvOBProgram_5: (+1)
+   \       0x98   0xE8BD 0x83F2      POP      {R1,R4-R9,PC}    ;; return
+    421          }
+    422          
+    423          /**
+    424            * @brief   Get the OBEX byte configuration
+    425            * @param  pAdvOBInit pointer to an FLASH_AdvOBProgramInitTypeDef structure that
+    426            *         contains the configuration information for the programming.
+    427            * 
+    428            * @retval None
+    429            */
+
+   \                                 In section .text, align 2, keep-with-next
+    430          void HAL_FLASHEx_AdvOBGetConfig(FLASH_AdvOBProgramInitTypeDef *pAdvOBInit)
+    431          {
+    432          #if defined(STM32F401xC) || defined(STM32F401xE) || defined(STM32F410Tx) || defined(STM32F410Cx) || defined(STM32F410Rx) ||\
+    433              defined(STM32F411xE) || defined(STM32F446xx) || defined(STM32F412Zx) || defined(STM32F412Vx) || defined(STM32F412Rx) ||\
+    434              defined(STM32F412Cx) || defined(STM32F413xx) || defined(STM32F423xx)
+    435            /*Get Sector*/
+    436            pAdvOBInit->Sectors = (*(__IO uint16_t *)(OPTCR_BYTE2_ADDRESS));
+    437          #else  /* STM32F427xx || STM32F437xx || STM32F429xx|| STM32F439xx || STM32F469xx || STM32F479xx */
+    438            /*Get Sector for Bank1*/
+    439            pAdvOBInit->SectorsBank1 = (*(__IO uint16_t *)(OPTCR_BYTE2_ADDRESS));
+   \                     HAL_FLASHEx_AdvOBGetConfig: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable11_4  ;; 0x40023c14
+   \        0x2   0x884A             LDRH     R2,[R1, #+2]
+   \        0x4   0x8182             STRH     R2,[R0, #+12]
+    440          
+    441            /*Get Sector for Bank2*/
+    442            pAdvOBInit->SectorsBank2 = (*(__IO uint16_t *)(OPTCR1_BYTE2_ADDRESS));
+   \        0x6   0x88CB             LDRH     R3,[R1, #+6]
+   \        0x8   0x81C3             STRH     R3,[R0, #+14]
+    443          
+    444            /*Get Boot config OB*/
+    445            pAdvOBInit->BootConfig = *(__IO uint8_t *)OPTCR_BYTE0_ADDRESS;
+   \        0xA   0x7809             LDRB     R1,[R1, #+0]
+   \        0xC   0x7401             STRB     R1,[R0, #+16]
+    446          #endif /* STM32F401xC || STM32F401xE || STM32F410xx || STM32F411xE || STM32F446xx || STM32F412Zx || STM32F412Vx || STM32F412Rx || STM32F412Cx ||
+    447                    STM32F413xx || STM32F423xx */
+    448          }
+   \        0xE   0x4770             BX       LR               ;; return
+    449          
+    450          /**
+    451            * @brief  Select the Protection Mode 
+    452            * 
+    453            * @note   After PCROP activated Option Byte modification NOT POSSIBLE! excepted 
+    454            *         Global Read Out Protection modification (from level1 to level0) 
+    455            * @note   Once SPRMOD bit is active unprotection of a protected sector is not possible 
+    456            * @note   Read a protected sector will set RDERR Flag and write a protected sector will set WRPERR Flag
+    457            * @note   This function can be used only for STM32F42xxx/STM32F43xxx/STM32F401xx/STM32F411xx/STM32F446xx/
+    458            *         STM32F469xx/STM32F479xx/STM32F412xx/STM32F413xx devices.
+    459            * 
+    460            * @retval HAL Status
+    461            */
+
+   \                                 In section .text, align 2, keep-with-next
+    462          HAL_StatusTypeDef HAL_FLASHEx_OB_SelectPCROP(void)
+    463          {
+    464            uint8_t optiontmp = 0xFF;
+    465          
+    466            /* Mask SPRMOD bit */
+    467            optiontmp =  (uint8_t)((*(__IO uint8_t *)OPTCR_BYTE3_ADDRESS) & (uint8_t)0x7F); 
+   \                     HAL_FLASHEx_OB_SelectPCROP: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable11_6  ;; 0x40023c17
+   \        0x2   0x7801             LDRB     R1,[R0, #+0]
+    468            
+    469            /* Update Option Byte */
+    470            *(__IO uint8_t *)OPTCR_BYTE3_ADDRESS = (uint8_t)(OB_PCROP_SELECTED | optiontmp); 
+   \        0x4   0xF041 0x0180      ORR      R1,R1,#0x80
+   \        0x8   0x....             B.N      ?Subroutine0
+    471            
+    472            return HAL_OK;
+    473          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine0: (+1)
+   \        0x0   0x7001             STRB     R1,[R0, #+0]
+   \        0x2   0x2000             MOVS     R0,#+0
+   \        0x4   0x4770             BX       LR               ;; return
+    474          
+    475          /**
+    476            * @brief  Deselect the Protection Mode 
+    477            * 
+    478            * @note   After PCROP activated Option Byte modification NOT POSSIBLE! excepted 
+    479            *         Global Read Out Protection modification (from level1 to level0) 
+    480            * @note   Once SPRMOD bit is active unprotection of a protected sector is not possible 
+    481            * @note   Read a protected sector will set RDERR Flag and write a protected sector will set WRPERR Flag
+    482            * @note   This function can be used only for STM32F42xxx/STM32F43xxx/STM32F401xx/STM32F411xx/STM32F446xx/
+    483            *         STM32F469xx/STM32F479xx/STM32F412xx/STM32F413xx devices.
+    484            * 
+    485            * @retval HAL Status
+    486            */
+
+   \                                 In section .text, align 2, keep-with-next
+    487          HAL_StatusTypeDef HAL_FLASHEx_OB_DeSelectPCROP(void)
+    488          {
+    489            uint8_t optiontmp = 0xFF;
+    490            
+    491            /* Mask SPRMOD bit */
+    492            optiontmp =  (uint8_t)((*(__IO uint8_t *)OPTCR_BYTE3_ADDRESS) & (uint8_t)0x7F); 
+   \                     HAL_FLASHEx_OB_DeSelectPCROP: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable11_6  ;; 0x40023c17
+   \        0x2   0x7801             LDRB     R1,[R0, #+0]
+    493            
+    494            /* Update Option Byte */
+    495            *(__IO uint8_t *)OPTCR_BYTE3_ADDRESS = (uint8_t)(OB_PCROP_DESELECTED | optiontmp);  
+   \        0x4   0xF001 0x017F      AND      R1,R1,#0x7F
+   \        0x8                      REQUIRE ?Subroutine0
+   \        0x8                      ;; // Fall through to label ?Subroutine0
+    496            
+    497            return HAL_OK;
+    498          }
+    499          #endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F401xC || STM32F401xE || STM32F410xx ||\
+    500                    STM32F411xE || STM32F469xx || STM32F479xx || STM32F412Zx || STM32F412Vx || STM32F412Rx || STM32F412Cx ||
+    501                    STM32F413xx || STM32F423xx */
+    502          
+    503          #if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx)|| defined(STM32F439xx) || defined(STM32F469xx) || defined(STM32F479xx)
+    504          /**
+    505            * @brief  Returns the FLASH Write Protection Option Bytes value for Bank 2
+    506            * @note   This function can be used only for STM32F42xxx/STM32F43xxx/STM32F469xx/STM32F479xx devices.  
+    507            * @retval The FLASH Write Protection  Option Bytes value
+    508            */
+
+   \                                 In section .text, align 2, keep-with-next
+    509          uint16_t HAL_FLASHEx_OB_GetBank2WRP(void)
+    510          {                            
+    511            /* Return the FLASH write protection Register value */
+    512            return (*(__IO uint16_t *)(OPTCR1_BYTE2_ADDRESS));
+   \                     HAL_FLASHEx_OB_GetBank2WRP: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable11_7  ;; 0x40023c1a
+   \        0x2   0x8800             LDRH     R0,[R0, #+0]
+   \        0x4   0x4770             BX       LR               ;; return
+    513          }
+    514          #endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F469xx || STM32F479xx */
+    515          
+    516          /**
+    517            * @}
+    518            */
+    519            
+    520          #if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || defined(STM32F469xx) || defined(STM32F479xx)
+    521          /**
+    522            * @brief  Full erase of FLASH memory sectors 
+    523            * @param  VoltageRange The device voltage range which defines the erase parallelism.  
+    524            *          This parameter can be one of the following values:
+    525            *            @arg FLASH_VOLTAGE_RANGE_1: when the device voltage range is 1.8V to 2.1V, 
+    526            *                                  the operation will be done by byte (8-bit) 
+    527            *            @arg FLASH_VOLTAGE_RANGE_2: when the device voltage range is 2.1V to 2.7V,
+    528            *                                  the operation will be done by half word (16-bit)
+    529            *            @arg FLASH_VOLTAGE_RANGE_3: when the device voltage range is 2.7V to 3.6V,
+    530            *                                  the operation will be done by word (32-bit)
+    531            *            @arg FLASH_VOLTAGE_RANGE_4: when the device voltage range is 2.7V to 3.6V + External Vpp, 
+    532            *                                  the operation will be done by double word (64-bit)
+    533            * 
+    534            * @param  Banks Banks to be erased
+    535            *          This parameter can be one of the following values:
+    536            *            @arg FLASH_BANK_1: Bank1 to be erased
+    537            *            @arg FLASH_BANK_2: Bank2 to be erased
+    538            *            @arg FLASH_BANK_BOTH: Bank1 and Bank2 to be erased
+    539            *
+    540            * @retval HAL Status
+    541            */
+
+   \                                 In section .text, align 2, keep-with-next
+    542          static void FLASH_MassErase(uint8_t VoltageRange, uint32_t Banks)
+    543          {
+    544            /* Check the parameters */
+    545            assert_param(IS_VOLTAGERANGE(VoltageRange));
+    546            assert_param(IS_FLASH_BANK(Banks));
+    547          
+    548            /* if the previous operation is completed, proceed to erase all sectors */
+    549            CLEAR_BIT(FLASH->CR, FLASH_CR_PSIZE);
+   \                     FLASH_MassErase: (+1)
+   \        0x0   0x....             LDR.N    R2,??DataTable11_1  ;; 0x40023c10
+   \        0x2   0x6813             LDR      R3,[R2, #+0]
+   \        0x4   0xF423 0x7340      BIC      R3,R3,#0x300
+    550          
+    551            if(Banks == FLASH_BANK_BOTH)
+   \        0x8   0x2903             CMP      R1,#+3
+   \        0xA   0x6013             STR      R3,[R2, #+0]
+   \        0xC   0xD103             BNE.N    ??FLASH_MassErase_0
+    552            {
+    553              /* bank1 & bank2 will be erased*/
+    554              FLASH->CR |= FLASH_MER_BIT;
+   \        0xE   0x6811             LDR      R1,[R2, #+0]
+   \       0x10   0xF441 0x4100      ORR      R1,R1,#0x8000
+   \       0x14   0xE002             B.N      ??FLASH_MassErase_1
+    555            }
+    556            else if(Banks == FLASH_BANK_1)
+   \                     ??FLASH_MassErase_0: (+1)
+   \       0x16   0x2901             CMP      R1,#+1
+   \       0x18   0xD104             BNE.N    ??FLASH_MassErase_2
+    557            {
+    558              /*Only bank1 will be erased*/
+    559              FLASH->CR |= FLASH_CR_MER1;
+   \       0x1A   0x6811             LDR      R1,[R2, #+0]
+   \                     ??FLASH_MassErase_1: (+1)
+   \       0x1C   0xF041 0x0104      ORR      R1,R1,#0x4
+   \       0x20   0x6011             STR      R1,[R2, #+0]
+   \       0x22   0xE003             B.N      ??FLASH_MassErase_3
+    560            }
+    561            else
+    562            {
+    563              /*Only bank2 will be erased*/
+    564              FLASH->CR |= FLASH_CR_MER2;
+   \                     ??FLASH_MassErase_2: (+1)
+   \       0x24   0x6813             LDR      R3,[R2, #+0]
+   \       0x26   0xF443 0x4300      ORR      R3,R3,#0x8000
+   \       0x2A   0x6013             STR      R3,[R2, #+0]
+    565            }
+    566            FLASH->CR |= FLASH_CR_STRT | ((uint32_t)VoltageRange <<8U);
+   \                     ??FLASH_MassErase_3: (+1)
+   \       0x2C   0x0200             LSLS     R0,R0,#+8
+   \       0x2E   0x6811             LDR      R1,[R2, #+0]
+   \       0x30   0xF440 0x3080      ORR      R0,R0,#0x10000
+   \       0x34   0x4308             ORRS     R0,R0,R1
+   \       0x36   0x6010             STR      R0,[R2, #+0]
+    567          }
+   \       0x38   0x4770             BX       LR               ;; return
+    568          
+    569          /**
+    570            * @brief  Erase the specified FLASH memory sector
+    571            * @param  Sector FLASH sector to erase
+    572            *         The value of this parameter depend on device used within the same series      
+    573            * @param  VoltageRange The device voltage range which defines the erase parallelism.  
+    574            *          This parameter can be one of the following values:
+    575            *            @arg FLASH_VOLTAGE_RANGE_1: when the device voltage range is 1.8V to 2.1V, 
+    576            *                                  the operation will be done by byte (8-bit) 
+    577            *            @arg FLASH_VOLTAGE_RANGE_2: when the device voltage range is 2.1V to 2.7V,
+    578            *                                  the operation will be done by half word (16-bit)
+    579            *            @arg FLASH_VOLTAGE_RANGE_3: when the device voltage range is 2.7V to 3.6V,
+    580            *                                  the operation will be done by word (32-bit)
+    581            *            @arg FLASH_VOLTAGE_RANGE_4: when the device voltage range is 2.7V to 3.6V + External Vpp, 
+    582            *                                  the operation will be done by double word (64-bit)
+    583            * 
+    584            * @retval None
+    585            */
+
+   \                                 In section .text, align 2, keep-with-next
+    586          void FLASH_Erase_Sector(uint32_t Sector, uint8_t VoltageRange)
+    587          {
+   \                     FLASH_Erase_Sector: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    588            uint32_t tmp_psize = 0U;
+   \        0x2   0x2200             MOVS     R2,#+0
+    589          
+    590            /* Check the parameters */
+    591            assert_param(IS_FLASH_SECTOR(Sector));
+    592            assert_param(IS_VOLTAGERANGE(VoltageRange));
+    593            
+    594            if(VoltageRange == FLASH_VOLTAGE_RANGE_1)
+   \        0x4   0x000B             MOVS     R3,R1
+   \        0x6   0xD00A             BEQ.N    ??FLASH_Erase_Sector_0
+    595            {
+    596               tmp_psize = FLASH_PSIZE_BYTE;
+    597            }
+    598            else if(VoltageRange == FLASH_VOLTAGE_RANGE_2)
+   \        0x8   0x2901             CMP      R1,#+1
+   \        0xA   0xBF08             IT       EQ
+   \        0xC   0xF44F 0x7280      MOVEQ    R2,#+256
+    599            {
+    600              tmp_psize = FLASH_PSIZE_HALF_WORD;
+   \       0x10   0xD005             BEQ.N    ??FLASH_Erase_Sector_0
+    601            }
+    602            else if(VoltageRange == FLASH_VOLTAGE_RANGE_3)
+   \       0x12   0x2902             CMP      R1,#+2
+   \       0x14   0xBF0C             ITE      EQ
+   \       0x16   0xF44F 0x7200      MOVEQ    R2,#+512
+   \       0x1A   0xF44F 0x7240      MOVNE    R2,#+768
+    603            {
+    604              tmp_psize = FLASH_PSIZE_WORD;
+    605            }
+    606            else
+    607            {
+    608              tmp_psize = FLASH_PSIZE_DOUBLE_WORD;
+    609            }
+    610          
+    611            /* Need to add offset of 4 when sector higher than FLASH_SECTOR_11 */
+    612            if(Sector > FLASH_SECTOR_11) 
+    613            {
+    614              Sector += 4U;
+    615            }
+    616            /* If the previous operation is completed, proceed to erase the sector */
+    617            CLEAR_BIT(FLASH->CR, FLASH_CR_PSIZE);
+   \                     ??FLASH_Erase_Sector_0: (+1)
+   \       0x1E   0x....             LDR.N    R1,??DataTable11_1  ;; 0x40023c10
+   \       0x20   0x680B             LDR      R3,[R1, #+0]
+   \       0x22   0xF423 0x7340      BIC      R3,R3,#0x300
+   \       0x26   0x600B             STR      R3,[R1, #+0]
+   \       0x28   0x280C             CMP      R0,#+12
+    618            FLASH->CR |= tmp_psize;
+   \       0x2A   0x680C             LDR      R4,[R1, #+0]
+   \       0x2C   0xBF28             IT       CS
+   \       0x2E   0x1D00             ADDCS    R0,R0,#+4
+   \       0x30   0x4322             ORRS     R2,R2,R4
+   \       0x32   0x600A             STR      R2,[R1, #+0]
+    619            CLEAR_BIT(FLASH->CR, FLASH_CR_SNB);
+    620            FLASH->CR |= FLASH_CR_SER | (Sector << FLASH_CR_SNB_Pos);
+   \       0x34   0x00C0             LSLS     R0,R0,#+3
+   \       0x36   0x680A             LDR      R2,[R1, #+0]
+   \       0x38   0xF022 0x02F8      BIC      R2,R2,#0xF8
+   \       0x3C   0x600A             STR      R2,[R1, #+0]
+   \       0x3E   0xF040 0x0002      ORR      R0,R0,#0x2
+   \       0x42   0x680B             LDR      R3,[R1, #+0]
+   \       0x44   0x4318             ORRS     R0,R0,R3
+   \       0x46   0x6008             STR      R0,[R1, #+0]
+    621            FLASH->CR |= FLASH_CR_STRT;
+   \       0x48   0x6808             LDR      R0,[R1, #+0]
+   \       0x4A   0xF440 0x3080      ORR      R0,R0,#0x10000
+   \       0x4E   0x6008             STR      R0,[R1, #+0]
+    622          }
+   \       0x50   0xBD10             POP      {R4,PC}          ;; return
+    623          
+    624          /**
+    625            * @brief  Enable the write protection of the desired bank1 or bank 2 sectors
+    626            *
+    627            * @note   When the memory read protection level is selected (RDP level = 1), 
+    628            *         it is not possible to program or erase the flash sector i if CortexM4  
+    629            *         debug features are connected or boot code is executed in RAM, even if nWRPi = 1 
+    630            * @note   Active value of nWRPi bits is inverted when PCROP mode is active (SPRMOD =1).   
+    631            * 
+    632            * @param  WRPSector specifies the sector(s) to be write protected.
+    633            *          This parameter can be one of the following values:
+    634            *            @arg WRPSector: A value between OB_WRP_SECTOR_0 and OB_WRP_SECTOR_23
+    635            *            @arg OB_WRP_SECTOR_All
+    636            * @note   BANK2 starts from OB_WRP_SECTOR_12
+    637            *
+    638            * @param  Banks Enable write protection on all the sectors for the specific bank
+    639            *          This parameter can be one of the following values:
+    640            *            @arg FLASH_BANK_1: WRP on all sectors of bank1
+    641            *            @arg FLASH_BANK_2: WRP on all sectors of bank2
+    642            *            @arg FLASH_BANK_BOTH: WRP on all sectors of bank1 & bank2
+    643            *
+    644            * @retval HAL FLASH State   
+    645            */
+    646          static HAL_StatusTypeDef FLASH_OB_EnableWRP(uint32_t WRPSector, uint32_t Banks)
+    647          {
+    648            HAL_StatusTypeDef status = HAL_OK;
+    649            
+    650            /* Check the parameters */
+    651            assert_param(IS_OB_WRP_SECTOR(WRPSector));
+    652            assert_param(IS_FLASH_BANK(Banks));
+    653              
+    654            /* Wait for last operation to be completed */
+    655            status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+    656          
+    657            if(status == HAL_OK)
+    658            {
+    659              if(((WRPSector == OB_WRP_SECTOR_All) && ((Banks == FLASH_BANK_1) || (Banks == FLASH_BANK_BOTH))) ||
+    660                   (WRPSector < OB_WRP_SECTOR_12))
+    661              {
+    662                 if(WRPSector == OB_WRP_SECTOR_All)
+    663                 {
+    664                    /*Write protection on all sector of BANK1*/
+    665                    *(__IO uint16_t*)OPTCR_BYTE2_ADDRESS &= (~(WRPSector>>12));  
+    666                 }
+    667                 else
+    668                 {
+    669                    /*Write protection done on sectors of BANK1*/
+    670                    *(__IO uint16_t*)OPTCR_BYTE2_ADDRESS &= (~WRPSector);  
+    671                 }
+    672              }
+    673              else 
+    674              {
+    675                /*Write protection done on sectors of BANK2*/
+    676                *(__IO uint16_t*)OPTCR1_BYTE2_ADDRESS &= (~(WRPSector>>12));  
+    677              }
+    678          
+    679              /*Write protection on all sector of BANK2*/
+    680              if((WRPSector == OB_WRP_SECTOR_All) && (Banks == FLASH_BANK_BOTH))
+    681              {
+    682                /* Wait for last operation to be completed */
+    683                status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+    684                
+    685                if(status == HAL_OK)
+    686                { 
+    687                  *(__IO uint16_t*)OPTCR1_BYTE2_ADDRESS &= (~(WRPSector>>12));  
+    688                }
+    689              }
+    690              
+    691            }
+    692            return status;
+    693          }
+    694          
+    695          /**
+    696            * @brief  Disable the write protection of the desired bank1 or bank 2 sectors
+    697            *
+    698            * @note   When the memory read protection level is selected (RDP level = 1), 
+    699            *         it is not possible to program or erase the flash sector i if CortexM4  
+    700            *         debug features are connected or boot code is executed in RAM, even if nWRPi = 1 
+    701            * @note   Active value of nWRPi bits is inverted when PCROP mode is active (SPRMOD =1).   
+    702            * 
+    703            * @param  WRPSector specifies the sector(s) to be write protected.
+    704            *          This parameter can be one of the following values:
+    705            *            @arg WRPSector: A value between OB_WRP_SECTOR_0 and OB_WRP_SECTOR_23
+    706            *            @arg OB_WRP_Sector_All
+    707            * @note   BANK2 starts from OB_WRP_SECTOR_12
+    708            *
+    709            * @param  Banks Disable write protection on all the sectors for the specific bank
+    710            *          This parameter can be one of the following values:
+    711            *            @arg FLASH_BANK_1: Bank1 to be erased
+    712            *            @arg FLASH_BANK_2: Bank2 to be erased
+    713            *            @arg FLASH_BANK_BOTH: Bank1 and Bank2 to be erased
+    714            *
+    715            * @retval HAL Status   
+    716            */
+    717          static HAL_StatusTypeDef FLASH_OB_DisableWRP(uint32_t WRPSector, uint32_t Banks)
+    718          {
+    719            HAL_StatusTypeDef status = HAL_OK;
+    720            
+    721            /* Check the parameters */
+    722            assert_param(IS_OB_WRP_SECTOR(WRPSector));
+    723            assert_param(IS_FLASH_BANK(Banks));
+    724              
+    725            /* Wait for last operation to be completed */
+    726            status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+    727          
+    728            if(status == HAL_OK)
+    729            {
+    730              if(((WRPSector == OB_WRP_SECTOR_All) && ((Banks == FLASH_BANK_1) || (Banks == FLASH_BANK_BOTH))) ||
+    731                   (WRPSector < OB_WRP_SECTOR_12))
+    732              {
+    733                 if(WRPSector == OB_WRP_SECTOR_All)
+    734                 {
+    735                    /*Write protection on all sector of BANK1*/
+    736                    *(__IO uint16_t*)OPTCR_BYTE2_ADDRESS |= (uint16_t)(WRPSector>>12); 
+    737                 }
+    738                 else
+    739                 {
+    740                    /*Write protection done on sectors of BANK1*/
+    741                    *(__IO uint16_t*)OPTCR_BYTE2_ADDRESS |= (uint16_t)WRPSector; 
+    742                 }
+    743              }
+    744              else 
+    745              {
+    746                /*Write protection done on sectors of BANK2*/
+    747                *(__IO uint16_t*)OPTCR1_BYTE2_ADDRESS |= (uint16_t)(WRPSector>>12); 
+    748              }
+    749          
+    750              /*Write protection on all sector  of BANK2*/
+    751              if((WRPSector == OB_WRP_SECTOR_All) && (Banks == FLASH_BANK_BOTH))
+    752              {
+    753                /* Wait for last operation to be completed */
+    754                status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+    755                
+    756                if(status == HAL_OK)
+    757                { 
+    758                  *(__IO uint16_t*)OPTCR1_BYTE2_ADDRESS |= (uint16_t)(WRPSector>>12); 
+    759                }
+    760              }
+    761              
+    762            }
+    763          
+    764            return status;
+    765          }
+    766          
+    767          /**
+    768            * @brief  Configure the Dual Bank Boot.
+    769            *   
+    770            * @note   This function can be used only for STM32F42xxx/43xxx devices.
+    771            *      
+    772            * @param  BootConfig specifies the Dual Bank Boot Option byte.
+    773            *          This parameter can be one of the following values:
+    774            *            @arg OB_Dual_BootEnabled: Dual Bank Boot Enable
+    775            *            @arg OB_Dual_BootDisabled: Dual Bank Boot Disabled
+    776            * @retval None
+    777            */
+    778          static HAL_StatusTypeDef FLASH_OB_BootConfig(uint8_t BootConfig)
+    779          {
+    780            HAL_StatusTypeDef status = HAL_OK;
+    781          
+    782            /* Check the parameters */
+    783            assert_param(IS_OB_BOOT(BootConfig));
+    784          
+    785            /* Wait for last operation to be completed */  
+    786            status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+    787          
+    788            if(status == HAL_OK)
+    789            { 
+    790              /* Set Dual Bank Boot */
+    791              *(__IO uint8_t *)OPTCR_BYTE0_ADDRESS &= (~FLASH_OPTCR_BFB2);
+    792              *(__IO uint8_t *)OPTCR_BYTE0_ADDRESS |= BootConfig;
+    793            }
+    794            
+    795            return status;
+    796          }
+    797          
+    798          /**
+    799            * @brief  Enable the read/write protection (PCROP) of the desired 
+    800            *         sectors of Bank 1 and/or Bank 2.
+    801            * @note   This function can be used only for STM32F42xxx/43xxx devices.
+    802            * @param  SectorBank1 Specifies the sector(s) to be read/write protected or unprotected for bank1.
+    803            *          This parameter can be one of the following values:
+    804            *            @arg OB_PCROP: A value between OB_PCROP_SECTOR_0 and OB_PCROP_SECTOR_11
+    805            *            @arg OB_PCROP_SECTOR__All                         
+    806            * @param  SectorBank2 Specifies the sector(s) to be read/write protected or unprotected for bank2.
+    807            *          This parameter can be one of the following values:
+    808            *            @arg OB_PCROP: A value between OB_PCROP_SECTOR_12 and OB_PCROP_SECTOR_23
+    809            *            @arg OB_PCROP_SECTOR__All                         
+    810            * @param  Banks Enable PCROP protection on all the sectors for the specific bank
+    811            *          This parameter can be one of the following values:
+    812            *            @arg FLASH_BANK_1: WRP on all sectors of bank1
+    813            *            @arg FLASH_BANK_2: WRP on all sectors of bank2
+    814            *            @arg FLASH_BANK_BOTH: WRP on all sectors of bank1 & bank2
+    815            *
+    816            * @retval HAL Status  
+    817            */
+    818          static HAL_StatusTypeDef FLASH_OB_EnablePCROP(uint32_t SectorBank1, uint32_t SectorBank2, uint32_t Banks)
+    819          {
+    820            HAL_StatusTypeDef status = HAL_OK;
+    821            
+    822            assert_param(IS_FLASH_BANK(Banks));
+    823              
+    824            /* Wait for last operation to be completed */
+    825            status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+    826          
+    827            if(status == HAL_OK)
+    828            {
+    829              if((Banks == FLASH_BANK_1) || (Banks == FLASH_BANK_BOTH))
+    830              {
+    831                assert_param(IS_OB_PCROP(SectorBank1));
+    832                /*Write protection done on sectors of BANK1*/
+    833                *(__IO uint16_t*)OPTCR_BYTE2_ADDRESS |= (uint16_t)SectorBank1; 
+    834              }
+    835              else 
+    836              {
+    837                assert_param(IS_OB_PCROP(SectorBank2));
+    838                /*Write protection done on sectors of BANK2*/
+    839                *(__IO uint16_t*)OPTCR1_BYTE2_ADDRESS |= (uint16_t)SectorBank2; 
+    840              }
+    841          
+    842              /*Write protection on all sector  of BANK2*/
+    843              if(Banks == FLASH_BANK_BOTH)
+    844              {
+    845                assert_param(IS_OB_PCROP(SectorBank2));
+    846                /* Wait for last operation to be completed */
+    847                status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+    848                
+    849                if(status == HAL_OK)
+    850                { 
+    851                  /*Write protection done on sectors of BANK2*/
+    852                  *(__IO uint16_t*)OPTCR1_BYTE2_ADDRESS |= (uint16_t)SectorBank2; 
+    853                }
+    854              }
+    855              
+    856            }
+    857          
+    858            return status;
+    859          }
+    860          
+    861          
+    862          /**
+    863            * @brief  Disable the read/write protection (PCROP) of the desired 
+    864            *         sectors  of Bank 1 and/or Bank 2.
+    865            * @note   This function can be used only for STM32F42xxx/43xxx devices.
+    866            * @param  SectorBank1 specifies the sector(s) to be read/write protected or unprotected for bank1.
+    867            *          This parameter can be one of the following values:
+    868            *            @arg OB_PCROP: A value between OB_PCROP_SECTOR_0 and OB_PCROP_SECTOR_11
+    869            *            @arg OB_PCROP_SECTOR__All                         
+    870            * @param  SectorBank2 Specifies the sector(s) to be read/write protected or unprotected for bank2.
+    871            *          This parameter can be one of the following values:
+    872            *            @arg OB_PCROP: A value between OB_PCROP_SECTOR_12 and OB_PCROP_SECTOR_23
+    873            *            @arg OB_PCROP_SECTOR__All                         
+    874            * @param  Banks Disable PCROP protection on all the sectors for the specific bank
+    875            *          This parameter can be one of the following values:
+    876            *            @arg FLASH_BANK_1: WRP on all sectors of bank1
+    877            *            @arg FLASH_BANK_2: WRP on all sectors of bank2
+    878            *            @arg FLASH_BANK_BOTH: WRP on all sectors of bank1 & bank2
+    879            *
+    880            * @retval HAL Status  
+    881            */
+    882          static HAL_StatusTypeDef FLASH_OB_DisablePCROP(uint32_t SectorBank1, uint32_t SectorBank2, uint32_t Banks)
+    883          {  
+    884            HAL_StatusTypeDef status = HAL_OK;
+    885            
+    886            /* Check the parameters */
+    887            assert_param(IS_FLASH_BANK(Banks));
+    888              
+    889            /* Wait for last operation to be completed */
+    890            status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+    891          
+    892            if(status == HAL_OK)
+    893            {
+    894              if((Banks == FLASH_BANK_1) || (Banks == FLASH_BANK_BOTH))
+    895              {
+    896                assert_param(IS_OB_PCROP(SectorBank1));
+    897                /*Write protection done on sectors of BANK1*/
+    898                *(__IO uint16_t*)OPTCR_BYTE2_ADDRESS &= (~SectorBank1); 
+    899              }
+    900              else 
+    901              {
+    902                /*Write protection done on sectors of BANK2*/
+    903                assert_param(IS_OB_PCROP(SectorBank2));
+    904                *(__IO uint16_t*)OPTCR1_BYTE2_ADDRESS &= (~SectorBank2); 
+    905              }
+    906          
+    907              /*Write protection on all sector  of BANK2*/
+    908              if(Banks == FLASH_BANK_BOTH)
+    909              {
+    910                assert_param(IS_OB_PCROP(SectorBank2));
+    911               /* Wait for last operation to be completed */
+    912                status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+    913                
+    914                if(status == HAL_OK)
+    915                { 
+    916                  /*Write protection done on sectors of BANK2*/
+    917                  *(__IO uint16_t*)OPTCR1_BYTE2_ADDRESS &= (~SectorBank2); 
+    918                }
+    919              }
+    920              
+    921            }
+    922            
+    923            return status;
+    924          
+    925          }
+    926          
+    927          #endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F469xx || STM32F479xx */
+    928          
+    929          #if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx) ||\
+    930              defined(STM32F401xC) || defined(STM32F401xE) || defined(STM32F410Tx) || defined(STM32F410Cx) ||\
+    931              defined(STM32F410Rx) || defined(STM32F411xE) || defined(STM32F446xx) || defined(STM32F412Zx) ||\
+    932              defined(STM32F412Vx) || defined(STM32F412Rx) || defined(STM32F412Cx) || defined(STM32F413xx) ||\
+    933              defined(STM32F423xx)
+    934          /**
+    935            * @brief  Mass erase of FLASH memory
+    936            * @param  VoltageRange The device voltage range which defines the erase parallelism.  
+    937            *          This parameter can be one of the following values:
+    938            *            @arg FLASH_VOLTAGE_RANGE_1: when the device voltage range is 1.8V to 2.1V, 
+    939            *                                  the operation will be done by byte (8-bit) 
+    940            *            @arg FLASH_VOLTAGE_RANGE_2: when the device voltage range is 2.1V to 2.7V,
+    941            *                                  the operation will be done by half word (16-bit)
+    942            *            @arg FLASH_VOLTAGE_RANGE_3: when the device voltage range is 2.7V to 3.6V,
+    943            *                                  the operation will be done by word (32-bit)
+    944            *            @arg FLASH_VOLTAGE_RANGE_4: when the device voltage range is 2.7V to 3.6V + External Vpp, 
+    945            *                                  the operation will be done by double word (64-bit)
+    946            * 
+    947            * @param  Banks Banks to be erased
+    948            *          This parameter can be one of the following values:
+    949            *            @arg FLASH_BANK_1: Bank1 to be erased
+    950            *
+    951            * @retval None
+    952            */
+    953          static void FLASH_MassErase(uint8_t VoltageRange, uint32_t Banks)
+    954          {
+    955            /* Check the parameters */
+    956            assert_param(IS_VOLTAGERANGE(VoltageRange));
+    957            assert_param(IS_FLASH_BANK(Banks));
+    958            
+    959            /* If the previous operation is completed, proceed to erase all sectors */
+    960            CLEAR_BIT(FLASH->CR, FLASH_CR_PSIZE);
+    961            FLASH->CR |= FLASH_CR_MER;
+    962            FLASH->CR |= FLASH_CR_STRT | ((uint32_t)VoltageRange <<8U);
+    963          }
+    964          
+    965          /**
+    966            * @brief  Erase the specified FLASH memory sector
+    967            * @param  Sector FLASH sector to erase
+    968            *         The value of this parameter depend on device used within the same series      
+    969            * @param  VoltageRange The device voltage range which defines the erase parallelism.  
+    970            *          This parameter can be one of the following values:
+    971            *            @arg FLASH_VOLTAGE_RANGE_1: when the device voltage range is 1.8V to 2.1V, 
+    972            *                                  the operation will be done by byte (8-bit) 
+    973            *            @arg FLASH_VOLTAGE_RANGE_2: when the device voltage range is 2.1V to 2.7V,
+    974            *                                  the operation will be done by half word (16-bit)
+    975            *            @arg FLASH_VOLTAGE_RANGE_3: when the device voltage range is 2.7V to 3.6V,
+    976            *                                  the operation will be done by word (32-bit)
+    977            *            @arg FLASH_VOLTAGE_RANGE_4: when the device voltage range is 2.7V to 3.6V + External Vpp, 
+    978            *                                  the operation will be done by double word (64-bit)
+    979            * 
+    980            * @retval None
+    981            */
+    982          void FLASH_Erase_Sector(uint32_t Sector, uint8_t VoltageRange)
+    983          {
+    984            uint32_t tmp_psize = 0U;
+    985          
+    986            /* Check the parameters */
+    987            assert_param(IS_FLASH_SECTOR(Sector));
+    988            assert_param(IS_VOLTAGERANGE(VoltageRange));
+    989            
+    990            if(VoltageRange == FLASH_VOLTAGE_RANGE_1)
+    991            {
+    992               tmp_psize = FLASH_PSIZE_BYTE;
+    993            }
+    994            else if(VoltageRange == FLASH_VOLTAGE_RANGE_2)
+    995            {
+    996              tmp_psize = FLASH_PSIZE_HALF_WORD;
+    997            }
+    998            else if(VoltageRange == FLASH_VOLTAGE_RANGE_3)
+    999            {
+   1000              tmp_psize = FLASH_PSIZE_WORD;
+   1001            }
+   1002            else
+   1003            {
+   1004              tmp_psize = FLASH_PSIZE_DOUBLE_WORD;
+   1005            }
+   1006          
+   1007            /* If the previous operation is completed, proceed to erase the sector */
+   1008            CLEAR_BIT(FLASH->CR, FLASH_CR_PSIZE);
+   1009            FLASH->CR |= tmp_psize;
+   1010            CLEAR_BIT(FLASH->CR, FLASH_CR_SNB);
+   1011            FLASH->CR |= FLASH_CR_SER | (Sector << FLASH_CR_SNB_Pos);
+   1012            FLASH->CR |= FLASH_CR_STRT;
+   1013          }
+   1014          
+   1015          /**
+   1016            * @brief  Enable the write protection of the desired bank 1 sectors
+   1017            *
+   1018            * @note   When the memory read protection level is selected (RDP level = 1), 
+   1019            *         it is not possible to program or erase the flash sector i if CortexM4  
+   1020            *         debug features are connected or boot code is executed in RAM, even if nWRPi = 1 
+   1021            * @note   Active value of nWRPi bits is inverted when PCROP mode is active (SPRMOD =1).   
+   1022            * 
+   1023            * @param  WRPSector specifies the sector(s) to be write protected.
+   1024            *         The value of this parameter depend on device used within the same series 
+   1025            * 
+   1026            * @param  Banks Enable write protection on all the sectors for the specific bank
+   1027            *          This parameter can be one of the following values:
+   1028            *            @arg FLASH_BANK_1: WRP on all sectors of bank1
+   1029            *
+   1030            * @retval HAL Status 
+   1031            */
+   1032          static HAL_StatusTypeDef FLASH_OB_EnableWRP(uint32_t WRPSector, uint32_t Banks)
+   1033          {
+   1034            HAL_StatusTypeDef status = HAL_OK;
+   1035            
+   1036            /* Check the parameters */
+   1037            assert_param(IS_OB_WRP_SECTOR(WRPSector));
+   1038            assert_param(IS_FLASH_BANK(Banks));
+   1039              
+   1040            /* Wait for last operation to be completed */
+   1041            status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+   1042          
+   1043            if(status == HAL_OK)
+   1044            { 
+   1045              *(__IO uint16_t*)OPTCR_BYTE2_ADDRESS &= (~WRPSector);  
+   1046            }
+   1047            
+   1048            return status;
+   1049          }
+   1050          
+   1051          /**
+   1052            * @brief  Disable the write protection of the desired bank 1 sectors
+   1053            *
+   1054            * @note   When the memory read protection level is selected (RDP level = 1), 
+   1055            *         it is not possible to program or erase the flash sector i if CortexM4  
+   1056            *         debug features are connected or boot code is executed in RAM, even if nWRPi = 1 
+   1057            * @note   Active value of nWRPi bits is inverted when PCROP mode is active (SPRMOD =1).   
+   1058            * 
+   1059            * @param  WRPSector specifies the sector(s) to be write protected.
+   1060            *         The value of this parameter depend on device used within the same series 
+   1061            * 
+   1062            * @param  Banks Enable write protection on all the sectors for the specific bank
+   1063            *          This parameter can be one of the following values:
+   1064            *            @arg FLASH_BANK_1: WRP on all sectors of bank1
+   1065            *
+   1066            * @retval HAL Status 
+   1067            */
+   1068          static HAL_StatusTypeDef FLASH_OB_DisableWRP(uint32_t WRPSector, uint32_t Banks)
+   1069          {
+   1070            HAL_StatusTypeDef status = HAL_OK;
+   1071            
+   1072            /* Check the parameters */
+   1073            assert_param(IS_OB_WRP_SECTOR(WRPSector));
+   1074            assert_param(IS_FLASH_BANK(Banks));
+   1075              
+   1076            /* Wait for last operation to be completed */
+   1077            status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+   1078          
+   1079            if(status == HAL_OK)
+   1080            { 
+   1081              *(__IO uint16_t*)OPTCR_BYTE2_ADDRESS |= (uint16_t)WRPSector; 
+   1082            }
+   1083            
+   1084            return status;
+   1085          }
+   1086          #endif /* STM32F40xxx || STM32F41xxx || STM32F401xx || STM32F410xx || STM32F411xE || STM32F446xx || STM32F412Zx || STM32F412Vx || STM32F412Rx || STM32F412Cx
+   1087                    STM32F413xx || STM32F423xx */
+   1088          
+   1089          #if defined(STM32F401xC) || defined(STM32F401xE) || defined(STM32F410Tx) || defined(STM32F410Cx) || defined(STM32F410Rx) ||\
+   1090              defined(STM32F411xE) || defined(STM32F446xx) || defined(STM32F412Zx) || defined(STM32F412Vx) || defined(STM32F412Rx) ||\
+   1091              defined(STM32F412Cx) || defined(STM32F413xx) || defined(STM32F423xx)
+   1092          /**
+   1093            * @brief  Enable the read/write protection (PCROP) of the desired sectors.
+   1094            * @note   This function can be used only for STM32F401xx devices.
+   1095            * @param  Sector specifies the sector(s) to be read/write protected or unprotected.
+   1096            *          This parameter can be one of the following values:
+   1097            *            @arg OB_PCROP: A value between OB_PCROP_Sector0 and OB_PCROP_Sector5
+   1098            *            @arg OB_PCROP_Sector_All                         
+   1099            * @retval HAL Status  
+   1100            */
+   1101          static HAL_StatusTypeDef FLASH_OB_EnablePCROP(uint32_t Sector)
+   1102          {
+   1103            HAL_StatusTypeDef status = HAL_OK;
+   1104            
+   1105            /* Check the parameters */
+   1106            assert_param(IS_OB_PCROP(Sector));
+   1107              
+   1108            /* Wait for last operation to be completed */  
+   1109            status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+   1110          
+   1111            if(status == HAL_OK)
+   1112            { 
+   1113              *(__IO uint16_t*)OPTCR_BYTE2_ADDRESS |= (uint16_t)Sector;
+   1114            }
+   1115            
+   1116            return status;
+   1117          }
+   1118          
+   1119          
+   1120          /**
+   1121            * @brief  Disable the read/write protection (PCROP) of the desired sectors.
+   1122            * @note   This function can be used only for STM32F401xx devices.
+   1123            * @param  Sector specifies the sector(s) to be read/write protected or unprotected.
+   1124            *          This parameter can be one of the following values:
+   1125            *            @arg OB_PCROP: A value between OB_PCROP_Sector0 and OB_PCROP_Sector5
+   1126            *            @arg OB_PCROP_Sector_All                         
+   1127            * @retval HAL Status  
+   1128            */
+   1129          static HAL_StatusTypeDef FLASH_OB_DisablePCROP(uint32_t Sector)
+   1130          {  
+   1131            HAL_StatusTypeDef status = HAL_OK;
+   1132            
+   1133            /* Check the parameters */
+   1134            assert_param(IS_OB_PCROP(Sector));
+   1135              
+   1136            /* Wait for last operation to be completed */  
+   1137            status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+   1138          
+   1139            if(status == HAL_OK)
+   1140            { 
+   1141              *(__IO uint16_t*)OPTCR_BYTE2_ADDRESS &= (~Sector);
+   1142            }
+   1143            
+   1144            return status;
+   1145          
+   1146          }
+   1147          #endif /* STM32F401xC || STM32F401xE || STM32F411xE || STM32F446xx || STM32F412Zx || STM32F412Vx || STM32F412Rx || STM32F412Cx
+   1148                    STM32F413xx || STM32F423xx */
+   1149          
+   1150          /**
+   1151            * @brief  Set the read protection level.
+   1152            * @param  Level specifies the read protection level.
+   1153            *          This parameter can be one of the following values:
+   1154            *            @arg OB_RDP_LEVEL_0: No protection
+   1155            *            @arg OB_RDP_LEVEL_1: Read protection of the memory
+   1156            *            @arg OB_RDP_LEVEL_2: Full chip protection
+   1157            *   
+   1158            * @note WARNING: When enabling OB_RDP level 2 it's no more possible to go back to level 1 or 0
+   1159            *    
+   1160            * @retval HAL Status
+   1161            */
+   1162          static HAL_StatusTypeDef FLASH_OB_RDP_LevelConfig(uint8_t Level)
+   1163          {
+   1164            HAL_StatusTypeDef status = HAL_OK;
+   1165            
+   1166            /* Check the parameters */
+   1167            assert_param(IS_OB_RDP_LEVEL(Level));
+   1168              
+   1169            /* Wait for last operation to be completed */
+   1170            status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+   1171          
+   1172            if(status == HAL_OK)
+   1173            { 
+   1174              *(__IO uint8_t*)OPTCR_BYTE1_ADDRESS = Level;
+   1175            }
+   1176            
+   1177            return status;
+   1178          }
+   1179          
+   1180          /**
+   1181            * @brief  Program the FLASH User Option Byte: IWDG_SW / RST_STOP / RST_STDBY.    
+   1182            * @param  Iwdg Selects the IWDG mode
+   1183            *          This parameter can be one of the following values:
+   1184            *            @arg OB_IWDG_SW: Software IWDG selected
+   1185            *            @arg OB_IWDG_HW: Hardware IWDG selected
+   1186            * @param  Stop Reset event when entering STOP mode.
+   1187            *          This parameter  can be one of the following values:
+   1188            *            @arg OB_STOP_NO_RST: No reset generated when entering in STOP
+   1189            *            @arg OB_STOP_RST: Reset generated when entering in STOP
+   1190            * @param  Stdby Reset event when entering Standby mode.
+   1191            *          This parameter  can be one of the following values:
+   1192            *            @arg OB_STDBY_NO_RST: No reset generated when entering in STANDBY
+   1193            *            @arg OB_STDBY_RST: Reset generated when entering in STANDBY
+   1194            * @retval HAL Status
+   1195            */
+   1196          static HAL_StatusTypeDef FLASH_OB_UserConfig(uint8_t Iwdg, uint8_t Stop, uint8_t Stdby)
+   1197          {
+   1198            uint8_t optiontmp = 0xFF;
+   1199            HAL_StatusTypeDef status = HAL_OK;
+   1200          
+   1201            /* Check the parameters */
+   1202            assert_param(IS_OB_IWDG_SOURCE(Iwdg));
+   1203            assert_param(IS_OB_STOP_SOURCE(Stop));
+   1204            assert_param(IS_OB_STDBY_SOURCE(Stdby));
+   1205          
+   1206            /* Wait for last operation to be completed */
+   1207            status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
+   1208            
+   1209            if(status == HAL_OK)
+   1210            {     
+   1211              /* Mask OPTLOCK, OPTSTRT, BOR_LEV and BFB2 bits */
+   1212              optiontmp =  (uint8_t)((*(__IO uint8_t *)OPTCR_BYTE0_ADDRESS) & (uint8_t)0x1F);
+   1213          
+   1214              /* Update User Option Byte */
+   1215              *(__IO uint8_t *)OPTCR_BYTE0_ADDRESS = Iwdg | (uint8_t)(Stdby | (uint8_t)(Stop | ((uint8_t)optiontmp))); 
+   1216            }
+   1217            
+   1218            return status; 
+   1219          }
+   1220          
+   1221          /**
+   1222            * @brief  Set the BOR Level. 
+   1223            * @param  Level specifies the Option Bytes BOR Reset Level.
+   1224            *          This parameter can be one of the following values:
+   1225            *            @arg OB_BOR_LEVEL3: Supply voltage ranges from 2.7 to 3.6 V
+   1226            *            @arg OB_BOR_LEVEL2: Supply voltage ranges from 2.4 to 2.7 V
+   1227            *            @arg OB_BOR_LEVEL1: Supply voltage ranges from 2.1 to 2.4 V
+   1228            *            @arg OB_BOR_OFF: Supply voltage ranges from 1.62 to 2.1 V
+   1229            * @retval HAL Status
+   1230            */
+   1231          static HAL_StatusTypeDef FLASH_OB_BOR_LevelConfig(uint8_t Level)
+   1232          {
+   1233            /* Check the parameters */
+   1234            assert_param(IS_OB_BOR_LEVEL(Level));
+   1235          
+   1236            /* Set the BOR Level */
+   1237            *(__IO uint8_t *)OPTCR_BYTE0_ADDRESS &= (~FLASH_OPTCR_BOR_LEV);
+   1238            *(__IO uint8_t *)OPTCR_BYTE0_ADDRESS |= Level;
+   1239            
+   1240            return HAL_OK;
+   1241            
+   1242          }
+   1243          
+   1244          /**
+   1245            * @brief  Return the FLASH User Option Byte value.
+   1246            * @retval uint8_t FLASH User Option Bytes values: IWDG_SW(Bit0), RST_STOP(Bit1)
+   1247            *         and RST_STDBY(Bit2).
+   1248            */
+   1249          static uint8_t FLASH_OB_GetUser(void)
+   1250          {
+   1251            /* Return the User Option Byte */
+   1252            return ((uint8_t)(FLASH->OPTCR & 0xE0));
+   1253          }
+   1254          
+   1255          /**
+   1256            * @brief  Return the FLASH Write Protection Option Bytes value.
+   1257            * @retval uint16_t FLASH Write Protection Option Bytes value
+   1258            */
+   1259          static uint16_t FLASH_OB_GetWRP(void)
+   1260          {
+   1261            /* Return the FLASH write protection Register value */
+   1262            return (*(__IO uint16_t *)(OPTCR_BYTE2_ADDRESS));
+   1263          }
+   1264          
+   1265          /**
+   1266            * @brief  Returns the FLASH Read Protection level.
+   1267            * @retval FLASH ReadOut Protection Status:
+   1268            *         This parameter can be one of the following values:
+   1269            *            @arg OB_RDP_LEVEL_0: No protection
+   1270            *            @arg OB_RDP_LEVEL_1: Read protection of the memory
+   1271            *            @arg OB_RDP_LEVEL_2: Full chip protection
+   1272            */
+   1273          static uint8_t FLASH_OB_GetRDP(void)
+   1274          {
+   1275            uint8_t readstatus = OB_RDP_LEVEL_0;
+   1276          
+   1277            if((*(__IO uint8_t*)(OPTCR_BYTE1_ADDRESS) == (uint8_t)OB_RDP_LEVEL_2))
+   1278            {
+   1279              readstatus = OB_RDP_LEVEL_2;
+   1280            }
+   1281            else if((*(__IO uint8_t*)(OPTCR_BYTE1_ADDRESS) == (uint8_t)OB_RDP_LEVEL_0))
+   1282            {
+   1283              readstatus = OB_RDP_LEVEL_0;
+   1284            }
+   1285            else 
+   1286            {
+   1287              readstatus = OB_RDP_LEVEL_1;
+   1288            }
+   1289          
+   1290            return readstatus;
+   1291          }
+   1292          
+   1293          /**
+   1294            * @brief  Returns the FLASH BOR level.
+   1295            * @retval uint8_t The FLASH BOR level:
+   1296            *           - OB_BOR_LEVEL3: Supply voltage ranges from 2.7 to 3.6 V
+   1297            *           - OB_BOR_LEVEL2: Supply voltage ranges from 2.4 to 2.7 V
+   1298            *           - OB_BOR_LEVEL1: Supply voltage ranges from 2.1 to 2.4 V
+   1299            *           - OB_BOR_OFF   : Supply voltage ranges from 1.62 to 2.1 V  
+   1300            */
+   1301          static uint8_t FLASH_OB_GetBOR(void)
+   1302          {
+   1303            /* Return the FLASH BOR level */
+   1304            return (uint8_t)(*(__IO uint8_t *)(OPTCR_BYTE0_ADDRESS) & (uint8_t)0x0C);
+   1305          }
+   1306          
+   1307          /**
+   1308            * @brief  Flush the instruction and data caches
+   1309            * @retval None
+   1310            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1311          void FLASH_FlushCaches(void)
+   1312          {
+   1313            /* Flush instruction cache  */
+   1314            if(READ_BIT(FLASH->ACR, FLASH_ACR_ICEN)!= RESET)
+   \                     FLASH_FlushCaches: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable11_8  ;; 0x40023c00
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0x058A             LSLS     R2,R1,#+22
+   \        0x6   0xD50F             BPL.N    ??FLASH_FlushCaches_0
+   1315            {
+   1316              /* Disable instruction cache  */
+   1317              __HAL_FLASH_INSTRUCTION_CACHE_DISABLE();
+   \        0x8   0x6801             LDR      R1,[R0, #+0]
+   \        0xA   0xF421 0x7100      BIC      R1,R1,#0x200
+   \        0xE   0x6001             STR      R1,[R0, #+0]
+   1318              /* Reset instruction cache */
+   1319              __HAL_FLASH_INSTRUCTION_CACHE_RESET();
+   \       0x10   0x6802             LDR      R2,[R0, #+0]
+   \       0x12   0xF442 0x6200      ORR      R2,R2,#0x800
+   \       0x16   0x6002             STR      R2,[R0, #+0]
+   \       0x18   0x6801             LDR      R1,[R0, #+0]
+   \       0x1A   0xF421 0x6100      BIC      R1,R1,#0x800
+   \       0x1E   0x6001             STR      R1,[R0, #+0]
+   1320              /* Enable instruction cache */
+   1321              __HAL_FLASH_INSTRUCTION_CACHE_ENABLE();
+   \       0x20   0x6802             LDR      R2,[R0, #+0]
+   \       0x22   0xF442 0x7200      ORR      R2,R2,#0x200
+   \       0x26   0x6002             STR      R2,[R0, #+0]
+   1322            }
+   1323            
+   1324            /* Flush data cache */
+   1325            if(READ_BIT(FLASH->ACR, FLASH_ACR_DCEN) != RESET)
+   \                     ??FLASH_FlushCaches_0: (+1)
+   \       0x28   0x6801             LDR      R1,[R0, #+0]
+   \       0x2A   0x054A             LSLS     R2,R1,#+21
+   \       0x2C   0xD50F             BPL.N    ??FLASH_FlushCaches_1
+   1326            {
+   1327              /* Disable data cache  */
+   1328              __HAL_FLASH_DATA_CACHE_DISABLE();
+   \       0x2E   0x6801             LDR      R1,[R0, #+0]
+   \       0x30   0xF421 0x6180      BIC      R1,R1,#0x400
+   \       0x34   0x6001             STR      R1,[R0, #+0]
+   1329              /* Reset data cache */
+   1330              __HAL_FLASH_DATA_CACHE_RESET();
+   \       0x36   0x6802             LDR      R2,[R0, #+0]
+   \       0x38   0xF442 0x5280      ORR      R2,R2,#0x1000
+   \       0x3C   0x6002             STR      R2,[R0, #+0]
+   \       0x3E   0x6801             LDR      R1,[R0, #+0]
+   \       0x40   0xF421 0x5180      BIC      R1,R1,#0x1000
+   \       0x44   0x6001             STR      R1,[R0, #+0]
+   1331              /* Enable data cache */
+   1332              __HAL_FLASH_DATA_CACHE_ENABLE();
+   \       0x46   0x6802             LDR      R2,[R0, #+0]
+   \       0x48   0xF442 0x6280      ORR      R2,R2,#0x400
+   \       0x4C   0x6002             STR      R2,[R0, #+0]
+   1333            }
+   1334          }
+   \                     ??FLASH_FlushCaches_1: (+1)
+   \       0x4E   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine2: (+1)
+   \        0x0   0x4648             MOV      R0,R9
+   \        0x2   0x....'....        B.W      FLASH_WaitForLastOperation
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable11:
+   \        0x0   0x....'....        DC32     pFlash
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable11_1:
+   \        0x0   0x4002'3C10        DC32     0x40023c10
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable11_2:
+   \        0x0   0xFFFF'7FFB        DC32     0xffff7ffb
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable11_3:
+   \        0x0   0x4002'3C0C        DC32     0x40023c0c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable11_4:
+   \        0x0   0x4002'3C14        DC32     0x40023c14
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable11_5:
+   \        0x0   0x00FF'F000        DC32     0xfff000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable11_6:
+   \        0x0   0x4002'3C17        DC32     0x40023c17
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable11_7:
+   \        0x0   0x4002'3C1A        DC32     0x40023c1a
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable11_8:
+   \        0x0   0x4002'3C00        DC32     0x40023c00
+   1335          
+   1336          /**
+   1337            * @}
+   1338            */
+   1339            
+   1340          #endif /* HAL_FLASH_MODULE_ENABLED */
+   1341          
+   1342          /**
+   1343            * @}
+   1344            */
+   1345          
+   1346          /**
+   1347            * @}
+   1348            */
+   1349          
+   1350          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   FLASH_Erase_Sector
+       0   FLASH_FlushCaches
+       0   FLASH_MassErase
+       0   HAL_FLASHEx_AdvOBGetConfig
+      32   HAL_FLASHEx_AdvOBProgram
+        32   -> FLASH_WaitForLastOperation
+      32   HAL_FLASHEx_Erase
+        32   -> FLASH_Erase_Sector
+        32   -> FLASH_FlushCaches
+        32   -> FLASH_MassErase
+        32   -> FLASH_WaitForLastOperation
+       8   HAL_FLASHEx_Erase_IT
+         8   -> FLASH_Erase_Sector
+         8   -> FLASH_MassErase
+       0   HAL_FLASHEx_OBGetConfig
+      40   HAL_FLASHEx_OBProgram
+        40   -> FLASH_WaitForLastOperation
+       0   HAL_FLASHEx_OB_DeSelectPCROP
+       0   HAL_FLASHEx_OB_GetBank2WRP
+       0   HAL_FLASHEx_OB_SelectPCROP
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable11
+       4  ??DataTable11_1
+       4  ??DataTable11_2
+       4  ??DataTable11_3
+       4  ??DataTable11_4
+       4  ??DataTable11_5
+       4  ??DataTable11_6
+       4  ??DataTable11_7
+       4  ??DataTable11_8
+       6  ?Subroutine0
+       6  ?Subroutine1
+       6  ?Subroutine2
+      82  FLASH_Erase_Sector
+      80  FLASH_FlushCaches
+      58  FLASH_MassErase
+      16  HAL_FLASHEx_AdvOBGetConfig
+     156  HAL_FLASHEx_AdvOBProgram
+     150  HAL_FLASHEx_Erase
+     100  HAL_FLASHEx_Erase_IT
+      50  HAL_FLASHEx_OBGetConfig
+     312  HAL_FLASHEx_OBProgram
+       8  HAL_FLASHEx_OB_DeSelectPCROP
+       6  HAL_FLASHEx_OB_GetBank2WRP
+      10  HAL_FLASHEx_OB_SelectPCROP
+
+ 
+ 1'082 bytes in section .text
+ 
+ 1'082 bytes of CODE memory
+
+Errors: none
+Warnings: none

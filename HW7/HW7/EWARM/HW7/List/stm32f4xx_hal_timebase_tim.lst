@@ -1,0 +1,283 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         19/Mar/2020  10:30:35
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\Src\stm32f4xx_hal_timebase_tim.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EW9EDD.tmp
+#        ("C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\Src\stm32f4xx_hal_timebase_tim.c" -D USE_HAL_DRIVER
+#        -D STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM\HW7\List" -o "C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM\HW7\Obj" --debug --endian=little
+#        --cpu=Cortex-M4 -e --fpu=VFPv4_sp --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.4\arm\inc\c\DLib_Config_Full.h"
+#        -I "C:\Users\mohit\Desktop\Microapps projects\HW7\HW7\EWARM/../Inc\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM\HW7\List\stm32f4xx_hal_timebase_tim.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM\HW7\Obj\stm32f4xx_hal_timebase_tim.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\HW7\HW7\Src\stm32f4xx_hal_timebase_tim.c
+      1          /* USER CODE BEGIN Header */
+      2          /**
+      3            ******************************************************************************
+      4            * @file    stm32f4xx_hal_timebase_TIM.c 
+      5            * @brief   HAL time base based on the hardware TIM.
+      6            ******************************************************************************
+      7            * @attention
+      8            *
+      9            * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+     10            * All rights reserved.</center></h2>
+     11            *
+     12            * This software component is licensed by ST under BSD 3-Clause license,
+     13            * the "License"; You may not use this file except in compliance with the
+     14            * License. You may obtain a copy of the License at:
+     15            *                        opensource.org/licenses/BSD-3-Clause
+     16            *
+     17            ******************************************************************************
+     18            */
+     19          /* USER CODE END Header */
+     20          
+     21          /* Includes ------------------------------------------------------------------*/
+     22          #include "stm32f4xx_hal.h"
+     23          #include "stm32f4xx_hal_tim.h"
+     24           
+     25          /* Private typedef -----------------------------------------------------------*/
+     26          /* Private define ------------------------------------------------------------*/
+     27          /* Private macro -------------------------------------------------------------*/
+     28          /* Private variables ---------------------------------------------------------*/
+
+   \                                 In section .bss, align 4
+     29          TIM_HandleTypeDef        htim1; 
+   \                     htim1:
+   \        0x0                      DS8 64
+     30          /* Private function prototypes -----------------------------------------------*/
+     31          /* Private functions ---------------------------------------------------------*/
+     32          
+     33          /**
+     34            * @brief  This function configures the TIM1 as a time base source. 
+     35            *         The time source is configured  to have 1ms time base with a dedicated 
+     36            *         Tick interrupt priority. 
+     37            * @note   This function is called  automatically at the beginning of program after
+     38            *         reset by HAL_Init() or at any time when clock is configured, by HAL_RCC_ClockConfig(). 
+     39            * @param  TickPriority: Tick interrupt priority.
+     40            * @retval HAL status
+     41            */
+
+   \                                 In section .text, align 2, keep-with-next
+     42          HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+     43          {
+   \                     HAL_InitTick: (+1)
+   \        0x0   0xB518             PUSH     {R3,R4,LR}
+   \        0x2   0x4601             MOV      R1,R0
+   \        0x4   0xB087             SUB      SP,SP,#+28
+     44            RCC_ClkInitTypeDef    clkconfig;
+     45            uint32_t              uwTimclock = 0;
+     46            uint32_t              uwPrescalerValue = 0;
+     47            uint32_t              pFLatency;
+     48            
+     49            /*Configure the TIM1 IRQ priority */
+     50            HAL_NVIC_SetPriority(TIM1_UP_TIM10_IRQn, TickPriority ,0); 
+   \        0x6   0x2200             MOVS     R2,#+0
+   \        0x8   0x2019             MOVS     R0,#+25
+   \        0xA   0x....'....        BL       HAL_NVIC_SetPriority
+     51            
+     52            /* Enable the TIM1 global Interrupt */
+     53            HAL_NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn); 
+   \        0xE   0x2019             MOVS     R0,#+25
+   \       0x10   0x....'....        BL       HAL_NVIC_EnableIRQ
+     54            
+     55            /* Enable TIM1 clock */
+     56            __HAL_RCC_TIM1_CLK_ENABLE();
+   \       0x14   0x2000             MOVS     R0,#+0
+   \       0x16   0x9000             STR      R0,[SP, #+0]
+     57            
+     58            /* Get clock configuration */
+     59            HAL_RCC_GetClockConfig(&clkconfig, &pFLatency);
+   \       0x18   0x....             LDR.N    R4,??DataTable2
+   \       0x1A   0x....             LDR.N    R0,??DataTable2_1  ;; 0x40023844
+   \       0x1C   0x6801             LDR      R1,[R0, #+0]
+   \       0x1E   0xF041 0x0101      ORR      R1,R1,#0x1
+   \       0x22   0x6001             STR      R1,[R0, #+0]
+   \       0x24   0xA901             ADD      R1,SP,#+4
+   \       0x26   0x6800             LDR      R0,[R0, #+0]
+   \       0x28   0xF000 0x0001      AND      R0,R0,#0x1
+   \       0x2C   0x9000             STR      R0,[SP, #+0]
+   \       0x2E   0x9800             LDR      R0,[SP, #+0]
+   \       0x30   0xA802             ADD      R0,SP,#+8
+   \       0x32   0x....'....        BL       HAL_RCC_GetClockConfig
+     60            
+     61            /* Compute TIM1 clock */
+     62            uwTimclock = 2*HAL_RCC_GetPCLK2Freq();
+   \       0x36   0x....'....        BL       HAL_RCC_GetPCLK2Freq
+     63             
+     64            /* Compute the prescaler value to have TIM1 counter clock equal to 1MHz */
+     65            uwPrescalerValue = (uint32_t) ((uwTimclock / 1000000) - 1);
+     66            
+     67            /* Initialize TIM1 */
+     68            htim1.Instance = TIM1;
+   \       0x3A   0x....             LDR.N    R1,??DataTable2_2  ;; 0x40010000
+   \       0x3C   0x6021             STR      R1,[R4, #+0]
+     69            
+     70            /* Initialize TIMx peripheral as follow:
+     71            + Period = [(TIM1CLK/1000) - 1]. to have a (1/1000) s time base.
+     72            + Prescaler = (uwTimclock/1000000 - 1) to have a 1MHz counter clock.
+     73            + ClockDivision = 0
+     74            + Counter direction = Up
+     75            */
+     76            htim1.Init.Period = (1000000 / 1000) - 1;
+   \       0x3E   0xF240 0x32E7      MOVW     R2,#+999
+     77            htim1.Init.Prescaler = uwPrescalerValue;
+   \       0x42   0x0040             LSLS     R0,R0,#+1
+   \       0x44   0x....             LDR.N    R1,??DataTable2_3  ;; 0xf4240
+   \       0x46   0x60E2             STR      R2,[R4, #+12]
+   \       0x48   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+   \       0x4C   0x1E40             SUBS     R0,R0,#+1
+   \       0x4E   0x6060             STR      R0,[R4, #+4]
+     78            htim1.Init.ClockDivision = 0;
+   \       0x50   0x2200             MOVS     R2,#+0
+   \       0x52   0x6122             STR      R2,[R4, #+16]
+     79            htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+   \       0x54   0x60A2             STR      R2,[R4, #+8]
+     80            if(HAL_TIM_Base_Init(&htim1) == HAL_OK)
+   \       0x56   0x4620             MOV      R0,R4
+   \       0x58   0x....'....        BL       HAL_TIM_Base_Init
+   \       0x5C   0xB918             CBNZ.N   R0,??HAL_InitTick_0
+     81            {
+     82              /* Start the TIM time Base generation in interrupt mode */
+     83              return HAL_TIM_Base_Start_IT(&htim1);
+   \       0x5E   0x4620             MOV      R0,R4
+   \       0x60   0x....'....        BL       HAL_TIM_Base_Start_IT
+   \       0x64   0xE000             B.N      ??HAL_InitTick_1
+     84            }
+     85            
+     86            /* Return function status */
+     87            return HAL_ERROR;
+   \                     ??HAL_InitTick_0: (+1)
+   \       0x66   0x2001             MOVS     R0,#+1
+   \                     ??HAL_InitTick_1: (+1)
+   \       0x68   0xB008             ADD      SP,SP,#+32
+   \       0x6A   0xBD10             POP      {R4,PC}          ;; return
+     88          }
+     89          
+     90          /**
+     91            * @brief  Suspend Tick increment.
+     92            * @note   Disable the tick increment by disabling TIM1 update interrupt.
+     93            * @param  None
+     94            * @retval None
+     95            */
+
+   \                                 In section .text, align 2, keep-with-next
+     96          void HAL_SuspendTick(void)
+     97          {
+     98            /* Disable TIM1 update Interrupt */
+     99            __HAL_TIM_DISABLE_IT(&htim1, TIM_IT_UPDATE);                                                  
+   \                     HAL_SuspendTick: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable2
+   \        0x2   0x6800             LDR      R0,[R0, #+0]
+   \        0x4   0x68C1             LDR      R1,[R0, #+12]
+   \        0x6   0x0849             LSRS     R1,R1,#+1
+   \        0x8   0x0049             LSLS     R1,R1,#+1
+   \        0xA   0x60C1             STR      R1,[R0, #+12]
+    100          }
+   \        0xC   0x4770             BX       LR               ;; return
+    101          
+    102          /**
+    103            * @brief  Resume Tick increment.
+    104            * @note   Enable the tick increment by Enabling TIM1 update interrupt.
+    105            * @param  None
+    106            * @retval None
+    107            */
+
+   \                                 In section .text, align 2, keep-with-next
+    108          void HAL_ResumeTick(void)
+    109          {
+    110            /* Enable TIM1 Update interrupt */
+    111            __HAL_TIM_ENABLE_IT(&htim1, TIM_IT_UPDATE);
+   \                     HAL_ResumeTick: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable2
+   \        0x2   0x6800             LDR      R0,[R0, #+0]
+   \        0x4   0x68C1             LDR      R1,[R0, #+12]
+   \        0x6   0xF041 0x0101      ORR      R1,R1,#0x1
+   \        0xA   0x60C1             STR      R1,[R0, #+12]
+    112          }
+   \        0xC   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2:
+   \        0x0   0x....'....        DC32     htim1
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_1:
+   \        0x0   0x4002'3844        DC32     0x40023844
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_2:
+   \        0x0   0x4001'0000        DC32     0x40010000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_3:
+   \        0x0   0x000F'4240        DC32     0xf4240
+    113          
+    114          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      40   HAL_InitTick
+        40   -> HAL_NVIC_EnableIRQ
+        40   -> HAL_NVIC_SetPriority
+        40   -> HAL_RCC_GetClockConfig
+        40   -> HAL_RCC_GetPCLK2Freq
+        40   -> HAL_TIM_Base_Init
+        40   -> HAL_TIM_Base_Start_IT
+       0   HAL_ResumeTick
+       0   HAL_SuspendTick
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_2
+       4  ??DataTable2_3
+     108  HAL_InitTick
+      14  HAL_ResumeTick
+      14  HAL_SuspendTick
+      64  htim1
+
+ 
+  64 bytes in section .bss
+ 152 bytes in section .text
+ 
+ 152 bytes of CODE memory
+  64 bytes of DATA memory
+
+Errors: none
+Warnings: none

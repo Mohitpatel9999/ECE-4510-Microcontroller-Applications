@@ -1,0 +1,1055 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         25/Feb/2020  20:10:32
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB7\TASK3\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_gpio.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EW6EE2.tmp
+#        ("C:\Users\mohit\Desktop\Microapps
+#        projects\LAB7\TASK3\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_gpio.c"
+#        -D USE_HAL_DRIVER -D STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB7\TASK3\EWARM\TASK3\List" -o
+#        "C:\Users\mohit\Desktop\Microapps projects\LAB7\TASK3\EWARM\TASK3\Obj"
+#        --debug --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.4\arm\inc\c\DLib_Config_Full.h" -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB7\TASK3\EWARM/../Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB7\TASK3\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB7\TASK3\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB7\TASK3\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB7\TASK3\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB7\TASK3\EWARM\TASK3\List\stm32f4xx_hal_gpio.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB7\TASK3\EWARM\TASK3\Obj\stm32f4xx_hal_gpio.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\LAB7\TASK3\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_gpio.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    stm32f4xx_hal_gpio.c
+      4            * @author  MCD Application Team
+      5            * @brief   GPIO HAL module driver.
+      6            *          This file provides firmware functions to manage the following 
+      7            *          functionalities of the General Purpose Input/Output (GPIO) peripheral:
+      8            *           + Initialization and de-initialization functions
+      9            *           + IO operation functions
+     10            *
+     11            @verbatim
+     12            ==============================================================================
+     13                              ##### GPIO Peripheral features #####
+     14            ==============================================================================
+     15            [..] 
+     16            Subject to the specific hardware characteristics of each I/O port listed in the datasheet, each
+     17            port bit of the General Purpose IO (GPIO) Ports, can be individually configured by software
+     18            in several modes:
+     19            (+) Input mode 
+     20            (+) Analog mode
+     21            (+) Output mode
+     22            (+) Alternate function mode
+     23            (+) External interrupt/event lines
+     24          
+     25            [..]  
+     26            During and just after reset, the alternate functions and external interrupt  
+     27            lines are not active and the I/O ports are configured in input floating mode.
+     28            
+     29            [..]   
+     30            All GPIO pins have weak internal pull-up and pull-down resistors, which can be 
+     31            activated or not.
+     32          
+     33            [..]
+     34            In Output or Alternate mode, each IO can be configured on open-drain or push-pull
+     35            type and the IO speed can be selected depending on the VDD value.
+     36          
+     37            [..]  
+     38            All ports have external interrupt/event capability. To use external interrupt 
+     39            lines, the port must be configured in input mode. All available GPIO pins are 
+     40            connected to the 16 external interrupt/event lines from EXTI0 to EXTI15.
+     41            
+     42            [..]
+     43            The external interrupt/event controller consists of up to 23 edge detectors 
+     44            (16 lines are connected to GPIO) for generating event/interrupt requests (each 
+     45            input line can be independently configured to select the type (interrupt or event) 
+     46            and the corresponding trigger event (rising or falling or both). Each line can 
+     47            also be masked independently. 
+     48          
+     49                               ##### How to use this driver #####
+     50            ==============================================================================  
+     51            [..]
+     52              (#) Enable the GPIO AHB clock using the following function: __HAL_RCC_GPIOx_CLK_ENABLE(). 
+     53          
+     54              (#) Configure the GPIO pin(s) using HAL_GPIO_Init().
+     55                  (++) Configure the IO mode using "Mode" member from GPIO_InitTypeDef structure
+     56                  (++) Activate Pull-up, Pull-down resistor using "Pull" member from GPIO_InitTypeDef 
+     57                       structure.
+     58                  (++) In case of Output or alternate function mode selection: the speed is 
+     59                       configured through "Speed" member from GPIO_InitTypeDef structure.
+     60                  (++) In alternate mode is selection, the alternate function connected to the IO
+     61                       is configured through "Alternate" member from GPIO_InitTypeDef structure.
+     62                  (++) Analog mode is required when a pin is to be used as ADC channel 
+     63                       or DAC output.
+     64                  (++) In case of external interrupt/event selection the "Mode" member from 
+     65                       GPIO_InitTypeDef structure select the type (interrupt or event) and 
+     66                       the corresponding trigger event (rising or falling or both).
+     67          
+     68              (#) In case of external interrupt/event mode selection, configure NVIC IRQ priority 
+     69                  mapped to the EXTI line using HAL_NVIC_SetPriority() and enable it using
+     70                  HAL_NVIC_EnableIRQ().
+     71                   
+     72              (#) To get the level of a pin configured in input mode use HAL_GPIO_ReadPin().
+     73                      
+     74              (#) To set/reset the level of a pin configured in output mode use 
+     75                  HAL_GPIO_WritePin()/HAL_GPIO_TogglePin().
+     76              
+     77              (#) To lock pin configuration until next reset use HAL_GPIO_LockPin().
+     78          
+     79                           
+     80              (#) During and just after reset, the alternate functions are not 
+     81                  active and the GPIO pins are configured in input floating mode (except JTAG
+     82                  pins).
+     83            
+     84              (#) The LSE oscillator pins OSC32_IN and OSC32_OUT can be used as general purpose 
+     85                  (PC14 and PC15, respectively) when the LSE oscillator is off. The LSE has 
+     86                  priority over the GPIO function.
+     87            
+     88              (#) The HSE oscillator pins OSC_IN/OSC_OUT can be used as 
+     89                  general purpose PH0 and PH1, respectively, when the HSE oscillator is off. 
+     90                  The HSE has priority over the GPIO function.
+     91            
+     92            @endverbatim
+     93            ******************************************************************************
+     94            * @attention
+     95            *
+     96            * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+     97            * All rights reserved.</center></h2>
+     98            *
+     99            * This software component is licensed by ST under BSD 3-Clause license,
+    100            * the "License"; You may not use this file except in compliance with the
+    101            * License. You may obtain a copy of the License at:
+    102            *                        opensource.org/licenses/BSD-3-Clause
+    103            *
+    104            ******************************************************************************
+    105            */ 
+    106          
+    107          /* Includes ------------------------------------------------------------------*/
+    108          #include "stm32f4xx_hal.h"
+    109          
+    110          /** @addtogroup STM32F4xx_HAL_Driver
+    111            * @{
+    112            */
+    113          
+    114          /** @defgroup GPIO GPIO
+    115            * @brief GPIO HAL module driver
+    116            * @{
+    117            */
+    118          
+    119          #ifdef HAL_GPIO_MODULE_ENABLED
+    120          
+    121          /* Private typedef -----------------------------------------------------------*/
+    122          /* Private define ------------------------------------------------------------*/
+    123          /** @addtogroup GPIO_Private_Constants GPIO Private Constants
+    124            * @{
+    125            */
+    126          #define GPIO_MODE             0x00000003U
+    127          #define EXTI_MODE             0x10000000U
+    128          #define GPIO_MODE_IT          0x00010000U
+    129          #define GPIO_MODE_EVT         0x00020000U
+    130          #define RISING_EDGE           0x00100000U
+    131          #define FALLING_EDGE          0x00200000U
+    132          #define GPIO_OUTPUT_TYPE      0x00000010U
+    133          
+    134          #define GPIO_NUMBER           16U
+    135          /**
+    136            * @}
+    137            */
+    138          /* Private macro -------------------------------------------------------------*/
+    139          /* Private variables ---------------------------------------------------------*/
+    140          /* Private function prototypes -----------------------------------------------*/
+    141          /* Private functions ---------------------------------------------------------*/
+    142          /* Exported functions --------------------------------------------------------*/
+    143          /** @defgroup GPIO_Exported_Functions GPIO Exported Functions
+    144            * @{
+    145            */
+    146          
+    147          /** @defgroup GPIO_Exported_Functions_Group1 Initialization and de-initialization functions
+    148            *  @brief    Initialization and Configuration functions
+    149            *
+    150          @verbatim    
+    151           ===============================================================================
+    152                        ##### Initialization and de-initialization functions #####
+    153           ===============================================================================
+    154            [..]
+    155              This section provides functions allowing to initialize and de-initialize the GPIOs
+    156              to be ready for use.
+    157           
+    158          @endverbatim
+    159            * @{
+    160            */
+    161          
+    162          
+    163          /**
+    164            * @brief  Initializes the GPIOx peripheral according to the specified parameters in the GPIO_Init.
+    165            * @param  GPIOx where x can be (A..K) to select the GPIO peripheral for STM32F429X device or
+    166            *                      x can be (A..I) to select the GPIO peripheral for STM32F40XX and STM32F427X devices.
+    167            * @param  GPIO_Init pointer to a GPIO_InitTypeDef structure that contains
+    168            *         the configuration information for the specified GPIO peripheral.
+    169            * @retval None
+    170            */
+
+   \                                 In section .text, align 2, keep-with-next
+    171          void HAL_GPIO_Init(GPIO_TypeDef  *GPIOx, GPIO_InitTypeDef *GPIO_Init)
+    172          {
+   \                     HAL_GPIO_Init: (+1)
+   \        0x0   0xE92D 0x4FF8      PUSH     {R3-R11,LR}
+   \        0x4   0x460D             MOV      R5,R1
+    173            uint32_t position;
+    174            uint32_t ioposition = 0x00U;
+    175            uint32_t iocurrent = 0x00U;
+    176            uint32_t temp = 0x00U;
+    177          
+    178            /* Check the parameters */
+    179            assert_param(IS_GPIO_ALL_INSTANCE(GPIOx));
+    180            assert_param(IS_GPIO_PIN(GPIO_Init->Pin));
+    181            assert_param(IS_GPIO_MODE(GPIO_Init->Mode));
+    182            assert_param(IS_GPIO_PULL(GPIO_Init->Pull));
+    183          
+    184            /* Configure the port pins */
+    185            for(position = 0U; position < GPIO_NUMBER; position++)
+   \        0x6   0x2600             MOVS     R6,#+0
+   \        0x8   0x....             LDR.N    R1,??DataTable2  ;; 0x40013c00
+   \        0xA   0x....             LDR.N    R2,??DataTable2_1  ;; 0x40023844
+   \        0xC   0x230F             MOVS     R3,#+15
+   \        0xE   0x4604             MOV      R4,R0
+    186            {
+    187              /* Get the IO position */
+    188              ioposition = 0x01U << position;
+   \                     ??HAL_GPIO_Init_0: (+1)
+   \       0x10   0x2001             MOVS     R0,#+1
+    189              /* Get the current IO position */
+    190              iocurrent = (uint32_t)(GPIO_Init->Pin) & ioposition;
+   \       0x12   0x682F             LDR      R7,[R5, #+0]
+   \       0x14   0x40B0             LSLS     R0,R0,R6
+   \       0x16   0xEA00 0x0807      AND      R8,R0,R7
+    191          
+    192              if(iocurrent == ioposition)
+   \       0x1A   0x4580             CMP      R8,R0
+   \       0x1C   0xF040 0x80CB      BNE.W    ??HAL_GPIO_Init_1
+    193              {
+    194                /*--------------------- GPIO Mode Configuration ------------------------*/
+    195                /* In case of Output or Alternate function mode selection */
+    196                if((GPIO_Init->Mode == GPIO_MODE_OUTPUT_PP) || (GPIO_Init->Mode == GPIO_MODE_AF_PP) ||
+    197                   (GPIO_Init->Mode == GPIO_MODE_OUTPUT_OD) || (GPIO_Init->Mode == GPIO_MODE_AF_OD))
+   \       0x20   0xEA4F 0x0C46      LSL      R12,R6,#+1
+   \       0x24   0x2703             MOVS     R7,#+3
+   \       0x26   0xFA07 0xF70C      LSL      R7,R7,R12
+   \       0x2A   0xEA6F 0x0E07      MVN      LR,R7
+   \       0x2E   0x686F             LDR      R7,[R5, #+4]
+   \       0x30   0x2F01             CMP      R7,#+1
+   \       0x32   0xBF18             IT       NE
+   \       0x34   0x2F02             CMPNE    R7,#+2
+   \       0x36   0xD003             BEQ.N    ??HAL_GPIO_Init_2
+   \       0x38   0x2F11             CMP      R7,#+17
+   \       0x3A   0xBF18             IT       NE
+   \       0x3C   0x2F12             CMPNE    R7,#+18
+   \       0x3E   0xD112             BNE.N    ??HAL_GPIO_Init_3
+    198                {
+    199                  /* Check the Speed parameter */
+    200                  assert_param(IS_GPIO_SPEED(GPIO_Init->Speed));
+    201                  /* Configure the IO Speed */
+    202                  temp = GPIOx->OSPEEDR; 
+   \                     ??HAL_GPIO_Init_2: (+1)
+   \       0x40   0x68A7             LDR      R7,[R4, #+8]
+    203                  temp &= ~(GPIO_OSPEEDER_OSPEEDR0 << (position * 2U));
+    204                  temp |= (GPIO_Init->Speed << (position * 2U));
+    205                  GPIOx->OSPEEDR = temp;
+   \       0x42   0xF8D5 0x900C      LDR      R9,[R5, #+12]
+   \       0x46   0xEA0E 0x0707      AND      R7,LR,R7
+   \       0x4A   0xFA09 0xF90C      LSL      R9,R9,R12
+   \       0x4E   0xEA49 0x0707      ORR      R7,R9,R7
+   \       0x52   0x60A7             STR      R7,[R4, #+8]
+    206          
+    207                  /* Configure the IO Output Type */
+    208                  temp = GPIOx->OTYPER;
+   \       0x54   0x6867             LDR      R7,[R4, #+4]
+    209                  temp &= ~(GPIO_OTYPER_OT_0 << position) ;
+    210                  temp |= (((GPIO_Init->Mode & GPIO_OUTPUT_TYPE) >> 4U) << position);
+    211                  GPIOx->OTYPER = temp;
+   \       0x56   0xEA27 0x0000      BIC      R0,R7,R0
+   \       0x5A   0x686F             LDR      R7,[R5, #+4]
+   \       0x5C   0xF3C7 0x1700      UBFX     R7,R7,#+4,#+1
+   \       0x60   0x40B7             LSLS     R7,R7,R6
+   \       0x62   0x4338             ORRS     R0,R7,R0
+   \       0x64   0x6060             STR      R0,[R4, #+4]
+    212                 }
+    213          
+    214                /* Activate the Pull-up or Pull down resistor for the current IO */
+    215                temp = GPIOx->PUPDR;
+   \                     ??HAL_GPIO_Init_3: (+1)
+   \       0x66   0x68E0             LDR      R0,[R4, #+12]
+    216                temp &= ~(GPIO_PUPDR_PUPDR0 << (position * 2U));
+    217                temp |= ((GPIO_Init->Pull) << (position * 2U));
+    218                GPIOx->PUPDR = temp;
+   \       0x68   0x68AF             LDR      R7,[R5, #+8]
+   \       0x6A   0xEA0E 0x0000      AND      R0,LR,R0
+   \       0x6E   0xFA07 0xF70C      LSL      R7,R7,R12
+   \       0x72   0x4338             ORRS     R0,R7,R0
+   \       0x74   0x60E0             STR      R0,[R4, #+12]
+    219          
+    220                /* In case of Alternate function mode selection */
+    221                if((GPIO_Init->Mode == GPIO_MODE_AF_PP) || (GPIO_Init->Mode == GPIO_MODE_AF_OD))
+   \       0x76   0x00B0             LSLS     R0,R6,#+2
+   \       0x78   0x686F             LDR      R7,[R5, #+4]
+   \       0x7A   0x2F02             CMP      R7,#+2
+   \       0x7C   0xBF18             IT       NE
+   \       0x7E   0x2F12             CMPNE    R7,#+18
+   \       0x80   0xD112             BNE.N    ??HAL_GPIO_Init_4
+    222                {
+    223                  /* Check the Alternate function parameter */
+    224                  assert_param(IS_GPIO_AF(GPIO_Init->Alternate));
+    225                  /* Configure Alternate function mapped with the current IO */
+    226                  temp = GPIOx->AFR[position >> 3U];
+   \       0x82   0x08F7             LSRS     R7,R6,#+3
+   \       0x84   0xEB04 0x0787      ADD      R7,R4,R7, LSL #+2
+    227                  temp &= ~(0xFU << ((uint32_t)(position & 0x07U) * 4U)) ;
+    228                  temp |= ((uint32_t)(GPIO_Init->Alternate) << (((uint32_t)position & 0x07U) * 4U));
+    229                  GPIOx->AFR[position >> 3U] = temp;
+   \       0x88   0xF000 0x091C      AND      R9,R0,#0x1C
+   \       0x8C   0xF8D7 0xA020      LDR      R10,[R7, #+32]
+   \       0x90   0xFA03 0xFB09      LSL      R11,R3,R9
+   \       0x94   0xEA2A 0x0A0B      BIC      R10,R10,R11
+   \       0x98   0xF8D5 0xB010      LDR      R11,[R5, #+16]
+   \       0x9C   0xFA0B 0xF909      LSL      R9,R11,R9
+   \       0xA0   0xEA49 0x090A      ORR      R9,R9,R10
+   \       0xA4   0xF8C7 0x9020      STR      R9,[R7, #+32]
+    230                }
+    231          
+    232                /* Configure IO Direction mode (Input, Output, Alternate or Analog) */
+    233                temp = GPIOx->MODER;
+   \                     ??HAL_GPIO_Init_4: (+1)
+   \       0xA8   0x6827             LDR      R7,[R4, #+0]
+    234                temp &= ~(GPIO_MODER_MODER0 << (position * 2U));
+    235                temp |= ((GPIO_Init->Mode & GPIO_MODE) << (position * 2U));
+    236                GPIOx->MODER = temp;
+   \       0xAA   0xEA0E 0x0E07      AND      LR,LR,R7
+   \       0xAE   0x792F             LDRB     R7,[R5, #+4]
+   \       0xB0   0xF007 0x0703      AND      R7,R7,#0x3
+   \       0xB4   0xFA07 0xF70C      LSL      R7,R7,R12
+   \       0xB8   0xEA47 0x070E      ORR      R7,R7,LR
+   \       0xBC   0x6027             STR      R7,[R4, #+0]
+    237          
+    238                /*--------------------- EXTI Mode Configuration ------------------------*/
+    239                /* Configure the External Interrupt or event for the current IO */
+    240                if((GPIO_Init->Mode & EXTI_MODE) == EXTI_MODE)
+   \       0xBE   0x686F             LDR      R7,[R5, #+4]
+   \       0xC0   0x00FF             LSLS     R7,R7,#+3
+   \       0xC2   0xD578             BPL.N    ??HAL_GPIO_Init_1
+    241                {
+    242                  /* Enable SYSCFG Clock */
+    243                  __HAL_RCC_SYSCFG_CLK_ENABLE();
+   \       0xC4   0x2700             MOVS     R7,#+0
+   \       0xC6   0x9700             STR      R7,[SP, #+0]
+    244          
+    245                  temp = SYSCFG->EXTICR[position >> 2U];
+   \       0xC8   0xEA4F 0x0C96      LSR      R12,R6,#+2
+   \       0xCC   0x6817             LDR      R7,[R2, #+0]
+   \       0xCE   0xF447 0x4780      ORR      R7,R7,#0x4000
+   \       0xD2   0x6017             STR      R7,[R2, #+0]
+    246                  temp &= ~(0x0FU << (4U * (position & 0x03U)));
+   \       0xD4   0xF000 0x000C      AND      R0,R0,#0xC
+   \       0xD8   0x6817             LDR      R7,[R2, #+0]
+   \       0xDA   0xF407 0x4780      AND      R7,R7,#0x4000
+   \       0xDE   0x9700             STR      R7,[SP, #+0]
+   \       0xE0   0xFA03 0xFE00      LSL      LR,R3,R0
+   \       0xE4   0x9F00             LDR      R7,[SP, #+0]
+   \       0xE6   0x....             LDR.N    R7,??DataTable2_2  ;; 0x40013808
+   \       0xE8   0xF857 0x702C      LDR      R7,[R7, R12, LSL #+2]
+   \       0xEC   0xEA27 0x0E0E      BIC      LR,R7,LR
+    247                  temp |= ((uint32_t)(GPIO_GET_INDEX(GPIOx)) << (4U * (position & 0x03U)));
+   \       0xF0   0x....             LDR.N    R7,??DataTable2_3  ;; 0x40020000
+   \       0xF2   0x42BC             CMP      R4,R7
+   \       0xF4   0xBF08             IT       EQ
+   \       0xF6   0x2700             MOVEQ    R7,#+0
+   \       0xF8   0xD02C             BEQ.N    ??HAL_GPIO_Init_5
+   \       0xFA   0x....             LDR.N    R7,??DataTable2_4  ;; 0x40020400
+   \       0xFC   0x42BC             CMP      R4,R7
+   \       0xFE   0xBF08             IT       EQ
+   \      0x100   0x2701             MOVEQ    R7,#+1
+   \      0x102   0xD027             BEQ.N    ??HAL_GPIO_Init_5
+   \      0x104   0x....             LDR.N    R7,??DataTable2_5  ;; 0x40020800
+   \      0x106   0x42BC             CMP      R4,R7
+   \      0x108   0xBF08             IT       EQ
+   \      0x10A   0x2702             MOVEQ    R7,#+2
+   \      0x10C   0xD022             BEQ.N    ??HAL_GPIO_Init_5
+   \      0x10E   0x....             LDR.N    R7,??DataTable2_6  ;; 0x40020c00
+   \      0x110   0x42BC             CMP      R4,R7
+   \      0x112   0xBF08             IT       EQ
+   \      0x114   0x2703             MOVEQ    R7,#+3
+   \      0x116   0xD01D             BEQ.N    ??HAL_GPIO_Init_5
+   \      0x118   0x....             LDR.N    R7,??DataTable2_7  ;; 0x40021000
+   \      0x11A   0x42BC             CMP      R4,R7
+   \      0x11C   0xBF08             IT       EQ
+   \      0x11E   0x2704             MOVEQ    R7,#+4
+   \      0x120   0xD018             BEQ.N    ??HAL_GPIO_Init_5
+   \      0x122   0x....             LDR.N    R7,??DataTable2_8  ;; 0x40021400
+   \      0x124   0x42BC             CMP      R4,R7
+   \      0x126   0xBF08             IT       EQ
+   \      0x128   0x2705             MOVEQ    R7,#+5
+   \      0x12A   0xD013             BEQ.N    ??HAL_GPIO_Init_5
+   \      0x12C   0x....             LDR.N    R7,??DataTable2_9  ;; 0x40021800
+   \      0x12E   0x42BC             CMP      R4,R7
+   \      0x130   0xBF08             IT       EQ
+   \      0x132   0x2706             MOVEQ    R7,#+6
+   \      0x134   0xD00E             BEQ.N    ??HAL_GPIO_Init_5
+   \      0x136   0x....             LDR.N    R7,??DataTable2_10  ;; 0x40021c00
+   \      0x138   0x42BC             CMP      R4,R7
+   \      0x13A   0xBF08             IT       EQ
+   \      0x13C   0x2707             MOVEQ    R7,#+7
+   \      0x13E   0xD009             BEQ.N    ??HAL_GPIO_Init_5
+   \      0x140   0x....             LDR.N    R7,??DataTable2_11  ;; 0x40022000
+   \      0x142   0x42BC             CMP      R4,R7
+   \      0x144   0xBF08             IT       EQ
+   \      0x146   0x2708             MOVEQ    R7,#+8
+   \      0x148   0xD004             BEQ.N    ??HAL_GPIO_Init_5
+   \      0x14A   0x....             LDR.N    R7,??DataTable2_12  ;; 0x40022400
+   \      0x14C   0x42BC             CMP      R4,R7
+   \      0x14E   0xBF0C             ITE      EQ
+   \      0x150   0x2709             MOVEQ    R7,#+9
+   \      0x152   0x270A             MOVNE    R7,#+10
+    248                  SYSCFG->EXTICR[position >> 2U] = temp;
+   \                     ??HAL_GPIO_Init_5: (+1)
+   \      0x154   0xFA07 0xF000      LSL      R0,R7,R0
+   \      0x158   0x....             LDR.N    R7,??DataTable2_2  ;; 0x40013808
+   \      0x15A   0xEA40 0x000E      ORR      R0,R0,LR
+   \      0x15E   0xF847 0x002C      STR      R0,[R7, R12, LSL #+2]
+    249          
+    250                  /* Clear EXTI line configuration */
+    251                  temp = EXTI->IMR;
+    252                  temp &= ~((uint32_t)iocurrent);
+   \      0x162   0xEA6F 0x0008      MVN      R0,R8
+   \      0x166   0x680F             LDR      R7,[R1, #+0]
+   \      0x168   0xEA00 0x0C07      AND      R12,R0,R7
+    253                  if((GPIO_Init->Mode & GPIO_MODE_IT) == GPIO_MODE_IT)
+   \      0x16C   0x686F             LDR      R7,[R5, #+4]
+   \      0x16E   0x03FF             LSLS     R7,R7,#+15
+   \      0x170   0xBF48             IT       MI
+   \      0x172   0xEA48 0x0C0C      ORRMI    R12,R8,R12
+    254                  {
+    255                    temp |= iocurrent;
+    256                  }
+    257                  EXTI->IMR = temp;
+   \      0x176   0xF8C1 0xC000      STR      R12,[R1, #+0]
+    258          
+    259                  temp = EXTI->EMR;
+   \      0x17A   0x684F             LDR      R7,[R1, #+4]
+    260                  temp &= ~((uint32_t)iocurrent);
+   \      0x17C   0xEA00 0x0C07      AND      R12,R0,R7
+    261                  if((GPIO_Init->Mode & GPIO_MODE_EVT) == GPIO_MODE_EVT)
+   \      0x180   0x686F             LDR      R7,[R5, #+4]
+   \      0x182   0x03BF             LSLS     R7,R7,#+14
+   \      0x184   0xBF48             IT       MI
+   \      0x186   0xEA48 0x0C0C      ORRMI    R12,R8,R12
+    262                  {
+    263                    temp |= iocurrent;
+    264                  }
+    265                  EXTI->EMR = temp;
+   \      0x18A   0xF8C1 0xC004      STR      R12,[R1, #+4]
+    266          
+    267                  /* Clear Rising Falling edge configuration */
+    268                  temp = EXTI->RTSR;
+   \      0x18E   0x688F             LDR      R7,[R1, #+8]
+    269                  temp &= ~((uint32_t)iocurrent);
+   \      0x190   0xEA00 0x0C07      AND      R12,R0,R7
+    270                  if((GPIO_Init->Mode & RISING_EDGE) == RISING_EDGE)
+   \      0x194   0x686F             LDR      R7,[R5, #+4]
+   \      0x196   0x02FF             LSLS     R7,R7,#+11
+   \      0x198   0xBF48             IT       MI
+   \      0x19A   0xEA48 0x0C0C      ORRMI    R12,R8,R12
+    271                  {
+    272                    temp |= iocurrent;
+    273                  }
+    274                  EXTI->RTSR = temp;
+   \      0x19E   0xF8C1 0xC008      STR      R12,[R1, #+8]
+    275          
+    276                  temp = EXTI->FTSR;
+   \      0x1A2   0x68CF             LDR      R7,[R1, #+12]
+    277                  temp &= ~((uint32_t)iocurrent);
+   \      0x1A4   0xEA00 0x0C07      AND      R12,R0,R7
+    278                  if((GPIO_Init->Mode & FALLING_EDGE) == FALLING_EDGE)
+   \      0x1A8   0x6868             LDR      R0,[R5, #+4]
+   \      0x1AA   0x0280             LSLS     R0,R0,#+10
+   \      0x1AC   0xBF48             IT       MI
+   \      0x1AE   0xEA48 0x0C0C      ORRMI    R12,R8,R12
+    279                  {
+    280                    temp |= iocurrent;
+    281                  }
+    282                  EXTI->FTSR = temp;
+   \      0x1B2   0xF8C1 0xC00C      STR      R12,[R1, #+12]
+    283                }
+    284              }
+    285            }
+   \                     ??HAL_GPIO_Init_1: (+1)
+   \      0x1B6   0x1C76             ADDS     R6,R6,#+1
+   \      0x1B8   0x2E0F             CMP      R6,#+15
+   \      0x1BA   0xF67F 0xAF29      BLS.W    ??HAL_GPIO_Init_0
+    286          }
+   \      0x1BE   0xE8BD 0x8FF1      POP      {R0,R4-R11,PC}   ;; return
+    287          
+    288          /**
+    289            * @brief  De-initializes the GPIOx peripheral registers to their default reset values.
+    290            * @param  GPIOx where x can be (A..K) to select the GPIO peripheral for STM32F429X device or
+    291            *                      x can be (A..I) to select the GPIO peripheral for STM32F40XX and STM32F427X devices.
+    292            * @param  GPIO_Pin specifies the port bit to be written.
+    293            *          This parameter can be one of GPIO_PIN_x where x can be (0..15).
+    294            * @retval None
+    295            */
+
+   \                                 In section .text, align 2, keep-with-next
+    296          void HAL_GPIO_DeInit(GPIO_TypeDef  *GPIOx, uint32_t GPIO_Pin)
+    297          {
+   \                     HAL_GPIO_DeInit: (+1)
+   \        0x0   0xE92D 0x4FF8      PUSH     {R3-R11,LR}
+   \        0x4   0x4681             MOV      R9,R0
+   \        0x6   0x460C             MOV      R4,R1
+    298            uint32_t position;
+    299            uint32_t ioposition = 0x00U;
+    300            uint32_t iocurrent = 0x00U;
+    301            uint32_t tmp = 0x00U;
+    302          
+    303            /* Check the parameters */
+    304            assert_param(IS_GPIO_ALL_INSTANCE(GPIOx));
+    305            
+    306            /* Configure the port pins */
+    307            for(position = 0U; position < GPIO_NUMBER; position++)
+   \        0x8   0x2500             MOVS     R5,#+0
+   \        0xA   0x....             LDR.N    R0,??DataTable2  ;; 0x40013c00
+   \        0xC   0x....             LDR.N    R2,??DataTable2_2  ;; 0x40013808
+   \        0xE   0x9400             STR      R4,[SP, #+0]
+   \       0x10   0x210F             MOVS     R1,#+15
+   \       0x12   0x2301             MOVS     R3,#+1
+    308            {
+    309              /* Get the IO position */
+    310              ioposition = 0x01U << position;
+    311              /* Get the current IO position */
+    312              iocurrent = (GPIO_Pin) & ioposition;
+   \                     ??HAL_GPIO_DeInit_0: (+1)
+   \       0x14   0x9E00             LDR      R6,[SP, #+0]
+   \       0x16   0xFA03 0xFA05      LSL      R10,R3,R5
+   \       0x1A   0xEA0A 0x0606      AND      R6,R10,R6
+    313          
+    314              if(iocurrent == ioposition)
+   \       0x1E   0x4556             CMP      R6,R10
+   \       0x20   0xD178             BNE.N    ??HAL_GPIO_DeInit_1
+    315              {
+    316                /*------------------------- EXTI Mode Configuration --------------------*/
+    317                tmp = SYSCFG->EXTICR[position >> 2U];
+   \       0x22   0xEA4F 0x0C95      LSR      R12,R5,#+2
+    318                tmp &= (0x0FU << (4U * (position & 0x03U)));
+   \       0x26   0xEA4F 0x0B85      LSL      R11,R5,#+2
+   \       0x2A   0xF852 0x402C      LDR      R4,[R2, R12, LSL #+2]
+    319                if(tmp == ((uint32_t)(GPIO_GET_INDEX(GPIOx)) << (4U * (position & 0x03U))))
+   \       0x2E   0x....             LDR.N    R7,??DataTable2_3  ;; 0x40020000
+   \       0x30   0xF00B 0x0E0C      AND      LR,R11,#0xC
+   \       0x34   0xFA01 0xF80E      LSL      R8,R1,LR
+   \       0x38   0x45B9             CMP      R9,R7
+   \       0x3A   0xEA08 0x0404      AND      R4,R8,R4
+   \       0x3E   0xBF08             IT       EQ
+   \       0x40   0x2700             MOVEQ    R7,#+0
+   \       0x42   0xD02C             BEQ.N    ??HAL_GPIO_DeInit_2
+   \       0x44   0x....             LDR.N    R7,??DataTable2_4  ;; 0x40020400
+   \       0x46   0x45B9             CMP      R9,R7
+   \       0x48   0xBF08             IT       EQ
+   \       0x4A   0x2701             MOVEQ    R7,#+1
+   \       0x4C   0xD027             BEQ.N    ??HAL_GPIO_DeInit_2
+   \       0x4E   0x....             LDR.N    R7,??DataTable2_5  ;; 0x40020800
+   \       0x50   0x45B9             CMP      R9,R7
+   \       0x52   0xBF08             IT       EQ
+   \       0x54   0x2702             MOVEQ    R7,#+2
+   \       0x56   0xD022             BEQ.N    ??HAL_GPIO_DeInit_2
+   \       0x58   0x....             LDR.N    R7,??DataTable2_6  ;; 0x40020c00
+   \       0x5A   0x45B9             CMP      R9,R7
+   \       0x5C   0xBF08             IT       EQ
+   \       0x5E   0x2703             MOVEQ    R7,#+3
+   \       0x60   0xD01D             BEQ.N    ??HAL_GPIO_DeInit_2
+   \       0x62   0x....             LDR.N    R7,??DataTable2_7  ;; 0x40021000
+   \       0x64   0x45B9             CMP      R9,R7
+   \       0x66   0xBF08             IT       EQ
+   \       0x68   0x2704             MOVEQ    R7,#+4
+   \       0x6A   0xD018             BEQ.N    ??HAL_GPIO_DeInit_2
+   \       0x6C   0x....             LDR.N    R7,??DataTable2_8  ;; 0x40021400
+   \       0x6E   0x45B9             CMP      R9,R7
+   \       0x70   0xBF08             IT       EQ
+   \       0x72   0x2705             MOVEQ    R7,#+5
+   \       0x74   0xD013             BEQ.N    ??HAL_GPIO_DeInit_2
+   \       0x76   0x....             LDR.N    R7,??DataTable2_9  ;; 0x40021800
+   \       0x78   0x45B9             CMP      R9,R7
+   \       0x7A   0xBF08             IT       EQ
+   \       0x7C   0x2706             MOVEQ    R7,#+6
+   \       0x7E   0xD00E             BEQ.N    ??HAL_GPIO_DeInit_2
+   \       0x80   0x....             LDR.N    R7,??DataTable2_10  ;; 0x40021c00
+   \       0x82   0x45B9             CMP      R9,R7
+   \       0x84   0xBF08             IT       EQ
+   \       0x86   0x2707             MOVEQ    R7,#+7
+   \       0x88   0xD009             BEQ.N    ??HAL_GPIO_DeInit_2
+   \       0x8A   0x....             LDR.N    R7,??DataTable2_11  ;; 0x40022000
+   \       0x8C   0x45B9             CMP      R9,R7
+   \       0x8E   0xBF08             IT       EQ
+   \       0x90   0x2708             MOVEQ    R7,#+8
+   \       0x92   0xD004             BEQ.N    ??HAL_GPIO_DeInit_2
+   \       0x94   0x....             LDR.N    R7,??DataTable2_12  ;; 0x40022400
+   \       0x96   0x45B9             CMP      R9,R7
+   \       0x98   0xBF0C             ITE      EQ
+   \       0x9A   0x2709             MOVEQ    R7,#+9
+   \       0x9C   0x270A             MOVNE    R7,#+10
+   \                     ??HAL_GPIO_DeInit_2: (+1)
+   \       0x9E   0xFA07 0xF70E      LSL      R7,R7,LR
+   \       0xA2   0x42BC             CMP      R4,R7
+   \       0xA4   0xD112             BNE.N    ??HAL_GPIO_DeInit_3
+    320                {
+    321                  /* Clear EXTI line configuration */
+    322                  EXTI->IMR &= ~((uint32_t)iocurrent);
+   \       0xA6   0x6804             LDR      R4,[R0, #+0]
+   \       0xA8   0x43F6             MVNS     R6,R6
+   \       0xAA   0x4034             ANDS     R4,R6,R4
+   \       0xAC   0x6004             STR      R4,[R0, #+0]
+    323                  EXTI->EMR &= ~((uint32_t)iocurrent);
+   \       0xAE   0x6844             LDR      R4,[R0, #+4]
+   \       0xB0   0x4034             ANDS     R4,R6,R4
+   \       0xB2   0x6044             STR      R4,[R0, #+4]
+    324                  
+    325                  /* Clear Rising Falling edge configuration */
+    326                  EXTI->RTSR &= ~((uint32_t)iocurrent);
+   \       0xB4   0x6884             LDR      R4,[R0, #+8]
+   \       0xB6   0x4034             ANDS     R4,R6,R4
+   \       0xB8   0x6084             STR      R4,[R0, #+8]
+    327                  EXTI->FTSR &= ~((uint32_t)iocurrent);
+   \       0xBA   0x68C4             LDR      R4,[R0, #+12]
+   \       0xBC   0x4026             ANDS     R6,R6,R4
+   \       0xBE   0x60C6             STR      R6,[R0, #+12]
+    328          
+    329                  /* Configure the External Interrupt or event for the current IO */
+    330                  tmp = 0x0FU << (4U * (position & 0x03U));
+    331                  SYSCFG->EXTICR[position >> 2U] &= ~tmp;
+   \       0xC0   0xF852 0x402C      LDR      R4,[R2, R12, LSL #+2]
+   \       0xC4   0xEA24 0x0408      BIC      R4,R4,R8
+   \       0xC8   0xF842 0x402C      STR      R4,[R2, R12, LSL #+2]
+    332                }
+    333          
+    334                /*------------------------- GPIO Mode Configuration --------------------*/
+    335                /* Configure IO Direction in Input Floating Mode */
+    336                GPIOx->MODER &= ~(GPIO_MODER_MODER0 << (position * 2U));
+   \                     ??HAL_GPIO_DeInit_3: (+1)
+   \       0xCC   0x2403             MOVS     R4,#+3
+   \       0xCE   0x006E             LSLS     R6,R5,#+1
+   \       0xD0   0x40B4             LSLS     R4,R4,R6
+   \       0xD2   0x43E6             MVNS     R6,R4
+   \       0xD4   0xF8D9 0x4000      LDR      R4,[R9, #+0]
+   \       0xD8   0x4034             ANDS     R4,R6,R4
+   \       0xDA   0xF8C9 0x4000      STR      R4,[R9, #+0]
+    337          
+    338                /* Configure the default Alternate Function in current IO */
+    339                GPIOx->AFR[position >> 3U] &= ~(0xFU << ((uint32_t)(position & 0x07U) * 4U)) ;
+   \       0xDE   0xF00B 0x0B1C      AND      R11,R11,#0x1C
+   \       0xE2   0x08EC             LSRS     R4,R5,#+3
+   \       0xE4   0xEB09 0x0484      ADD      R4,R9,R4, LSL #+2
+   \       0xE8   0xFA01 0xFB0B      LSL      R11,R1,R11
+   \       0xEC   0x6A27             LDR      R7,[R4, #+32]
+   \       0xEE   0xEA27 0x070B      BIC      R7,R7,R11
+   \       0xF2   0x6227             STR      R7,[R4, #+32]
+    340          
+    341                /* Deactivate the Pull-up and Pull-down resistor for the current IO */
+    342                GPIOx->PUPDR &= ~(GPIO_PUPDR_PUPDR0 << (position * 2U));
+   \       0xF4   0xF8D9 0x400C      LDR      R4,[R9, #+12]
+   \       0xF8   0x4034             ANDS     R4,R6,R4
+   \       0xFA   0xF8C9 0x400C      STR      R4,[R9, #+12]
+    343          
+    344                /* Configure the default value IO Output Type */
+    345                GPIOx->OTYPER  &= ~(GPIO_OTYPER_OT_0 << position) ;
+   \       0xFE   0xF8D9 0x4004      LDR      R4,[R9, #+4]
+   \      0x102   0xEA24 0x040A      BIC      R4,R4,R10
+   \      0x106   0xF8C9 0x4004      STR      R4,[R9, #+4]
+    346          
+    347                /* Configure the default value for IO Speed */
+    348                GPIOx->OSPEEDR &= ~(GPIO_OSPEEDER_OSPEEDR0 << (position * 2U));
+   \      0x10A   0xF8D9 0x4008      LDR      R4,[R9, #+8]
+   \      0x10E   0x4034             ANDS     R4,R6,R4
+   \      0x110   0xF8C9 0x4008      STR      R4,[R9, #+8]
+    349              }
+    350            }
+   \                     ??HAL_GPIO_DeInit_1: (+1)
+   \      0x114   0x1C6D             ADDS     R5,R5,#+1
+   \      0x116   0x2D0F             CMP      R5,#+15
+   \      0x118   0xF67F 0xAF7C      BLS.W    ??HAL_GPIO_DeInit_0
+    351          }
+   \      0x11C   0xE8BD 0x8FF1      POP      {R0,R4-R11,PC}   ;; return
+    352          
+    353          /**
+    354            * @}
+    355            */
+    356          
+    357          /** @defgroup GPIO_Exported_Functions_Group2 IO operation functions 
+    358            *  @brief   GPIO Read and Write
+    359            *
+    360          @verbatim
+    361           ===============================================================================
+    362                                 ##### IO operation functions #####
+    363           ===============================================================================
+    364          
+    365          @endverbatim
+    366            * @{
+    367            */
+    368          
+    369          /**
+    370            * @brief  Reads the specified input port pin.
+    371            * @param  GPIOx where x can be (A..K) to select the GPIO peripheral for STM32F429X device or
+    372            *                      x can be (A..I) to select the GPIO peripheral for STM32F40XX and STM32F427X devices.
+    373            * @param  GPIO_Pin specifies the port bit to read.
+    374            *         This parameter can be GPIO_PIN_x where x can be (0..15).
+    375            * @retval The input port pin value.
+    376            */
+
+   \                                 In section .text, align 2, keep-with-next
+    377          GPIO_PinState HAL_GPIO_ReadPin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
+    378          {
+    379            GPIO_PinState bitstatus;
+    380          
+    381            /* Check the parameters */
+    382            assert_param(IS_GPIO_PIN(GPIO_Pin));
+    383          
+    384            if((GPIOx->IDR & GPIO_Pin) != (uint32_t)GPIO_PIN_RESET)
+   \                     HAL_GPIO_ReadPin: (+1)
+   \        0x0   0x6900             LDR      R0,[R0, #+16]
+   \        0x2   0x4008             ANDS     R0,R1,R0
+   \        0x4   0xBF18             IT       NE
+   \        0x6   0x2001             MOVNE    R0,#+1
+    385            {
+    386              bitstatus = GPIO_PIN_SET;
+    387            }
+    388            else
+    389            {
+    390              bitstatus = GPIO_PIN_RESET;
+    391            }
+    392            return bitstatus;
+   \        0x8   0xB2C0             UXTB     R0,R0
+   \        0xA   0x4770             BX       LR               ;; return
+    393          }
+    394          
+    395          /**
+    396            * @brief  Sets or clears the selected data port bit.
+    397            *
+    398            * @note   This function uses GPIOx_BSRR register to allow atomic read/modify
+    399            *         accesses. In this way, there is no risk of an IRQ occurring between
+    400            *         the read and the modify access.
+    401            *
+    402            * @param  GPIOx where x can be (A..K) to select the GPIO peripheral for STM32F429X device or
+    403            *                      x can be (A..I) to select the GPIO peripheral for STM32F40XX and STM32F427X devices.
+    404            * @param  GPIO_Pin specifies the port bit to be written.
+    405            *          This parameter can be one of GPIO_PIN_x where x can be (0..15).
+    406            * @param  PinState specifies the value to be written to the selected bit.
+    407            *          This parameter can be one of the GPIO_PinState enum values:
+    408            *            @arg GPIO_PIN_RESET: to clear the port pin
+    409            *            @arg GPIO_PIN_SET: to set the port pin
+    410            * @retval None
+    411            */
+
+   \                                 In section .text, align 2, keep-with-next
+    412          void HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState)
+    413          {
+    414            /* Check the parameters */
+    415            assert_param(IS_GPIO_PIN(GPIO_Pin));
+    416            assert_param(IS_GPIO_PIN_ACTION(PinState));
+    417          
+    418            if(PinState != GPIO_PIN_RESET)
+   \                     HAL_GPIO_WritePin: (+1)
+   \        0x0   0xB902             CBNZ.N   R2,??HAL_GPIO_WritePin_0
+    419            {
+    420              GPIOx->BSRR = GPIO_Pin;
+    421            }
+    422            else
+    423            {
+    424              GPIOx->BSRR = (uint32_t)GPIO_Pin << 16U;
+   \        0x2   0x0409             LSLS     R1,R1,#+16
+   \                     ??HAL_GPIO_WritePin_0: (+1)
+   \        0x4   0x6181             STR      R1,[R0, #+24]
+    425            }
+    426          }
+   \        0x6   0x4770             BX       LR               ;; return
+    427          
+    428          /**
+    429            * @brief  Toggles the specified GPIO pins.
+    430            * @param  GPIOx Where x can be (A..K) to select the GPIO peripheral for STM32F429X device or
+    431            *                      x can be (A..I) to select the GPIO peripheral for STM32F40XX and STM32F427X devices.
+    432            * @param  GPIO_Pin Specifies the pins to be toggled.
+    433            * @retval None
+    434            */
+
+   \                                 In section .text, align 2, keep-with-next
+    435          void HAL_GPIO_TogglePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
+    436          {
+    437            /* Check the parameters */
+    438            assert_param(IS_GPIO_PIN(GPIO_Pin));
+    439          
+    440            if ((GPIOx->ODR & GPIO_Pin) == GPIO_Pin)
+   \                     HAL_GPIO_TogglePin: (+1)
+   \        0x0   0x6942             LDR      R2,[R0, #+20]
+   \        0x2   0x400A             ANDS     R2,R1,R2
+   \        0x4   0x428A             CMP      R2,R1
+   \        0x6   0xBF08             IT       EQ
+   \        0x8   0x0409             LSLEQ    R1,R1,#+16
+    441            {
+    442              GPIOx->BSRR = (uint32_t)GPIO_Pin << GPIO_NUMBER;
+    443            }
+    444            else
+    445            {
+    446              GPIOx->BSRR = GPIO_Pin;
+   \        0xA   0x6181             STR      R1,[R0, #+24]
+    447            }
+    448          }
+   \        0xC   0x4770             BX       LR               ;; return
+    449          
+    450          /**
+    451            * @brief  Locks GPIO Pins configuration registers.
+    452            * @note   The locked registers are GPIOx_MODER, GPIOx_OTYPER, GPIOx_OSPEEDR,
+    453            *         GPIOx_PUPDR, GPIOx_AFRL and GPIOx_AFRH.
+    454            * @note   The configuration of the locked GPIO pins can no longer be modified
+    455            *         until the next reset.
+    456            * @param  GPIOx where x can be (A..F) to select the GPIO peripheral for STM32F4 family
+    457            * @param  GPIO_Pin specifies the port bit to be locked.
+    458            *         This parameter can be any combination of GPIO_PIN_x where x can be (0..15).
+    459            * @retval None
+    460            */
+
+   \                                 In section .text, align 2, keep-with-next
+    461          HAL_StatusTypeDef HAL_GPIO_LockPin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
+    462          {
+   \                     HAL_GPIO_LockPin: (+1)
+   \        0x0   0xB518             PUSH     {R3,R4,LR}
+    463            __IO uint32_t tmp = GPIO_LCKR_LCKK;
+   \        0x2   0xF44F 0x3380      MOV      R3,#+65536
+   \        0x6   0x9300             STR      R3,[SP, #+0]
+    464          
+    465            /* Check the parameters */
+    466            assert_param(IS_GPIO_PIN(GPIO_Pin));
+    467          
+    468            /* Apply lock key write sequence */
+    469            tmp |= GPIO_Pin;
+   \        0x8   0x9C00             LDR      R4,[SP, #+0]
+   \        0xA   0x430C             ORRS     R4,R1,R4
+   \        0xC   0x9400             STR      R4,[SP, #+0]
+    470            /* Set LCKx bit(s): LCKK='1' + LCK[15-0] */
+    471            GPIOx->LCKR = tmp;
+   \        0xE   0x9A00             LDR      R2,[SP, #+0]
+   \       0x10   0x61C2             STR      R2,[R0, #+28]
+    472            /* Reset LCKx bit(s): LCKK='0' + LCK[15-0] */
+    473            GPIOx->LCKR = GPIO_Pin;
+   \       0x12   0x61C1             STR      R1,[R0, #+28]
+    474            /* Set LCKx bit(s): LCKK='1' + LCK[15-0] */
+    475            GPIOx->LCKR = tmp;
+   \       0x14   0x9900             LDR      R1,[SP, #+0]
+   \       0x16   0x61C1             STR      R1,[R0, #+28]
+    476            /* Read LCKR register. This read is mandatory to complete key lock sequence */
+    477            tmp = GPIOx->LCKR;
+   \       0x18   0x69C2             LDR      R2,[R0, #+28]
+   \       0x1A   0x9200             STR      R2,[SP, #+0]
+    478          
+    479            /* Read again in order to confirm lock is active */
+    480           if((GPIOx->LCKR & GPIO_LCKR_LCKK) != RESET)
+   \       0x1C   0x69C0             LDR      R0,[R0, #+28]
+   \       0x1E   0xF400 0x3080      AND      R0,R0,#0x10000
+   \       0x22   0x1E40             SUBS     R0,R0,#+1
+   \       0x24   0x4180             SBCS     R0,R0,R0
+   \       0x26   0x0FC0             LSRS     R0,R0,#+31
+    481            {
+    482              return HAL_OK;
+    483            }
+    484            else
+    485            {
+    486              return HAL_ERROR;
+   \       0x28   0xBD12             POP      {R1,R4,PC}       ;; return
+    487            }
+    488          }
+    489          
+    490          /**
+    491            * @brief  This function handles EXTI interrupt request.
+    492            * @param  GPIO_Pin Specifies the pins connected EXTI line
+    493            * @retval None
+    494            */
+
+   \                                 In section .text, align 2, keep-with-next
+    495          void HAL_GPIO_EXTI_IRQHandler(uint16_t GPIO_Pin)
+    496          {
+    497            /* EXTI line interrupt detected */
+    498            if(__HAL_GPIO_EXTI_GET_IT(GPIO_Pin) != RESET)
+   \                     HAL_GPIO_EXTI_IRQHandler: (+1)
+   \        0x0   0x....             LDR.N    R2,??DataTable2_13  ;; 0x40013c14
+   \        0x2   0x6813             LDR      R3,[R2, #+0]
+   \        0x4   0x4203             TST      R3,R0
+   \        0x6   0xBF1C             ITT      NE
+    499            {
+    500              __HAL_GPIO_EXTI_CLEAR_IT(GPIO_Pin);
+   \        0x8   0x6010             STRNE    R0,[R2, #+0]
+    501              HAL_GPIO_EXTI_Callback(GPIO_Pin);
+   \        0xA   0x....'....        BNE.W    HAL_GPIO_EXTI_Callback
+    502            }
+    503          }
+   \        0xE   0x4770             BX       LR               ;; return
+    504          
+    505          /**
+    506            * @brief  EXTI line detection callbacks.
+    507            * @param  GPIO_Pin Specifies the pins connected EXTI line
+    508            * @retval None
+    509            */
+
+   \                                 In section .text, align 2
+    510          __weak void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+    511          {
+    512            /* Prevent unused argument(s) compilation warning */
+    513            UNUSED(GPIO_Pin);
+    514            /* NOTE: This function Should not be modified, when the callback is needed,
+    515                     the HAL_GPIO_EXTI_Callback could be implemented in the user file
+    516             */
+    517          }
+   \                     HAL_GPIO_EXTI_Callback: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2:
+   \        0x0   0x4001'3C00        DC32     0x40013c00
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_1:
+   \        0x0   0x4002'3844        DC32     0x40023844
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_2:
+   \        0x0   0x4001'3808        DC32     0x40013808
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_3:
+   \        0x0   0x4002'0000        DC32     0x40020000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_4:
+   \        0x0   0x4002'0400        DC32     0x40020400
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_5:
+   \        0x0   0x4002'0800        DC32     0x40020800
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_6:
+   \        0x0   0x4002'0C00        DC32     0x40020c00
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_7:
+   \        0x0   0x4002'1000        DC32     0x40021000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_8:
+   \        0x0   0x4002'1400        DC32     0x40021400
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_9:
+   \        0x0   0x4002'1800        DC32     0x40021800
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_10:
+   \        0x0   0x4002'1C00        DC32     0x40021c00
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_11:
+   \        0x0   0x4002'2000        DC32     0x40022000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_12:
+   \        0x0   0x4002'2400        DC32     0x40022400
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_13:
+   \        0x0   0x4001'3C14        DC32     0x40013c14
+    518          
+    519          /**
+    520            * @}
+    521            */
+    522          
+    523          
+    524          /**
+    525            * @}
+    526            */
+    527          
+    528          #endif /* HAL_GPIO_MODULE_ENABLED */
+    529          /**
+    530            * @}
+    531            */
+    532          
+    533          /**
+    534            * @}
+    535            */
+    536          
+    537          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      40   HAL_GPIO_DeInit
+       0   HAL_GPIO_EXTI_Callback
+       0   HAL_GPIO_EXTI_IRQHandler
+         0   -> HAL_GPIO_EXTI_Callback
+      40   HAL_GPIO_Init
+      12   HAL_GPIO_LockPin
+       0   HAL_GPIO_ReadPin
+       0   HAL_GPIO_TogglePin
+       0   HAL_GPIO_WritePin
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_10
+       4  ??DataTable2_11
+       4  ??DataTable2_12
+       4  ??DataTable2_13
+       4  ??DataTable2_2
+       4  ??DataTable2_3
+       4  ??DataTable2_4
+       4  ??DataTable2_5
+       4  ??DataTable2_6
+       4  ??DataTable2_7
+       4  ??DataTable2_8
+       4  ??DataTable2_9
+     288  HAL_GPIO_DeInit
+       2  HAL_GPIO_EXTI_Callback
+      16  HAL_GPIO_EXTI_IRQHandler
+     450  HAL_GPIO_Init
+      42  HAL_GPIO_LockPin
+      12  HAL_GPIO_ReadPin
+      14  HAL_GPIO_TogglePin
+       8  HAL_GPIO_WritePin
+
+ 
+ 888 bytes in section .text
+ 
+ 886 bytes of CODE memory (+ 2 bytes shared)
+
+Errors: none
+Warnings: none

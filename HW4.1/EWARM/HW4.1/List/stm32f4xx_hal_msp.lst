@@ -1,0 +1,470 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         13/Feb/2020  10:18:03
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW4.1\Src\stm32f4xx_hal_msp.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EWFAAB.tmp
+#        ("C:\Users\mohit\Desktop\Microapps
+#        projects\HW4.1\Src\stm32f4xx_hal_msp.c" -D USE_HAL_DRIVER -D
+#        STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\HW4.1\EWARM\HW4.1\List" -o "C:\Users\mohit\Desktop\Microapps
+#        projects\HW4.1\EWARM\HW4.1\Obj" --debug --endian=little
+#        --cpu=Cortex-M4 -e --fpu=VFPv4_sp --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.4\arm\inc\c\DLib_Config_Full.h"
+#        -I "C:\Users\mohit\Desktop\Microapps projects\HW4.1\EWARM/../Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\HW4.1\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\HW4.1\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\HW4.1\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\HW4.1\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW4.1\EWARM\HW4.1\List\stm32f4xx_hal_msp.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW4.1\EWARM\HW4.1\Obj\stm32f4xx_hal_msp.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\HW4.1\Src\stm32f4xx_hal_msp.c
+      1          /* USER CODE BEGIN Header */
+      2          /**
+      3            ******************************************************************************
+      4            * File Name          : stm32f4xx_hal_msp.c
+      5            * Description        : This file provides code for the MSP Initialization 
+      6            *                      and de-Initialization codes.
+      7            ******************************************************************************
+      8            * @attention
+      9            *
+     10            * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+     11            * All rights reserved.</center></h2>
+     12            *
+     13            * This software component is licensed by ST under BSD 3-Clause license,
+     14            * the "License"; You may not use this file except in compliance with the
+     15            * License. You may obtain a copy of the License at:
+     16            *                        opensource.org/licenses/BSD-3-Clause
+     17            *
+     18            ******************************************************************************
+     19            */
+     20          /* USER CODE END Header */
+     21          
+     22          /* Includes ------------------------------------------------------------------*/
+     23          #include "main.h"
+     24          /* USER CODE BEGIN Includes */
+     25          
+     26          /* USER CODE END Includes */
+     27          
+     28          /* Private typedef -----------------------------------------------------------*/
+     29          /* USER CODE BEGIN TD */
+     30          
+     31          /* USER CODE END TD */
+     32          
+     33          /* Private define ------------------------------------------------------------*/
+     34          /* USER CODE BEGIN Define */
+     35           
+     36          /* USER CODE END Define */
+     37          
+     38          /* Private macro -------------------------------------------------------------*/
+     39          /* USER CODE BEGIN Macro */
+     40          
+     41          /* USER CODE END Macro */
+     42          
+     43          /* Private variables ---------------------------------------------------------*/
+     44          /* USER CODE BEGIN PV */
+     45          
+     46          /* USER CODE END PV */
+     47          
+     48          /* Private function prototypes -----------------------------------------------*/
+     49          /* USER CODE BEGIN PFP */
+     50          
+     51          /* USER CODE END PFP */
+     52          
+     53          /* External functions --------------------------------------------------------*/
+     54          /* USER CODE BEGIN ExternalFunctions */
+     55          
+     56          /* USER CODE END ExternalFunctions */
+     57          
+     58          /* USER CODE BEGIN 0 */
+     59          
+     60          /* USER CODE END 0 */
+     61                                  
+     62          void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+     63                              /**
+     64            * Initializes the Global MSP.
+     65            */
+
+   \                                 In section .text, align 2, keep-with-next
+     66          void HAL_MspInit(void)
+     67          {
+   \                     HAL_MspInit: (+1)
+   \        0x0   0xB081             SUB      SP,SP,#+4
+     68            /* USER CODE BEGIN MspInit 0 */
+     69          
+     70            /* USER CODE END MspInit 0 */
+     71          
+     72            __HAL_RCC_SYSCFG_CLK_ENABLE();
+   \        0x2   0x2000             MOVS     R0,#+0
+   \        0x4   0x9000             STR      R0,[SP, #+0]
+     73            __HAL_RCC_PWR_CLK_ENABLE();
+   \        0x6   0x2200             MOVS     R2,#+0
+   \        0x8   0x....             LDR.N    R0,??DataTable6  ;; 0x40023840
+   \        0xA   0x6841             LDR      R1,[R0, #+4]
+   \        0xC   0xF441 0x4180      ORR      R1,R1,#0x4000
+   \       0x10   0x6041             STR      R1,[R0, #+4]
+   \       0x12   0x6841             LDR      R1,[R0, #+4]
+   \       0x14   0xF401 0x4180      AND      R1,R1,#0x4000
+   \       0x18   0x9100             STR      R1,[SP, #+0]
+   \       0x1A   0x9900             LDR      R1,[SP, #+0]
+   \       0x1C   0x9200             STR      R2,[SP, #+0]
+   \       0x1E   0x6803             LDR      R3,[R0, #+0]
+   \       0x20   0xF043 0x5380      ORR      R3,R3,#0x10000000
+   \       0x24   0x6003             STR      R3,[R0, #+0]
+   \       0x26   0x6800             LDR      R0,[R0, #+0]
+   \       0x28   0xF000 0x5080      AND      R0,R0,#0x10000000
+   \       0x2C   0x9000             STR      R0,[SP, #+0]
+   \       0x2E   0x9800             LDR      R0,[SP, #+0]
+     74          
+     75            /* System interrupt init*/
+     76          
+     77            /* USER CODE BEGIN MspInit 1 */
+     78          
+     79            /* USER CODE END MspInit 1 */
+     80          }
+   \       0x30   0xB001             ADD      SP,SP,#+4
+   \       0x32   0x4770             BX       LR               ;; return
+     81          
+     82          /**
+     83          * @brief TIM_Base MSP Initialization
+     84          * This function configures the hardware resources used in this example
+     85          * @param htim_base: TIM_Base handle pointer
+     86          * @retval None
+     87          */
+
+   \                                 In section .text, align 2, keep-with-next
+     88          void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
+     89          {
+   \                     HAL_TIM_Base_MspInit: (+1)
+   \        0x0   0x6800             LDR      R0,[R0, #+0]
+   \        0x2   0x....             LDR.N    R1,??DataTable6_1  ;; 0x40000400
+   \        0x4   0x4288             CMP      R0,R1
+   \        0x6   0xD000             BEQ.N    ??HAL_TIM_Base_MspInit_0
+   \        0x8   0x4770             BX       LR
+   \                     ??HAL_TIM_Base_MspInit_0: (+1)
+   \        0xA   0xB580             PUSH     {R7,LR}
+     90            if(htim_base->Instance==TIM3)
+     91            {
+     92            /* USER CODE BEGIN TIM3_MspInit 0 */
+     93          
+     94            /* USER CODE END TIM3_MspInit 0 */
+     95              /* Peripheral clock enable */
+     96              __HAL_RCC_TIM3_CLK_ENABLE();
+   \        0xC   0x....'....        BL       ?Subroutine0
+   \                     ??CrossCallReturnLabel_0: (+1)
+   \       0x10   0xF041 0x0102      ORR      R1,R1,#0x2
+   \       0x14   0x6001             STR      R1,[R0, #+0]
+     97              /* TIM3 interrupt Init */
+     98              HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
+   \       0x16   0x2100             MOVS     R1,#+0
+   \       0x18   0x6800             LDR      R0,[R0, #+0]
+   \       0x1A   0xF000 0x0002      AND      R0,R0,#0x2
+   \       0x1E   0x9000             STR      R0,[SP, #+0]
+   \       0x20   0x9800             LDR      R0,[SP, #+0]
+   \       0x22   0x201D             MOVS     R0,#+29
+   \       0x24   0x....'....        BL       HAL_NVIC_SetPriority
+     99              HAL_NVIC_EnableIRQ(TIM3_IRQn);
+   \       0x28   0xE8BD 0x4002      POP      {R1,LR}
+   \       0x2C   0x201D             MOVS     R0,#+29
+   \       0x2E   0x....'....        B.W      HAL_NVIC_EnableIRQ
+    100            /* USER CODE BEGIN TIM3_MspInit 1 */
+    101          
+    102            /* USER CODE END TIM3_MspInit 1 */
+    103            }
+    104          
+    105          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine0: (+1)
+   \        0x0   0x2200             MOVS     R2,#+0
+   \        0x2   0x....             LDR.N    R0,??DataTable6  ;; 0x40023840
+   \        0x4   0x9200             STR      R2,[SP, #+0]
+   \        0x6   0x6801             LDR      R1,[R0, #+0]
+   \        0x8   0x4770             BX       LR
+    106          
+    107          /**
+    108          * @brief TIM_OC MSP Initialization
+    109          * This function configures the hardware resources used in this example
+    110          * @param htim_oc: TIM_OC handle pointer
+    111          * @retval None
+    112          */
+
+   \                                 In section .text, align 2, keep-with-next
+    113          void HAL_TIM_OC_MspInit(TIM_HandleTypeDef* htim_oc)
+    114          {
+   \                     HAL_TIM_OC_MspInit: (+1)
+   \        0x0   0x6800             LDR      R0,[R0, #+0]
+   \        0x2   0x....             LDR.N    R1,??DataTable6_2  ;; 0x40000800
+   \        0x4   0x4288             CMP      R0,R1
+   \        0x6   0xD000             BEQ.N    ??HAL_TIM_OC_MspInit_0
+   \        0x8   0x4770             BX       LR
+   \                     ??HAL_TIM_OC_MspInit_0: (+1)
+   \        0xA   0xB580             PUSH     {R7,LR}
+    115            if(htim_oc->Instance==TIM4)
+    116            {
+    117            /* USER CODE BEGIN TIM4_MspInit 0 */
+    118          
+    119            /* USER CODE END TIM4_MspInit 0 */
+    120              /* Peripheral clock enable */
+    121              __HAL_RCC_TIM4_CLK_ENABLE();
+   \        0xC   0x....'....        BL       ?Subroutine0
+   \                     ??CrossCallReturnLabel_1: (+1)
+   \       0x10   0xF041 0x0104      ORR      R1,R1,#0x4
+   \       0x14   0x6001             STR      R1,[R0, #+0]
+    122              /* TIM4 interrupt Init */
+    123              HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);
+   \       0x16   0x2100             MOVS     R1,#+0
+   \       0x18   0x6800             LDR      R0,[R0, #+0]
+   \       0x1A   0xF000 0x0004      AND      R0,R0,#0x4
+   \       0x1E   0x9000             STR      R0,[SP, #+0]
+   \       0x20   0x9800             LDR      R0,[SP, #+0]
+   \       0x22   0x201E             MOVS     R0,#+30
+   \       0x24   0x....'....        BL       HAL_NVIC_SetPriority
+    124              HAL_NVIC_EnableIRQ(TIM4_IRQn);
+   \       0x28   0xE8BD 0x4002      POP      {R1,LR}
+   \       0x2C   0x201E             MOVS     R0,#+30
+   \       0x2E   0x....'....        B.W      HAL_NVIC_EnableIRQ
+    125            /* USER CODE BEGIN TIM4_MspInit 1 */
+    126          
+    127            /* USER CODE END TIM4_MspInit 1 */
+    128            }
+    129          
+    130          }
+    131          
+
+   \                                 In section .text, align 2, keep-with-next
+    132          void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim)
+    133          {
+   \                     HAL_TIM_MspPostInit: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   \        0x2   0xB086             SUB      SP,SP,#+24
+   \        0x4   0x4604             MOV      R4,R0
+   \        0x6   0x2214             MOVS     R2,#+20
+   \        0x8   0x2100             MOVS     R1,#+0
+   \        0xA   0xA801             ADD      R0,SP,#+4
+   \        0xC   0x....'....        BL       memset
+    134            GPIO_InitTypeDef GPIO_InitStruct = {0};
+    135            if(htim->Instance==TIM4)
+   \       0x10   0x6821             LDR      R1,[R4, #+0]
+   \       0x12   0x....             LDR.N    R0,??DataTable6_2  ;; 0x40000800
+   \       0x14   0x4281             CMP      R1,R0
+   \       0x16   0xD119             BNE.N    ??HAL_TIM_MspPostInit_0
+    136            {
+    137            /* USER CODE BEGIN TIM4_MspPostInit 0 */
+    138          
+    139            /* USER CODE END TIM4_MspPostInit 0 */
+    140            
+    141              __HAL_RCC_GPIOD_CLK_ENABLE();
+   \       0x18   0x2200             MOVS     R2,#+0
+   \       0x1A   0x....             LDR.N    R0,??DataTable6_3  ;; 0x40023830
+   \       0x1C   0x9200             STR      R2,[SP, #+0]
+    142              /**TIM4 GPIO Configuration    
+    143              PD15     ------> TIM4_CH4 
+    144              */
+    145              GPIO_InitStruct.Pin = GPIO_PIN_15;
+    146              GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+   \       0x1E   0x2202             MOVS     R2,#+2
+   \       0x20   0x6801             LDR      R1,[R0, #+0]
+   \       0x22   0xF041 0x0108      ORR      R1,R1,#0x8
+   \       0x26   0x6001             STR      R1,[R0, #+0]
+   \       0x28   0xF44F 0x4100      MOV      R1,#+32768
+   \       0x2C   0x6800             LDR      R0,[R0, #+0]
+   \       0x2E   0xF000 0x0008      AND      R0,R0,#0x8
+   \       0x32   0x9000             STR      R0,[SP, #+0]
+   \       0x34   0x9800             LDR      R0,[SP, #+0]
+    147              GPIO_InitStruct.Pull = GPIO_NOPULL;
+    148              GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    149              GPIO_InitStruct.Alternate = GPIO_AF2_TIM4;
+    150              HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+   \       0x36   0x....             LDR.N    R0,??DataTable6_4  ;; 0x40020c00
+   \       0x38   0x9101             STR      R1,[SP, #+4]
+   \       0x3A   0x9202             STR      R2,[SP, #+8]
+   \       0x3C   0x2100             MOVS     R1,#+0
+   \       0x3E   0x9103             STR      R1,[SP, #+12]
+   \       0x40   0x9104             STR      R1,[SP, #+16]
+   \       0x42   0x2102             MOVS     R1,#+2
+   \       0x44   0x9105             STR      R1,[SP, #+20]
+   \       0x46   0xA901             ADD      R1,SP,#+4
+   \       0x48   0x....'....        BL       HAL_GPIO_Init
+    151          
+    152            /* USER CODE BEGIN TIM4_MspPostInit 1 */
+    153          
+    154            /* USER CODE END TIM4_MspPostInit 1 */
+    155            }
+    156          
+    157          }
+   \                     ??HAL_TIM_MspPostInit_0: (+1)
+   \       0x4C   0xB006             ADD      SP,SP,#+24
+   \       0x4E   0xBD10             POP      {R4,PC}          ;; return
+    158          /**
+    159          * @brief TIM_Base MSP De-Initialization
+    160          * This function freeze the hardware resources used in this example
+    161          * @param htim_base: TIM_Base handle pointer
+    162          * @retval None
+    163          */
+
+   \                                 In section .text, align 2, keep-with-next
+    164          void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
+    165          {
+    166            if(htim_base->Instance==TIM3)
+   \                     HAL_TIM_Base_MspDeInit: (+1)
+   \        0x0   0x6800             LDR      R0,[R0, #+0]
+   \        0x2   0x....             LDR.N    R1,??DataTable6_1  ;; 0x40000400
+   \        0x4   0x4288             CMP      R0,R1
+   \        0x6   0xD107             BNE.N    ??HAL_TIM_Base_MspDeInit_0
+    167            {
+    168            /* USER CODE BEGIN TIM3_MspDeInit 0 */
+    169          
+    170            /* USER CODE END TIM3_MspDeInit 0 */
+    171              /* Peripheral clock disable */
+    172              __HAL_RCC_TIM3_CLK_DISABLE();
+   \        0x8   0x....             LDR.N    R0,??DataTable6  ;; 0x40023840
+   \        0xA   0x6802             LDR      R2,[R0, #+0]
+   \        0xC   0xF022 0x0202      BIC      R2,R2,#0x2
+   \       0x10   0x6002             STR      R2,[R0, #+0]
+    173          
+    174              /* TIM3 interrupt DeInit */
+    175              HAL_NVIC_DisableIRQ(TIM3_IRQn);
+   \       0x12   0x201D             MOVS     R0,#+29
+   \       0x14   0x....'....        B.W      HAL_NVIC_DisableIRQ
+    176            /* USER CODE BEGIN TIM3_MspDeInit 1 */
+    177          
+    178            /* USER CODE END TIM3_MspDeInit 1 */
+    179            }
+    180          
+    181          }
+   \                     ??HAL_TIM_Base_MspDeInit_0: (+1)
+   \       0x18   0x4770             BX       LR               ;; return
+    182          
+    183          /**
+    184          * @brief TIM_OC MSP De-Initialization
+    185          * This function freeze the hardware resources used in this example
+    186          * @param htim_oc: TIM_OC handle pointer
+    187          * @retval None
+    188          */
+
+   \                                 In section .text, align 2, keep-with-next
+    189          void HAL_TIM_OC_MspDeInit(TIM_HandleTypeDef* htim_oc)
+    190          {
+    191            if(htim_oc->Instance==TIM4)
+   \                     HAL_TIM_OC_MspDeInit: (+1)
+   \        0x0   0x6800             LDR      R0,[R0, #+0]
+   \        0x2   0x....             LDR.N    R1,??DataTable6_2  ;; 0x40000800
+   \        0x4   0x4288             CMP      R0,R1
+   \        0x6   0xD107             BNE.N    ??HAL_TIM_OC_MspDeInit_0
+    192            {
+    193            /* USER CODE BEGIN TIM4_MspDeInit 0 */
+    194          
+    195            /* USER CODE END TIM4_MspDeInit 0 */
+    196              /* Peripheral clock disable */
+    197              __HAL_RCC_TIM4_CLK_DISABLE();
+   \        0x8   0x....             LDR.N    R0,??DataTable6  ;; 0x40023840
+   \        0xA   0x6802             LDR      R2,[R0, #+0]
+   \        0xC   0xF022 0x0204      BIC      R2,R2,#0x4
+   \       0x10   0x6002             STR      R2,[R0, #+0]
+    198          
+    199              /* TIM4 interrupt DeInit */
+    200              HAL_NVIC_DisableIRQ(TIM4_IRQn);
+   \       0x12   0x201E             MOVS     R0,#+30
+   \       0x14   0x....'....        B.W      HAL_NVIC_DisableIRQ
+    201            /* USER CODE BEGIN TIM4_MspDeInit 1 */
+    202          
+    203            /* USER CODE END TIM4_MspDeInit 1 */
+    204            }
+    205          
+    206          }
+   \                     ??HAL_TIM_OC_MspDeInit_0: (+1)
+   \       0x18   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6:
+   \        0x0   0x4002'3840        DC32     0x40023840
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_1:
+   \        0x0   0x4000'0400        DC32     0x40000400
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_2:
+   \        0x0   0x4000'0800        DC32     0x40000800
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_3:
+   \        0x0   0x4002'3830        DC32     0x40023830
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_4:
+   \        0x0   0x4002'0C00        DC32     0x40020c00
+    207          
+    208          /* USER CODE BEGIN 1 */
+    209          
+    210          /* USER CODE END 1 */
+    211          
+    212          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       4   HAL_MspInit
+       0   HAL_TIM_Base_MspDeInit
+         0   -> HAL_NVIC_DisableIRQ
+       8   HAL_TIM_Base_MspInit
+         0   -> HAL_NVIC_EnableIRQ
+         8   -> HAL_NVIC_SetPriority
+      32   HAL_TIM_MspPostInit
+        32   -> HAL_GPIO_Init
+        32   -> memset
+       0   HAL_TIM_OC_MspDeInit
+         0   -> HAL_NVIC_DisableIRQ
+       8   HAL_TIM_OC_MspInit
+         0   -> HAL_NVIC_EnableIRQ
+         8   -> HAL_NVIC_SetPriority
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable6
+       4  ??DataTable6_1
+       4  ??DataTable6_2
+       4  ??DataTable6_3
+       4  ??DataTable6_4
+      10  ?Subroutine0
+      52  HAL_MspInit
+      26  HAL_TIM_Base_MspDeInit
+      50  HAL_TIM_Base_MspInit
+      80  HAL_TIM_MspPostInit
+      26  HAL_TIM_OC_MspDeInit
+      50  HAL_TIM_OC_MspInit
+
+ 
+ 314 bytes in section .text
+ 
+ 314 bytes of CODE memory
+
+Errors: none
+Warnings: none

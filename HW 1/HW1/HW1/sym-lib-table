@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name Custom_sram)(type Legacy)(uri C:/Users/mohit/Desktop/Custom_sram.lib)(options "")(descr ""))
+)

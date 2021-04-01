@@ -1,0 +1,2062 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         10/Mar/2020  09:52:00
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc_ex.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EW678C.tmp
+#        ("C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc_ex.c"
+#        -D USE_HAL_DRIVER -D STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM\HW6\List" -o "C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM\HW6\Obj" --debug --endian=little
+#        --cpu=Cortex-M4 -e --fpu=VFPv4_sp --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.4\arm\inc\c\DLib_Config_Full.h"
+#        -I "C:\Users\mohit\Desktop\Microapps projects\HW6\HW6\EWARM/../Inc\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM\HW6\List\stm32f4xx_hal_adc_ex.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM\HW6\Obj\stm32f4xx_hal_adc_ex.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\HW6\HW6\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc_ex.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    stm32f4xx_hal_adc_ex.c
+      4            * @author  MCD Application Team
+      5            * @brief   This file provides firmware functions to manage the following
+      6            *          functionalities of the ADC extension peripheral:
+      7            *           + Extended features functions
+      8            *
+      9            @verbatim
+     10            ==============================================================================
+     11                              ##### How to use this driver #####
+     12            ==============================================================================
+     13              [..]
+     14              (#)Initialize the ADC low level resources by implementing the HAL_ADC_MspInit():
+     15                 (##) Enable the ADC interface clock using __HAL_RCC_ADC_CLK_ENABLE()
+     16                 (##) ADC pins configuration
+     17                       (+++) Enable the clock for the ADC GPIOs using the following function:
+     18                             __HAL_RCC_GPIOx_CLK_ENABLE()
+     19                       (+++) Configure these ADC pins in analog mode using HAL_GPIO_Init()
+     20                 (##) In case of using interrupts (e.g. HAL_ADC_Start_IT())
+     21                       (+++) Configure the ADC interrupt priority using HAL_NVIC_SetPriority()
+     22                       (+++) Enable the ADC IRQ handler using HAL_NVIC_EnableIRQ()
+     23                       (+++) In ADC IRQ handler, call HAL_ADC_IRQHandler()
+     24                (##) In case of using DMA to control data transfer (e.g. HAL_ADC_Start_DMA())
+     25                       (+++) Enable the DMAx interface clock using __HAL_RCC_DMAx_CLK_ENABLE()
+     26                       (+++) Configure and enable two DMA streams stream for managing data
+     27                           transfer from peripheral to memory (output stream)
+     28                       (+++) Associate the initialized DMA handle to the ADC DMA handle
+     29                           using  __HAL_LINKDMA()
+     30                       (+++) Configure the priority and enable the NVIC for the transfer complete
+     31                           interrupt on the two DMA Streams. The output stream should have higher
+     32                           priority than the input stream.
+     33               (#) Configure the ADC Prescaler, conversion resolution and data alignment
+     34                   using the HAL_ADC_Init() function.
+     35          
+     36               (#) Configure the ADC Injected channels group features, use HAL_ADC_Init()
+     37                   and HAL_ADC_ConfigChannel() functions.
+     38          
+     39               (#) Three operation modes are available within this driver:
+     40          
+     41               *** Polling mode IO operation ***
+     42               =================================
+     43               [..]
+     44                 (+) Start the ADC peripheral using HAL_ADCEx_InjectedStart()
+     45                 (+) Wait for end of conversion using HAL_ADC_PollForConversion(), at this stage
+     46                     user can specify the value of timeout according to his end application
+     47                 (+) To read the ADC converted values, use the HAL_ADCEx_InjectedGetValue() function.
+     48                 (+) Stop the ADC peripheral using HAL_ADCEx_InjectedStop()
+     49          
+     50               *** Interrupt mode IO operation ***
+     51               ===================================
+     52               [..]
+     53                 (+) Start the ADC peripheral using HAL_ADCEx_InjectedStart_IT()
+     54                 (+) Use HAL_ADC_IRQHandler() called under ADC_IRQHandler() Interrupt subroutine
+     55                 (+) At ADC end of conversion HAL_ADCEx_InjectedConvCpltCallback() function is executed and user can
+     56                      add his own code by customization of function pointer HAL_ADCEx_InjectedConvCpltCallback 
+     57                 (+) In case of ADC Error, HAL_ADCEx_InjectedErrorCallback() function is executed and user can 
+     58                      add his own code by customization of function pointer HAL_ADCEx_InjectedErrorCallback
+     59                 (+) Stop the ADC peripheral using HAL_ADCEx_InjectedStop_IT()
+     60          
+     61               *** Multi mode ADCs Regular channels configuration ***
+     62               ======================================================
+     63               [..]
+     64                 (+) Select the Multi mode ADC regular channels features (dual or triple mode)
+     65                    and configure the DMA mode using HAL_ADCEx_MultiModeConfigChannel() functions.
+     66                 (+) Start the ADC peripheral using HAL_ADCEx_MultiModeStart_DMA(), at this stage the user specify the length
+     67                     of data to be transferred at each end of conversion
+     68                 (+) Read the ADCs converted values using the HAL_ADCEx_MultiModeGetValue() function.
+     69          
+     70          
+     71              @endverbatim
+     72            ******************************************************************************
+     73            * @attention
+     74            *
+     75            * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+     76            * All rights reserved.</center></h2>
+     77            *
+     78            * This software component is licensed by ST under BSD 3-Clause license,
+     79            * the "License"; You may not use this file except in compliance with the
+     80            * License. You may obtain a copy of the License at:
+     81            *                        opensource.org/licenses/BSD-3-Clause
+     82            *
+     83            ******************************************************************************
+     84            */
+     85          
+     86          /* Includes ------------------------------------------------------------------*/
+     87          #include "stm32f4xx_hal.h"
+     88          
+     89          /** @addtogroup STM32F4xx_HAL_Driver
+     90            * @{
+     91            */
+     92          
+     93          /** @defgroup ADCEx ADCEx
+     94            * @brief ADC Extended driver modules
+     95            * @{
+     96            */ 
+     97          
+     98          #ifdef HAL_ADC_MODULE_ENABLED
+     99              
+    100          /* Private typedef -----------------------------------------------------------*/
+    101          /* Private define ------------------------------------------------------------*/ 
+    102          /* Private macro -------------------------------------------------------------*/
+    103          /* Private variables ---------------------------------------------------------*/
+    104          /** @addtogroup ADCEx_Private_Functions
+    105            * @{
+    106            */
+    107          /* Private function prototypes -----------------------------------------------*/
+    108          static void ADC_MultiModeDMAConvCplt(DMA_HandleTypeDef *hdma);
+    109          static void ADC_MultiModeDMAError(DMA_HandleTypeDef *hdma);
+    110          static void ADC_MultiModeDMAHalfConvCplt(DMA_HandleTypeDef *hdma); 
+    111          /**
+    112            * @}
+    113            */
+    114          
+    115          /* Exported functions --------------------------------------------------------*/
+    116          /** @defgroup ADCEx_Exported_Functions ADC Exported Functions
+    117            * @{
+    118            */
+    119          
+    120          /** @defgroup ADCEx_Exported_Functions_Group1  Extended features functions 
+    121            *  @brief    Extended features functions  
+    122            *
+    123          @verbatim   
+    124           ===============================================================================
+    125                           ##### Extended features functions #####
+    126           ===============================================================================  
+    127              [..]  This section provides functions allowing to:
+    128                (+) Start conversion of injected channel.
+    129                (+) Stop conversion of injected channel.
+    130                (+) Start multimode and enable DMA transfer.
+    131                (+) Stop multimode and disable DMA transfer.
+    132                (+) Get result of injected channel conversion.
+    133                (+) Get result of multimode conversion.
+    134                (+) Configure injected channels.
+    135                (+) Configure multimode.
+    136                         
+    137          @endverbatim
+    138            * @{
+    139            */
+    140          
+    141          /**
+    142            * @brief  Enables the selected ADC software start conversion of the injected channels.
+    143            * @param  hadc pointer to a ADC_HandleTypeDef structure that contains
+    144            *         the configuration information for the specified ADC.
+    145            * @retval HAL status
+    146            */
+
+   \                                 In section .text, align 2, keep-with-next
+    147          HAL_StatusTypeDef HAL_ADCEx_InjectedStart(ADC_HandleTypeDef* hadc)
+    148          {
+   \                     HAL_ADCEx_InjectedStart: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+   \        0x2   0x....'....        BL       ?Subroutine3
+    149            __IO uint32_t counter = 0U;
+    150            uint32_t tmp1 = 0U, tmp2 = 0U;
+    151            ADC_Common_TypeDef *tmpADC_Common;
+    152            
+    153            /* Process locked */
+    154            __HAL_LOCK(hadc);
+   \                     ??CrossCallReturnLabel_4: (+1)
+   \        0x6   0xD101             BNE.N    ??HAL_ADCEx_InjectedStart_0
+   \        0x8   0x2002             MOVS     R0,#+2
+   \        0xA   0xBD32             POP      {R1,R4,R5,PC}
+   \                     ??HAL_ADCEx_InjectedStart_0: (+1)
+   \        0xC   0x....'....        BL       ?Subroutine1
+    155            
+    156            /* Enable the ADC peripheral */
+    157            
+    158            /* Check if ADC peripheral is disabled in order to enable it and wait during 
+    159               Tstab time the ADC's stabilization */
+    160            if((hadc->Instance->CR2 & ADC_CR2_ADON) != ADC_CR2_ADON)
+    161            {  
+    162              /* Enable the Peripheral */
+    163              __HAL_ADC_ENABLE(hadc);
+    164              
+    165              /* Delay for ADC stabilization time */
+    166              /* Compute number of CPU cycles to wait for */
+    167              counter = (ADC_STAB_DELAY_US * (SystemCoreClock / 1000000U));
+    168              while(counter != 0U)
+    169              {
+    170                counter--;
+    171              }
+    172            }
+    173            
+    174            /* Start conversion if ADC is effectively enabled */
+    175            if(HAL_IS_BIT_SET(hadc->Instance->CR2, ADC_CR2_ADON))
+   \                     ??CrossCallReturnLabel_0: (+1)
+   \       0x10   0xD51F             BPL.N    ??CrossCallReturnLabel_2
+    176            {
+    177              /* Set ADC state                                                          */
+    178              /* - Clear state bitfield related to injected group conversion results    */
+    179              /* - Set state bitfield related to injected operation                     */
+    180              ADC_STATE_CLR_SET(hadc->State,
+    181                                HAL_ADC_STATE_READY | HAL_ADC_STATE_INJ_EOC,
+    182                                HAL_ADC_STATE_INJ_BUSY);
+   \       0x12   0x....'....        BL       ?Subroutine4
+    183              
+    184              /* Check if a regular conversion is ongoing */
+    185              /* Note: On this device, there is no ADC error code fields related to     */
+    186              /*       conversions on group injected only. In case of conversion on     */
+    187              /*       going on group regular, no error code is reset.                  */
+    188              if (HAL_IS_BIT_CLR(hadc->State, HAL_ADC_STATE_REG_BUSY))
+   \                     ??CrossCallReturnLabel_6: (+1)
+   \       0x16   0xBF58             IT       PL
+   \       0x18   0x6098             STRPL    R0,[R3, #+8]
+    189              {
+    190                /* Reset ADC all error code fields */
+    191                ADC_CLEAR_ERRORCODE(hadc);
+    192              }
+    193              
+    194              /* Process unlocked */
+    195              /* Unlock before starting ADC conversions: in case of potential           */
+    196              /* interruption, to let the process to ADC IRQ Handler.                   */
+    197              __HAL_UNLOCK(hadc);
+   \       0x1A   0x....'....        BL       ?Subroutine5
+    198              
+    199              /* Clear injected group conversion flag */
+    200              /* (To ensure of no unknown state from potential previous ADC operations) */
+    201              __HAL_ADC_CLEAR_FLAG(hadc, ADC_FLAG_JEOC);
+    202          
+    203              /* Pointer to the common control register to which is belonging hadc    */
+    204              /* (Depending on STM32F4 product, there may be up to 3 ADC and 1 common */
+    205              /* control register)                                                    */
+    206              tmpADC_Common = ADC_COMMON_REGISTER(hadc);
+    207          
+    208              /* Check if Multimode enabled */
+    209              if(HAL_IS_BIT_CLR(tmpADC_Common->CCR, ADC_CCR_MULTI))
+   \                     ??CrossCallReturnLabel_8: (+1)
+   \       0x1E   0x....'....        LDR.W    R2,??DataTable9  ;; 0x40012304
+   \       0x22   0x6814             LDR      R4,[R2, #+0]
+   \       0x24   0x688A             LDR      R2,[R1, #+8]
+   \       0x26   0xF014 0x0F1F      TST      R4,#0x1F
+   \       0x2A   0xD10C             BNE.N    ??HAL_ADCEx_InjectedStart_1
+    210              {
+    211                tmp1 = HAL_IS_BIT_CLR(hadc->Instance->CR2, ADC_CR2_JEXTEN);
+   \       0x2C   0xF412 0x1F40      TST      R2,#0x300000
+    212                tmp2 = HAL_IS_BIT_CLR(hadc->Instance->CR1, ADC_CR1_JAUTO);
+   \       0x30   0x684A             LDR      R2,[R1, #+4]
+   \       0x32   0xBF08             IT       EQ
+   \       0x34   0x2001             MOVEQ    R0,#+1
+    213                if(tmp1 && tmp2)
+   \       0x36   0xB160             CBZ.N    R0,??CrossCallReturnLabel_2
+   \       0x38   0x0550             LSLS     R0,R2,#+21
+   \       0x3A   0xD40A             BMI.N    ??CrossCallReturnLabel_2
+    214                {
+    215                  /* Enable the selected ADC software conversion for injected group */
+    216                  hadc->Instance->CR2 |= ADC_CR2_JSWSTART;
+   \       0x3C   0x688A             LDR      R2,[R1, #+8]
+   \       0x3E   0xF442 0x0280      ORR      R2,R2,#0x400000
+   \       0x42   0x608A             STR      R2,[R1, #+8]
+   \       0x44   0xE005             B.N      ??CrossCallReturnLabel_2
+    217                }
+    218              }
+    219              else
+    220              {
+    221                tmp1 = HAL_IS_BIT_CLR(hadc->Instance->CR2, ADC_CR2_JEXTEN);
+   \                     ??HAL_ADCEx_InjectedStart_1: (+1)
+   \       0x46   0xF412 0x1F40      TST      R2,#0x300000
+   \       0x4A   0xBF08             IT       EQ
+   \       0x4C   0x2001             MOVEQ    R0,#+1
+    222                tmp2 = HAL_IS_BIT_CLR(hadc->Instance->CR1, ADC_CR1_JAUTO);
+    223                if((hadc->Instance == ADC1) && tmp1 && tmp2)  
+   \       0x4E   0x....'....        BL       ?Subroutine2
+    224                {
+    225                  /* Enable the selected ADC software conversion for injected group */
+    226                  hadc->Instance->CR2 |= ADC_CR2_JSWSTART;
+    227                }
+    228              }
+    229            }
+    230            
+    231            /* Return function status */
+    232            return HAL_OK;
+   \                     ??CrossCallReturnLabel_2: (+1)
+   \       0x52   0x2000             MOVS     R0,#+0
+   \       0x54   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    233          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine5: (+1)
+   \        0x0   0x7018             STRB     R0,[R3, #+0]
+   \        0x2   0xF06F 0x0104      MVN      R1,#+4
+   \        0x6   0x6813             LDR      R3,[R2, #+0]
+   \        0x8   0x6019             STR      R1,[R3, #+0]
+   \        0xA   0x6811             LDR      R1,[R2, #+0]
+   \        0xC   0x4770             BX       LR
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine4: (+1)
+   \        0x0   0x685D             LDR      R5,[R3, #+4]
+   \        0x2   0x....'....        LDR.W    R1,??DataTable9_1  ;; 0xffffdffe
+   \        0x6   0x400D             ANDS     R5,R1,R5
+   \        0x8   0xF445 0x5580      ORR      R5,R5,#0x1000
+   \        0xC   0x605D             STR      R5,[R3, #+4]
+   \        0xE   0x6859             LDR      R1,[R3, #+4]
+   \       0x10   0x05CC             LSLS     R4,R1,#+23
+   \       0x12   0x4770             BX       LR
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine3: (+1)
+   \        0x0   0x4602             MOV      R2,R0
+   \        0x2   0x2000             MOVS     R0,#+0
+   \        0x4   0xF102 0x033C      ADD      R3,R2,#+60
+   \        0x8   0x9000             STR      R0,[SP, #+0]
+   \        0xA   0x7819             LDRB     R1,[R3, #+0]
+   \        0xC   0x2901             CMP      R1,#+1
+   \        0xE   0x4770             BX       LR
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine2: (+1)
+   \        0x0   0x....'....        LDR.W    R3,??DataTable9_2  ;; 0x40012000
+   \        0x4   0x684A             LDR      R2,[R1, #+4]
+   \        0x6   0x4299             CMP      R1,R3
+   \        0x8   0xD108             BNE.N    ??Subroutine2_0
+   \        0xA   0xB138             CBZ.N    R0,??Subroutine2_0
+   \        0xC   0x0550             LSLS     R0,R2,#+21
+   \        0xE   0xD405             BMI.N    ??Subroutine2_0
+   \       0x10   0x....'....        LDR.W    R0,??DataTable9_3  ;; 0x40012008
+   \       0x14   0x6801             LDR      R1,[R0, #+0]
+   \       0x16   0xF441 0x0180      ORR      R1,R1,#0x400000
+   \       0x1A   0x6001             STR      R1,[R0, #+0]
+   \                     ??Subroutine2_0: (+1)
+   \       0x1C   0x4770             BX       LR
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine1: (+1)
+   \        0x0   0x2101             MOVS     R1,#+1
+   \        0x2   0x7019             STRB     R1,[R3, #+0]
+   \        0x4   0x6811             LDR      R1,[R2, #+0]
+   \        0x6   0x688C             LDR      R4,[R1, #+8]
+   \        0x8   0x07E5             LSLS     R5,R4,#+31
+   \        0xA   0xD414             BMI.N    ??Subroutine1_0
+   \        0xC   0x688C             LDR      R4,[R1, #+8]
+   \        0xE   0x....'....        LDR.W    R5,??DataTable9_4  ;; 0xf4240
+   \       0x12   0xF044 0x0401      ORR      R4,R4,#0x1
+   \       0x16   0x608C             STR      R4,[R1, #+8]
+   \       0x18   0x....'....        LDR.W    R1,??DataTable9_5
+   \       0x1C   0x680C             LDR      R4,[R1, #+0]
+   \       0x1E   0xFBB4 0xF5F5      UDIV     R5,R4,R5
+   \       0x22   0xEB05 0x0545      ADD      R5,R5,R5, LSL #+1
+   \       0x26   0x9500             STR      R5,[SP, #+0]
+   \       0x28   0xE002             B.N      ??Subroutine1_1
+   \                     ??Subroutine1_2: (+1)
+   \       0x2A   0x9900             LDR      R1,[SP, #+0]
+   \       0x2C   0x1E49             SUBS     R1,R1,#+1
+   \       0x2E   0x9100             STR      R1,[SP, #+0]
+   \                     ??Subroutine1_1: (+1)
+   \       0x30   0x9900             LDR      R1,[SP, #+0]
+   \       0x32   0x2900             CMP      R1,#+0
+   \       0x34   0xD1F9             BNE.N    ??Subroutine1_2
+   \                     ??Subroutine1_0: (+1)
+   \       0x36   0x6814             LDR      R4,[R2, #+0]
+   \       0x38   0x68A1             LDR      R1,[R4, #+8]
+   \       0x3A   0x07CC             LSLS     R4,R1,#+31
+   \       0x3C   0x4770             BX       LR
+    234          
+    235          /**
+    236            * @brief  Enables the interrupt and starts ADC conversion of injected channels.
+    237            * @param  hadc pointer to a ADC_HandleTypeDef structure that contains
+    238            *         the configuration information for the specified ADC.
+    239            *
+    240            * @retval HAL status.
+    241            */
+
+   \                                 In section .text, align 2, keep-with-next
+    242          HAL_StatusTypeDef HAL_ADCEx_InjectedStart_IT(ADC_HandleTypeDef* hadc)
+    243          {
+   \                     HAL_ADCEx_InjectedStart_IT: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+   \        0x2   0x....'....        BL       ?Subroutine3
+    244            __IO uint32_t counter = 0U;
+    245            uint32_t tmp1 = 0U, tmp2 = 0U;
+    246            ADC_Common_TypeDef *tmpADC_Common;
+    247            
+    248            /* Process locked */
+    249            __HAL_LOCK(hadc);
+   \                     ??CrossCallReturnLabel_5: (+1)
+   \        0x6   0xD101             BNE.N    ??HAL_ADCEx_InjectedStart_IT_0
+   \        0x8   0x2002             MOVS     R0,#+2
+   \        0xA   0xBD32             POP      {R1,R4,R5,PC}
+   \                     ??HAL_ADCEx_InjectedStart_IT_0: (+1)
+   \        0xC   0x....'....        BL       ?Subroutine1
+    250            
+    251            /* Enable the ADC peripheral */
+    252            
+    253            /* Check if ADC peripheral is disabled in order to enable it and wait during 
+    254               Tstab time the ADC's stabilization */
+    255            if((hadc->Instance->CR2 & ADC_CR2_ADON) != ADC_CR2_ADON)
+    256            {  
+    257              /* Enable the Peripheral */
+    258              __HAL_ADC_ENABLE(hadc);
+    259              
+    260              /* Delay for ADC stabilization time */
+    261              /* Compute number of CPU cycles to wait for */
+    262              counter = (ADC_STAB_DELAY_US * (SystemCoreClock / 1000000U));
+    263              while(counter != 0U)
+    264              {
+    265                counter--;
+    266              }
+    267            }
+    268            
+    269            /* Start conversion if ADC is effectively enabled */
+    270            if(HAL_IS_BIT_SET(hadc->Instance->CR2, ADC_CR2_ADON))
+   \                     ??CrossCallReturnLabel_1: (+1)
+   \       0x10   0xD524             BPL.N    ??CrossCallReturnLabel_3
+    271            {
+    272              /* Set ADC state                                                          */
+    273              /* - Clear state bitfield related to injected group conversion results    */
+    274              /* - Set state bitfield related to injected operation                     */
+    275              ADC_STATE_CLR_SET(hadc->State,
+    276                                HAL_ADC_STATE_READY | HAL_ADC_STATE_INJ_EOC,
+    277                                HAL_ADC_STATE_INJ_BUSY);
+   \       0x12   0x....'....        BL       ?Subroutine4
+    278              
+    279              /* Check if a regular conversion is ongoing */
+    280              /* Note: On this device, there is no ADC error code fields related to     */
+    281              /*       conversions on group injected only. In case of conversion on     */
+    282              /*       going on group regular, no error code is reset.                  */
+    283              if (HAL_IS_BIT_CLR(hadc->State, HAL_ADC_STATE_REG_BUSY))
+   \                     ??CrossCallReturnLabel_7: (+1)
+   \       0x16   0xBF58             IT       PL
+   \       0x18   0x6098             STRPL    R0,[R3, #+8]
+    284              {
+    285                /* Reset ADC all error code fields */
+    286                ADC_CLEAR_ERRORCODE(hadc);
+    287              }
+    288              
+    289              /* Process unlocked */
+    290              /* Unlock before starting ADC conversions: in case of potential           */
+    291              /* interruption, to let the process to ADC IRQ Handler.                   */
+    292              __HAL_UNLOCK(hadc);
+   \       0x1A   0x....'....        BL       ?Subroutine5
+    293              
+    294              /* Clear injected group conversion flag */
+    295              /* (To ensure of no unknown state from potential previous ADC operations) */
+    296              __HAL_ADC_CLEAR_FLAG(hadc, ADC_FLAG_JEOC);
+    297              
+    298              /* Enable end of conversion interrupt for injected channels */
+    299              __HAL_ADC_ENABLE_IT(hadc, ADC_IT_JEOC);
+   \                     ??CrossCallReturnLabel_9: (+1)
+   \       0x1E   0x684C             LDR      R4,[R1, #+4]
+   \       0x20   0xF044 0x0480      ORR      R4,R4,#0x80
+   \       0x24   0x604C             STR      R4,[R1, #+4]
+    300          
+    301              /* Pointer to the common control register to which is belonging hadc    */
+    302              /* (Depending on STM32F4 product, there may be up to 3 ADC and 1 common */
+    303              /* control register)                                                    */
+    304              tmpADC_Common = ADC_COMMON_REGISTER(hadc);
+    305              
+    306              /* Check if Multimode enabled */
+    307              if(HAL_IS_BIT_CLR(tmpADC_Common->CCR, ADC_CCR_MULTI))
+   \       0x26   0x6811             LDR      R1,[R2, #+0]
+   \       0x28   0x....'....        LDR.W    R2,??DataTable9  ;; 0x40012304
+   \       0x2C   0x6813             LDR      R3,[R2, #+0]
+   \       0x2E   0x688A             LDR      R2,[R1, #+8]
+   \       0x30   0xF013 0x0F1F      TST      R3,#0x1F
+   \       0x34   0xD10C             BNE.N    ??HAL_ADCEx_InjectedStart_IT_1
+    308              {
+    309                tmp1 = HAL_IS_BIT_CLR(hadc->Instance->CR2, ADC_CR2_JEXTEN);
+   \       0x36   0xF412 0x1F40      TST      R2,#0x300000
+    310                tmp2 = HAL_IS_BIT_CLR(hadc->Instance->CR1, ADC_CR1_JAUTO);
+   \       0x3A   0x684A             LDR      R2,[R1, #+4]
+   \       0x3C   0xBF08             IT       EQ
+   \       0x3E   0x2001             MOVEQ    R0,#+1
+    311                if(tmp1 && tmp2)
+   \       0x40   0xB160             CBZ.N    R0,??CrossCallReturnLabel_3
+   \       0x42   0x0550             LSLS     R0,R2,#+21
+   \       0x44   0xD40A             BMI.N    ??CrossCallReturnLabel_3
+    312                {
+    313                  /* Enable the selected ADC software conversion for injected group */
+    314                  hadc->Instance->CR2 |= ADC_CR2_JSWSTART;
+   \       0x46   0x688A             LDR      R2,[R1, #+8]
+   \       0x48   0xF442 0x0280      ORR      R2,R2,#0x400000
+   \       0x4C   0x608A             STR      R2,[R1, #+8]
+   \       0x4E   0xE005             B.N      ??CrossCallReturnLabel_3
+    315                }
+    316              }
+    317              else
+    318              {
+    319                tmp1 = HAL_IS_BIT_CLR(hadc->Instance->CR2, ADC_CR2_JEXTEN);
+   \                     ??HAL_ADCEx_InjectedStart_IT_1: (+1)
+   \       0x50   0xF412 0x1F40      TST      R2,#0x300000
+   \       0x54   0xBF08             IT       EQ
+   \       0x56   0x2001             MOVEQ    R0,#+1
+    320                tmp2 = HAL_IS_BIT_CLR(hadc->Instance->CR1, ADC_CR1_JAUTO);
+    321                if((hadc->Instance == ADC1) && tmp1 && tmp2)  
+   \       0x58   0x....'....        BL       ?Subroutine2
+    322                {
+    323                  /* Enable the selected ADC software conversion for injected group */
+    324                  hadc->Instance->CR2 |= ADC_CR2_JSWSTART;
+    325                }
+    326              }
+    327            }
+    328            
+    329            /* Return function status */
+    330            return HAL_OK;
+   \                     ??CrossCallReturnLabel_3: (+1)
+   \       0x5C   0x2000             MOVS     R0,#+0
+   \       0x5E   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    331          }
+    332          
+    333          /**
+    334            * @brief  Stop conversion of injected channels. Disable ADC peripheral if
+    335            *         no regular conversion is on going.
+    336            * @note   If ADC must be disabled and if conversion is on going on 
+    337            *         regular group, function HAL_ADC_Stop must be used to stop both
+    338            *         injected and regular groups, and disable the ADC.
+    339            * @note   If injected group mode auto-injection is enabled,
+    340            *         function HAL_ADC_Stop must be used.
+    341            * @note   In case of auto-injection mode, HAL_ADC_Stop must be used.
+    342            * @param  hadc ADC handle
+    343            * @retval None
+    344            */
+
+   \                                 In section .text, align 2, keep-with-next
+    345          HAL_StatusTypeDef HAL_ADCEx_InjectedStop(ADC_HandleTypeDef* hadc)
+    346          {
+   \                     HAL_ADCEx_InjectedStop: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+    347            HAL_StatusTypeDef tmp_hal_status = HAL_OK;
+    348            
+    349            /* Check the parameters */
+    350            assert_param(IS_ADC_ALL_INSTANCE(hadc->Instance));
+    351          
+    352            /* Process locked */
+    353            __HAL_LOCK(hadc);
+   \        0x2   0x....'....        BL       ?Subroutine7
+   \                     ??CrossCallReturnLabel_12: (+1)
+   \        0x6   0xD101             BNE.N    ??HAL_ADCEx_InjectedStop_0
+   \        0x8   0x2002             MOVS     R0,#+2
+   \        0xA   0xBD30             POP      {R4,R5,PC}
+   \                     ??HAL_ADCEx_InjectedStop_0: (+1)
+   \        0xC   0x2301             MOVS     R3,#+1
+   \        0xE   0x7013             STRB     R3,[R2, #+0]
+    354              
+    355            /* Stop potential conversion and disable ADC peripheral                     */
+    356            /* Conditioned to:                                                          */
+    357            /* - No conversion on the other group (regular group) is intended to        */
+    358            /*   continue (injected and regular groups stop conversion and ADC disable  */
+    359            /*   are common)                                                            */
+    360            /* - In case of auto-injection mode, HAL_ADC_Stop must be used.             */
+    361            if(((hadc->State & HAL_ADC_STATE_REG_BUSY) == RESET)  &&
+    362               HAL_IS_BIT_CLR(hadc->Instance->CR1, ADC_CR1_JAUTO)   )
+   \       0x10   0x6854             LDR      R4,[R2, #+4]
+   \       0x12   0x05E3             LSLS     R3,R4,#+23
+   \       0x14   0xD40E             BMI.N    ??HAL_ADCEx_InjectedStop_1
+   \       0x16   0x6803             LDR      R3,[R0, #+0]
+   \       0x18   0x685C             LDR      R4,[R3, #+4]
+   \       0x1A   0x0565             LSLS     R5,R4,#+21
+   \       0x1C   0xD40A             BMI.N    ??HAL_ADCEx_InjectedStop_1
+    363            {
+    364              /* Stop potential conversion on going, on regular and injected groups */
+    365              /* Disable ADC peripheral */
+    366              __HAL_ADC_DISABLE(hadc);
+   \       0x1E   0x....'....        BL       ?Subroutine6
+    367              
+    368              /* Check if ADC is effectively disabled */
+    369              if(HAL_IS_BIT_CLR(hadc->Instance->CR2, ADC_CR2_ADON))
+   \                     ??CrossCallReturnLabel_10: (+1)
+   \       0x22   0x07D8             LSLS     R0,R3,#+31
+   \       0x24   0xD408             BMI.N    ??CrossCallReturnLabel_14
+    370              {
+    371                /* Set ADC state */
+    372                ADC_STATE_CLR_SET(hadc->State,
+    373                                  HAL_ADC_STATE_REG_BUSY | HAL_ADC_STATE_INJ_BUSY,
+    374                                  HAL_ADC_STATE_READY);
+   \       0x26   0x6853             LDR      R3,[R2, #+4]
+   \       0x28   0xF423 0x5388      BIC      R3,R3,#0x1100
+   \       0x2C   0xF043 0x0301      ORR      R3,R3,#0x1
+   \       0x30   0x6053             STR      R3,[R2, #+4]
+   \       0x32   0xE001             B.N      ??CrossCallReturnLabel_14
+    375              }
+    376            }
+    377            else
+    378            {
+    379              /* Update ADC state machine to error */
+    380              SET_BIT(hadc->State, HAL_ADC_STATE_ERROR_CONFIG);
+   \                     ??HAL_ADCEx_InjectedStop_1: (+1)
+   \       0x34   0x....'....        BL       ?Subroutine8
+    381                
+    382              tmp_hal_status = HAL_ERROR;
+    383            }
+    384            
+    385            /* Process unlocked */
+    386            __HAL_UNLOCK(hadc);
+   \                     ??CrossCallReturnLabel_14: (+1)
+   \       0x38   0x....             B.N      ?Subroutine0
+    387            
+    388            /* Return function status */
+    389            return tmp_hal_status;
+    390          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine0: (+1)
+   \        0x0   0x2000             MOVS     R0,#+0
+   \        0x2   0x7010             STRB     R0,[R2, #+0]
+   \        0x4   0x4608             MOV      R0,R1
+   \        0x6   0xBD30             POP      {R4,R5,PC}       ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine8: (+1)
+   \        0x0   0x6850             LDR      R0,[R2, #+4]
+   \        0x2   0xF040 0x0020      ORR      R0,R0,#0x20
+   \        0x6   0x6050             STR      R0,[R2, #+4]
+   \        0x8   0x2101             MOVS     R1,#+1
+   \        0xA   0x4770             BX       LR
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine7: (+1)
+   \        0x0   0xF100 0x023C      ADD      R2,R0,#+60
+   \        0x4   0x2100             MOVS     R1,#+0
+   \        0x6   0x7813             LDRB     R3,[R2, #+0]
+   \        0x8   0x2B01             CMP      R3,#+1
+   \        0xA   0x4770             BX       LR
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine6: (+1)
+   \        0x0   0x689C             LDR      R4,[R3, #+8]
+   \        0x2   0x0864             LSRS     R4,R4,#+1
+   \        0x4   0x0064             LSLS     R4,R4,#+1
+   \        0x6   0x609C             STR      R4,[R3, #+8]
+   \        0x8   0x6800             LDR      R0,[R0, #+0]
+   \        0xA   0x6883             LDR      R3,[R0, #+8]
+   \        0xC   0x4770             BX       LR
+    391          
+    392          /**
+    393            * @brief  Poll for injected conversion complete
+    394            * @param  hadc pointer to a ADC_HandleTypeDef structure that contains
+    395            *         the configuration information for the specified ADC.
+    396            * @param  Timeout Timeout value in millisecond.  
+    397            * @retval HAL status
+    398            */
+
+   \                                 In section .text, align 2, keep-with-next
+    399          HAL_StatusTypeDef HAL_ADCEx_InjectedPollForConversion(ADC_HandleTypeDef* hadc, uint32_t Timeout)
+    400          {
+   \                     HAL_ADCEx_InjectedPollForConversion: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x4605             MOV      R5,R0
+   \        0x4   0x460C             MOV      R4,R1
+    401            uint32_t tickstart = 0U;
+    402          
+    403            /* Get tick */ 
+    404            tickstart = HAL_GetTick();
+   \        0x6   0x....'....        BL       HAL_GetTick
+   \        0xA   0x4606             MOV      R6,R0
+    405          
+    406            /* Check End of conversion flag */
+    407            while(!(__HAL_ADC_GET_FLAG(hadc, ADC_FLAG_JEOC)))
+   \                     ??HAL_ADCEx_InjectedPollForConversion_0: (+1)
+   \        0xC   0x6828             LDR      R0,[R5, #+0]
+   \        0xE   0x6801             LDR      R1,[R0, #+0]
+   \       0x10   0x074A             LSLS     R2,R1,#+29
+   \       0x12   0xD410             BMI.N    ??HAL_ADCEx_InjectedPollForConversion_1
+    408            {
+    409              /* Check for the Timeout */
+    410              if(Timeout != HAL_MAX_DELAY)
+   \       0x14   0xF114 0x0F01      CMN      R4,#+1
+   \       0x18   0xD0F8             BEQ.N    ??HAL_ADCEx_InjectedPollForConversion_0
+    411              {
+    412                if((Timeout == 0U)||((HAL_GetTick() - tickstart ) > Timeout))
+   \       0x1A   0xB124             CBZ.N    R4,??HAL_ADCEx_InjectedPollForConversion_2
+   \       0x1C   0x....'....        BL       HAL_GetTick
+   \       0x20   0x1B80             SUBS     R0,R0,R6
+   \       0x22   0x4284             CMP      R4,R0
+   \       0x24   0xD2F2             BCS.N    ??HAL_ADCEx_InjectedPollForConversion_0
+    413                {
+    414                  hadc->State= HAL_ADC_STATE_TIMEOUT;
+   \                     ??HAL_ADCEx_InjectedPollForConversion_2: (+1)
+   \       0x26   0xF105 0x003C      ADD      R0,R5,#+60
+   \       0x2A   0x2104             MOVS     R1,#+4
+   \       0x2C   0x6041             STR      R1,[R0, #+4]
+    415                  /* Process unlocked */
+    416                  __HAL_UNLOCK(hadc);
+   \       0x2E   0x2200             MOVS     R2,#+0
+   \       0x30   0x7002             STRB     R2,[R0, #+0]
+    417                  return HAL_TIMEOUT;
+   \       0x32   0x2003             MOVS     R0,#+3
+   \       0x34   0xBD70             POP      {R4-R6,PC}
+    418                }
+    419              }
+    420            }
+    421            
+    422            /* Clear injected group conversion flag */
+    423            __HAL_ADC_CLEAR_FLAG(hadc, ADC_FLAG_JSTRT | ADC_FLAG_JEOC);
+   \                     ??HAL_ADCEx_InjectedPollForConversion_1: (+1)
+   \       0x36   0xF06F 0x010C      MVN      R1,#+12
+   \       0x3A   0x6001             STR      R1,[R0, #+0]
+    424              
+    425            /* Update ADC state machine */
+    426            SET_BIT(hadc->State, HAL_ADC_STATE_INJ_EOC);
+   \       0x3C   0xF105 0x013C      ADD      R1,R5,#+60
+   \       0x40   0x6848             LDR      R0,[R1, #+4]
+   \       0x42   0xF440 0x5000      ORR      R0,R0,#0x2000
+   \       0x46   0x6048             STR      R0,[R1, #+4]
+    427            
+    428            /* Determine whether any further conversion upcoming on group injected      */
+    429            /* by external trigger, continuous mode or scan sequence on going.          */
+    430            /* Note: On STM32F4, there is no independent flag of end of sequence.       */
+    431            /*       The test of scan sequence on going is done either with scan        */
+    432            /*       sequence disabled or with end of conversion flag set to            */
+    433            /*       of end of sequence.                                                */
+    434            if(ADC_IS_SOFTWARE_START_INJECTED(hadc)                    &&
+    435               (HAL_IS_BIT_CLR(hadc->Instance->JSQR, ADC_JSQR_JL)  ||
+    436                HAL_IS_BIT_CLR(hadc->Instance->CR2, ADC_CR2_EOCS)    ) &&
+    437               (HAL_IS_BIT_CLR(hadc->Instance->CR1, ADC_CR1_JAUTO) &&
+    438                (ADC_IS_SOFTWARE_START_REGULAR(hadc)       &&
+    439                (hadc->Init.ContinuousConvMode == DISABLE)   )       )   )
+   \       0x48   0x6828             LDR      R0,[R5, #+0]
+   \       0x4A   0x6882             LDR      R2,[R0, #+8]
+   \       0x4C   0xF412 0x1F40      TST      R2,#0x300000
+   \       0x50   0xD11B             BNE.N    ??HAL_ADCEx_InjectedPollForConversion_3
+   \       0x52   0x6B82             LDR      R2,[R0, #+56]
+   \       0x54   0xF412 0x1F40      TST      R2,#0x300000
+   \       0x58   0xD002             BEQ.N    ??HAL_ADCEx_InjectedPollForConversion_4
+   \       0x5A   0x6882             LDR      R2,[R0, #+8]
+   \       0x5C   0x0553             LSLS     R3,R2,#+21
+   \       0x5E   0xD414             BMI.N    ??HAL_ADCEx_InjectedPollForConversion_3
+   \                     ??HAL_ADCEx_InjectedPollForConversion_4: (+1)
+   \       0x60   0x6842             LDR      R2,[R0, #+4]
+   \       0x62   0x0553             LSLS     R3,R2,#+21
+   \       0x64   0xD411             BMI.N    ??HAL_ADCEx_InjectedPollForConversion_3
+   \       0x66   0x6880             LDR      R0,[R0, #+8]
+   \       0x68   0xF010 0x5F40      TST      R0,#0x30000000
+   \       0x6C   0xBF04             ITT      EQ
+   \       0x6E   0x7E28             LDRBEQ   R0,[R5, #+24]
+   \       0x70   0x2800             CMPEQ    R0,#+0
+   \       0x72   0xD10A             BNE.N    ??HAL_ADCEx_InjectedPollForConversion_3
+    440            {
+    441              /* Set ADC state */
+    442              CLEAR_BIT(hadc->State, HAL_ADC_STATE_INJ_BUSY);
+   \       0x74   0x6848             LDR      R0,[R1, #+4]
+   \       0x76   0xF420 0x5080      BIC      R0,R0,#0x1000
+   \       0x7A   0x6048             STR      R0,[R1, #+4]
+    443              
+    444              if (HAL_IS_BIT_CLR(hadc->State, HAL_ADC_STATE_REG_BUSY))
+   \       0x7C   0x6848             LDR      R0,[R1, #+4]
+   \       0x7E   0x05C2             LSLS     R2,R0,#+23
+   \       0x80   0xD403             BMI.N    ??HAL_ADCEx_InjectedPollForConversion_3
+    445              { 
+    446                SET_BIT(hadc->State, HAL_ADC_STATE_READY);
+   \       0x82   0x6848             LDR      R0,[R1, #+4]
+   \       0x84   0xF040 0x0001      ORR      R0,R0,#0x1
+   \       0x88   0x6048             STR      R0,[R1, #+4]
+    447              }
+    448            }
+    449            
+    450            /* Return ADC state */
+    451            return HAL_OK;
+   \                     ??HAL_ADCEx_InjectedPollForConversion_3: (+1)
+   \       0x8A   0x2000             MOVS     R0,#+0
+   \       0x8C   0xBD70             POP      {R4-R6,PC}       ;; return
+    452          }      
+    453            
+    454          /**
+    455            * @brief  Stop conversion of injected channels, disable interruption of 
+    456            *         end-of-conversion. Disable ADC peripheral if no regular conversion
+    457            *         is on going.
+    458            * @note   If ADC must be disabled and if conversion is on going on 
+    459            *         regular group, function HAL_ADC_Stop must be used to stop both
+    460            *         injected and regular groups, and disable the ADC.
+    461            * @note   If injected group mode auto-injection is enabled,
+    462            *         function HAL_ADC_Stop must be used.
+    463            * @param  hadc ADC handle
+    464            * @retval None
+    465            */
+
+   \                                 In section .text, align 2, keep-with-next
+    466          HAL_StatusTypeDef HAL_ADCEx_InjectedStop_IT(ADC_HandleTypeDef* hadc)
+    467          {
+   \                     HAL_ADCEx_InjectedStop_IT: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+    468            HAL_StatusTypeDef tmp_hal_status = HAL_OK;
+    469            
+    470            /* Check the parameters */
+    471            assert_param(IS_ADC_ALL_INSTANCE(hadc->Instance));
+    472          
+    473            /* Process locked */
+    474            __HAL_LOCK(hadc);
+   \        0x2   0x....'....        BL       ?Subroutine7
+   \                     ??CrossCallReturnLabel_13: (+1)
+   \        0x6   0xD101             BNE.N    ??HAL_ADCEx_InjectedStop_IT_0
+   \        0x8   0x2002             MOVS     R0,#+2
+   \        0xA   0xBD30             POP      {R4,R5,PC}
+   \                     ??HAL_ADCEx_InjectedStop_IT_0: (+1)
+   \        0xC   0x2301             MOVS     R3,#+1
+   \        0xE   0x7013             STRB     R3,[R2, #+0]
+    475              
+    476            /* Stop potential conversion and disable ADC peripheral                     */
+    477            /* Conditioned to:                                                          */
+    478            /* - No conversion on the other group (regular group) is intended to        */
+    479            /*   continue (injected and regular groups stop conversion and ADC disable  */
+    480            /*   are common)                                                            */
+    481            /* - In case of auto-injection mode, HAL_ADC_Stop must be used.             */ 
+    482            if(((hadc->State & HAL_ADC_STATE_REG_BUSY) == RESET)  &&
+    483               HAL_IS_BIT_CLR(hadc->Instance->CR1, ADC_CR1_JAUTO)   )
+   \       0x10   0x6854             LDR      R4,[R2, #+4]
+   \       0x12   0x05E3             LSLS     R3,R4,#+23
+   \       0x14   0xD412             BMI.N    ??HAL_ADCEx_InjectedStop_IT_1
+   \       0x16   0x6803             LDR      R3,[R0, #+0]
+   \       0x18   0x685C             LDR      R4,[R3, #+4]
+   \       0x1A   0x0565             LSLS     R5,R4,#+21
+   \       0x1C   0xD40E             BMI.N    ??HAL_ADCEx_InjectedStop_IT_1
+    484            {
+    485              /* Stop potential conversion on going, on regular and injected groups */
+    486              /* Disable ADC peripheral */
+    487              __HAL_ADC_DISABLE(hadc);
+   \       0x1E   0x....'....        BL       ?Subroutine6
+    488              
+    489              /* Check if ADC is effectively disabled */
+    490              if(HAL_IS_BIT_CLR(hadc->Instance->CR2, ADC_CR2_ADON))
+   \                     ??CrossCallReturnLabel_11: (+1)
+   \       0x22   0x07DC             LSLS     R4,R3,#+31
+   \       0x24   0xD40C             BMI.N    ??CrossCallReturnLabel_15
+    491              {
+    492                /* Disable ADC end of conversion interrupt for injected channels */
+    493                __HAL_ADC_DISABLE_IT(hadc, ADC_IT_JEOC);
+   \       0x26   0x6843             LDR      R3,[R0, #+4]
+   \       0x28   0xF023 0x0380      BIC      R3,R3,#0x80
+   \       0x2C   0x6043             STR      R3,[R0, #+4]
+    494                
+    495                /* Set ADC state */
+    496                ADC_STATE_CLR_SET(hadc->State,
+    497                                  HAL_ADC_STATE_REG_BUSY | HAL_ADC_STATE_INJ_BUSY,
+    498                                  HAL_ADC_STATE_READY);
+   \       0x2E   0x6850             LDR      R0,[R2, #+4]
+   \       0x30   0xF420 0x5088      BIC      R0,R0,#0x1100
+   \       0x34   0xF040 0x0001      ORR      R0,R0,#0x1
+   \       0x38   0x6050             STR      R0,[R2, #+4]
+   \       0x3A   0xE001             B.N      ??CrossCallReturnLabel_15
+    499              }
+    500            }
+    501            else
+    502            {
+    503              /* Update ADC state machine to error */
+    504              SET_BIT(hadc->State, HAL_ADC_STATE_ERROR_CONFIG);
+   \                     ??HAL_ADCEx_InjectedStop_IT_1: (+1)
+   \       0x3C   0x....'....        BL       ?Subroutine8
+    505                
+    506              tmp_hal_status = HAL_ERROR;
+    507            }
+    508            
+    509            /* Process unlocked */
+    510            __HAL_UNLOCK(hadc);
+   \                     ??CrossCallReturnLabel_15: (+1)
+   \       0x40                      REQUIRE ?Subroutine0
+   \       0x40                      ;; // Fall through to label ?Subroutine0
+    511            
+    512            /* Return function status */
+    513            return tmp_hal_status;
+    514          }
+    515          
+    516          /**
+    517            * @brief  Gets the converted value from data register of injected channel.
+    518            * @param  hadc pointer to a ADC_HandleTypeDef structure that contains
+    519            *         the configuration information for the specified ADC.
+    520            * @param  InjectedRank the ADC injected rank.
+    521            *          This parameter can be one of the following values:
+    522            *            @arg ADC_INJECTED_RANK_1: Injected Channel1 selected
+    523            *            @arg ADC_INJECTED_RANK_2: Injected Channel2 selected
+    524            *            @arg ADC_INJECTED_RANK_3: Injected Channel3 selected
+    525            *            @arg ADC_INJECTED_RANK_4: Injected Channel4 selected
+    526            * @retval None
+    527            */
+
+   \                                 In section .text, align 4, keep-with-next
+    528          uint32_t HAL_ADCEx_InjectedGetValue(ADC_HandleTypeDef* hadc, uint32_t InjectedRank)
+    529          {
+   \                     HAL_ADCEx_InjectedGetValue: (+1)
+   \        0x0   0xB081             SUB      SP,SP,#+4
+    530            __IO uint32_t tmp = 0U;
+   \        0x2   0x2200             MOVS     R2,#+0
+   \        0x4   0x9200             STR      R2,[SP, #+0]
+    531            
+    532            /* Check the parameters */
+    533            assert_param(IS_ADC_INJECTED_RANK(InjectedRank));
+    534            
+    535            /* Clear injected group conversion flag to have similar behaviour as        */
+    536            /* regular group: reading data register also clears end of conversion flag. */
+    537            __HAL_ADC_CLEAR_FLAG(hadc, ADC_FLAG_JEOC);
+    538            
+    539            /* Return the selected ADC converted value */ 
+    540            switch(InjectedRank)
+   \        0x6   0x1E49             SUBS     R1,R1,#+1
+   \        0x8   0x6802             LDR      R2,[R0, #+0]
+   \        0xA   0xF06F 0x0004      MVN      R0,#+4
+   \        0xE   0x2903             CMP      R1,#+3
+   \       0x10   0x6010             STR      R0,[R2, #+0]
+   \       0x12   0xD80C             BHI.N    ??HAL_ADCEx_InjectedGetValue_1
+   \       0x14   0xE8DF 0xF001      TBB      [PC, R1]
+   \                     ??HAL_ADCEx_InjectedGetValue_0:
+   \       0x18   0x09 0x07          DC8      0x9,0x7,0x5,0x2
+
+   \              0x05 0x02
+    541            {  
+    542              case ADC_INJECTED_RANK_4:
+    543              {
+    544                tmp =  hadc->Instance->JDR4;
+   \                     ??HAL_ADCEx_InjectedGetValue_2: (+1)
+   \       0x1C   0x6C91             LDR      R1,[R2, #+72]
+   \       0x1E   0x9100             STR      R1,[SP, #+0]
+    545              }  
+    546              break;
+   \       0x20   0xE005             B.N      ??HAL_ADCEx_InjectedGetValue_1
+    547              case ADC_INJECTED_RANK_3: 
+    548              {  
+    549                tmp =  hadc->Instance->JDR3;
+   \                     ??HAL_ADCEx_InjectedGetValue_3: (+1)
+   \       0x22   0x6C50             LDR      R0,[R2, #+68]
+   \       0x24   0xE002             B.N      ??HAL_ADCEx_InjectedGetValue_4
+    550              }  
+    551              break;
+    552              case ADC_INJECTED_RANK_2: 
+    553              {  
+    554                tmp =  hadc->Instance->JDR2;
+   \                     ??HAL_ADCEx_InjectedGetValue_5: (+1)
+   \       0x26   0x6C10             LDR      R0,[R2, #+64]
+   \       0x28   0xE000             B.N      ??HAL_ADCEx_InjectedGetValue_4
+    555              }
+    556              break;
+    557              case ADC_INJECTED_RANK_1:
+    558              {
+    559                tmp =  hadc->Instance->JDR1;
+   \                     ??HAL_ADCEx_InjectedGetValue_6: (+1)
+   \       0x2A   0x6BD0             LDR      R0,[R2, #+60]
+   \                     ??HAL_ADCEx_InjectedGetValue_4: (+1)
+   \       0x2C   0x9000             STR      R0,[SP, #+0]
+    560              }
+    561              break;
+    562              default:
+    563              break;  
+    564            }
+    565            return tmp;
+   \                     ??HAL_ADCEx_InjectedGetValue_1: (+1)
+   \       0x2E   0x9800             LDR      R0,[SP, #+0]
+   \       0x30   0xB001             ADD      SP,SP,#+4
+   \       0x32   0x4770             BX       LR               ;; return
+    566          }
+    567          
+    568          /**
+    569            * @brief  Enables ADC DMA request after last transfer (Multi-ADC mode) and enables ADC peripheral
+    570            * 
+    571            * @note   Caution: This function must be used only with the ADC master.  
+    572            *
+    573            * @param  hadc pointer to a ADC_HandleTypeDef structure that contains
+    574            *         the configuration information for the specified ADC.
+    575            * @param  pData   Pointer to buffer in which transferred from ADC peripheral to memory will be stored. 
+    576            * @param  Length  The length of data to be transferred from ADC peripheral to memory.  
+    577            * @retval HAL status
+    578            */
+
+   \                                 In section .text, align 2, keep-with-next
+    579          HAL_StatusTypeDef HAL_ADCEx_MultiModeStart_DMA(ADC_HandleTypeDef* hadc, uint32_t* pData, uint32_t Length)
+    580          {
+   \                     HAL_ADCEx_MultiModeStart_DMA: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+   \        0x2   0x4604             MOV      R4,R0
+    581            __IO uint32_t counter = 0U;
+   \        0x4   0x2000             MOVS     R0,#+0
+   \        0x6   0x9000             STR      R0,[SP, #+0]
+    582            ADC_Common_TypeDef *tmpADC_Common;
+    583            
+    584            /* Check the parameters */
+    585            assert_param(IS_FUNCTIONAL_STATE(hadc->Init.ContinuousConvMode));
+    586            assert_param(IS_ADC_EXT_TRIG_EDGE(hadc->Init.ExternalTrigConvEdge));
+    587            assert_param(IS_FUNCTIONAL_STATE(hadc->Init.DMAContinuousRequests));
+    588            
+    589            /* Process locked */
+    590            __HAL_LOCK(hadc);
+   \        0x8   0xF104 0x0530      ADD      R5,R4,#+48
+   \        0xC   0x4613             MOV      R3,R2
+   \        0xE   0x7B28             LDRB     R0,[R5, #+12]
+   \       0x10   0x2801             CMP      R0,#+1
+   \       0x12   0xD101             BNE.N    ??HAL_ADCEx_MultiModeStart_DMA_0
+   \       0x14   0x2002             MOVS     R0,#+2
+   \       0x16   0xBDF2             POP      {R1,R4-R7,PC}
+   \                     ??HAL_ADCEx_MultiModeStart_DMA_0: (+1)
+   \       0x18   0x2001             MOVS     R0,#+1
+   \       0x1A   0x7328             STRB     R0,[R5, #+12]
+    591            
+    592            /* Check if ADC peripheral is disabled in order to enable it and wait during 
+    593               Tstab time the ADC's stabilization */
+    594            if((hadc->Instance->CR2 & ADC_CR2_ADON) != ADC_CR2_ADON)
+   \       0x1C   0x6820             LDR      R0,[R4, #+0]
+   \       0x1E   0x6882             LDR      R2,[R0, #+8]
+   \       0x20   0x07D6             LSLS     R6,R2,#+31
+   \       0x22   0xD412             BMI.N    ??HAL_ADCEx_MultiModeStart_DMA_1
+    595            {  
+    596              /* Enable the Peripheral */
+    597              __HAL_ADC_ENABLE(hadc);
+   \       0x24   0x6882             LDR      R2,[R0, #+8]
+    598              
+    599              /* Delay for temperature sensor stabilization time */
+    600              /* Compute number of CPU cycles to wait for */
+    601              counter = (ADC_STAB_DELAY_US * (SystemCoreClock / 1000000U));
+   \       0x26   0x....             LDR.N    R6,??DataTable9_4  ;; 0xf4240
+   \       0x28   0xF042 0x0201      ORR      R2,R2,#0x1
+   \       0x2C   0x6082             STR      R2,[R0, #+8]
+   \       0x2E   0x....             LDR.N    R0,??DataTable9_5
+   \       0x30   0x6802             LDR      R2,[R0, #+0]
+   \       0x32   0xFBB2 0xF6F6      UDIV     R6,R2,R6
+   \       0x36   0xEB06 0x0646      ADD      R6,R6,R6, LSL #+1
+   \       0x3A   0x9600             STR      R6,[SP, #+0]
+   \       0x3C   0xE002             B.N      ??HAL_ADCEx_MultiModeStart_DMA_2
+    602              while(counter != 0U)
+    603              {
+    604                counter--;
+   \                     ??HAL_ADCEx_MultiModeStart_DMA_3: (+1)
+   \       0x3E   0x9800             LDR      R0,[SP, #+0]
+   \       0x40   0x1E40             SUBS     R0,R0,#+1
+   \       0x42   0x9000             STR      R0,[SP, #+0]
+    605              }
+   \                     ??HAL_ADCEx_MultiModeStart_DMA_2: (+1)
+   \       0x44   0x9800             LDR      R0,[SP, #+0]
+   \       0x46   0x2800             CMP      R0,#+0
+   \       0x48   0xD1F9             BNE.N    ??HAL_ADCEx_MultiModeStart_DMA_3
+    606            }
+    607            
+    608            /* Start conversion if ADC is effectively enabled */
+    609            if(HAL_IS_BIT_SET(hadc->Instance->CR2, ADC_CR2_ADON))
+   \                     ??HAL_ADCEx_MultiModeStart_DMA_1: (+1)
+   \       0x4A   0x6822             LDR      R2,[R4, #+0]
+   \       0x4C   0x6890             LDR      R0,[R2, #+8]
+   \       0x4E   0x07C6             LSLS     R6,R0,#+31
+   \       0x50   0xD547             BPL.N    ??HAL_ADCEx_MultiModeStart_DMA_4
+    610            {
+    611              /* Set ADC state                                                          */
+    612              /* - Clear state bitfield related to regular group conversion results     */
+    613              /* - Set state bitfield related to regular group operation                */
+    614              ADC_STATE_CLR_SET(hadc->State,
+    615                                HAL_ADC_STATE_READY | HAL_ADC_STATE_REG_EOC | HAL_ADC_STATE_REG_OVR,
+    616                                HAL_ADC_STATE_REG_BUSY);
+   \       0x52   0x692F             LDR      R7,[R5, #+16]
+   \       0x54   0x....             LDR.N    R0,??DataTable9_6  ;; 0xfffff9fe
+   \       0x56   0x4007             ANDS     R7,R0,R7
+   \       0x58   0xF447 0x7780      ORR      R7,R7,#0x100
+   \       0x5C   0x612F             STR      R7,[R5, #+16]
+    617              
+    618              /* If conversions on group regular are also triggering group injected,    */
+    619              /* update ADC state.                                                      */
+    620              if (READ_BIT(hadc->Instance->CR1, ADC_CR1_JAUTO) != RESET)
+   \       0x5E   0x6850             LDR      R0,[R2, #+4]
+   \       0x60   0x0542             LSLS     R2,R0,#+21
+   \       0x62   0xD505             BPL.N    ??HAL_ADCEx_MultiModeStart_DMA_5
+    621              {
+    622                ADC_STATE_CLR_SET(hadc->State, HAL_ADC_STATE_INJ_EOC, HAL_ADC_STATE_INJ_BUSY);  
+   \       0x64   0x6928             LDR      R0,[R5, #+16]
+   \       0x66   0xF420 0x5000      BIC      R0,R0,#0x2000
+   \       0x6A   0xF440 0x5080      ORR      R0,R0,#0x1000
+   \       0x6E   0x6128             STR      R0,[R5, #+16]
+    623              }
+    624              
+    625              /* State machine update: Check if an injected conversion is ongoing */
+    626              if (HAL_IS_BIT_SET(hadc->State, HAL_ADC_STATE_INJ_BUSY))
+   \                     ??HAL_ADCEx_MultiModeStart_DMA_5: (+1)
+   \       0x70   0x6928             LDR      R0,[R5, #+16]
+   \       0x72   0x04C2             LSLS     R2,R0,#+19
+   \       0x74   0xBF46             ITTE     MI
+   \       0x76   0x6968             LDRMI    R0,[R5, #+20]
+   \       0x78   0xF020 0x0006      BICMI    R0,R0,#0x6
+   \       0x7C   0x2000             MOVPL    R0,#+0
+    627              {
+    628                /* Reset ADC error code fields related to conversions on group regular */
+    629                CLEAR_BIT(hadc->ErrorCode, (HAL_ADC_ERROR_OVR | HAL_ADC_ERROR_DMA));         
+    630              }
+    631              else
+    632              {
+    633                /* Reset ADC all error code fields */
+    634                ADC_CLEAR_ERRORCODE(hadc);
+   \       0x7E   0x6168             STR      R0,[R5, #+20]
+    635              }
+    636              
+    637              /* Process unlocked */
+    638              /* Unlock before starting ADC conversions: in case of potential           */
+    639              /* interruption, to let the process to ADC IRQ Handler.                   */
+    640              __HAL_UNLOCK(hadc);
+   \       0x80   0x2200             MOVS     R2,#+0
+   \       0x82   0x732A             STRB     R2,[R5, #+12]
+    641              
+    642              /* Set the DMA transfer complete callback */
+    643              hadc->DMA_Handle->XferCpltCallback = ADC_MultiModeDMAConvCplt;
+   \       0x84   0x....'....        ADR.W    R0,ADC_MultiModeDMAConvCplt
+   \       0x88   0x68AA             LDR      R2,[R5, #+8]
+   \       0x8A   0x63D0             STR      R0,[R2, #+60]
+    644              
+    645              /* Set the DMA half transfer complete callback */
+    646              hadc->DMA_Handle->XferHalfCpltCallback = ADC_MultiModeDMAHalfConvCplt;
+   \       0x8C   0x68AA             LDR      R2,[R5, #+8]
+   \       0x8E   0x....'....        ADR.W    R0,ADC_MultiModeDMAHalfConvCplt
+   \       0x92   0x6410             STR      R0,[R2, #+64]
+    647              
+    648              /* Set the DMA error callback */
+    649              hadc->DMA_Handle->XferErrorCallback = ADC_MultiModeDMAError ;
+   \       0x94   0x68AA             LDR      R2,[R5, #+8]
+   \       0x96   0x....'....        ADR.W    R0,ADC_MultiModeDMAError
+   \       0x9A   0x64D0             STR      R0,[R2, #+76]
+    650              
+    651              /* Manage ADC and DMA start: ADC overrun interruption, DMA start, ADC     */
+    652              /* start (in case of SW start):                                           */
+    653              
+    654              /* Clear regular group conversion flag and overrun flag */
+    655              /* (To ensure of no unknown state from potential previous ADC operations) */
+    656              __HAL_ADC_CLEAR_FLAG(hadc, ADC_FLAG_EOC);
+   \       0x9C   0xF06F 0x0002      MVN      R0,#+2
+   \       0xA0   0x6826             LDR      R6,[R4, #+0]
+   \       0xA2   0x6030             STR      R0,[R6, #+0]
+    657          
+    658              /* Enable ADC overrun interrupt */
+    659              __HAL_ADC_ENABLE_IT(hadc, ADC_IT_OVR);
+   \       0xA4   0x6820             LDR      R0,[R4, #+0]
+   \       0xA6   0x6842             LDR      R2,[R0, #+4]
+   \       0xA8   0xF042 0x6280      ORR      R2,R2,#0x4000000
+   \       0xAC   0x6042             STR      R2,[R0, #+4]
+    660          
+    661              /* Pointer to the common control register to which is belonging hadc    */
+    662              /* (Depending on STM32F4 product, there may be up to 3 ADC and 1 common */
+    663              /* control register)                                                    */
+    664              tmpADC_Common = ADC_COMMON_REGISTER(hadc);
+    665          
+    666              if (hadc->Init.DMAContinuousRequests != DISABLE)
+   \       0xAE   0x7828             LDRB     R0,[R5, #+0]
+   \       0xB0   0x....             LDR.N    R2,??DataTable9  ;; 0x40012304
+   \       0xB2   0xB120             CBZ.N    R0,??HAL_ADCEx_MultiModeStart_DMA_6
+    667              {
+    668                /* Enable the selected ADC DMA request after last transfer */
+    669                tmpADC_Common->CCR |= ADC_CCR_DDS;
+   \       0xB4   0x6816             LDR      R6,[R2, #+0]
+   \       0xB6   0xF446 0x5600      ORR      R6,R6,#0x2000
+   \       0xBA   0x6016             STR      R6,[R2, #+0]
+   \       0xBC   0xE003             B.N      ??HAL_ADCEx_MultiModeStart_DMA_7
+    670              }
+    671              else
+    672              {
+    673                /* Disable the selected ADC EOC rising on each regular channel conversion */
+    674                tmpADC_Common->CCR &= ~ADC_CCR_DDS;
+   \                     ??HAL_ADCEx_MultiModeStart_DMA_6: (+1)
+   \       0xBE   0x6810             LDR      R0,[R2, #+0]
+   \       0xC0   0xF420 0x5000      BIC      R0,R0,#0x2000
+   \       0xC4   0x6010             STR      R0,[R2, #+0]
+    675              }
+    676              
+    677              /* Enable the DMA Stream */
+    678              HAL_DMA_Start_IT(hadc->DMA_Handle, (uint32_t)&tmpADC_Common->CDR, (uint32_t)pData, Length);
+   \                     ??HAL_ADCEx_MultiModeStart_DMA_7: (+1)
+   \       0xC6   0x460A             MOV      R2,R1
+   \       0xC8   0x68A8             LDR      R0,[R5, #+8]
+   \       0xCA   0x....             LDR.N    R1,??DataTable9_7  ;; 0x40012308
+   \       0xCC   0x....'....        BL       HAL_DMA_Start_IT
+    679              
+    680              /* if no external trigger present enable software conversion of regular channels */
+    681              if((hadc->Instance->CR2 & ADC_CR2_EXTEN) == RESET) 
+   \       0xD0   0x6820             LDR      R0,[R4, #+0]
+   \       0xD2   0x6881             LDR      R1,[R0, #+8]
+   \       0xD4   0xF011 0x5F40      TST      R1,#0x30000000
+   \       0xD8   0xD103             BNE.N    ??HAL_ADCEx_MultiModeStart_DMA_4
+    682              {
+    683                /* Enable the selected ADC software conversion for regular group */
+    684                hadc->Instance->CR2 |= (uint32_t)ADC_CR2_SWSTART;
+   \       0xDA   0x6881             LDR      R1,[R0, #+8]
+   \       0xDC   0xF041 0x4180      ORR      R1,R1,#0x40000000
+   \       0xE0   0x6081             STR      R1,[R0, #+8]
+    685              }
+    686            }
+    687            
+    688            /* Return function status */
+    689            return HAL_OK;
+   \                     ??HAL_ADCEx_MultiModeStart_DMA_4: (+1)
+   \       0xE2   0x2000             MOVS     R0,#+0
+   \       0xE4   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    690          }
+    691          
+    692          /**
+    693            * @brief  Disables ADC DMA (multi-ADC mode) and disables ADC peripheral    
+    694            * @param  hadc pointer to a ADC_HandleTypeDef structure that contains
+    695            *         the configuration information for the specified ADC.
+    696            * @retval HAL status
+    697            */
+
+   \                                 In section .text, align 2, keep-with-next
+    698          HAL_StatusTypeDef HAL_ADCEx_MultiModeStop_DMA(ADC_HandleTypeDef* hadc)
+    699          {
+   \                     HAL_ADCEx_MultiModeStop_DMA: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+   \        0x2   0x4605             MOV      R5,R0
+    700            HAL_StatusTypeDef tmp_hal_status = HAL_OK;
+    701            ADC_Common_TypeDef *tmpADC_Common;
+    702            
+    703            /* Check the parameters */
+    704            assert_param(IS_ADC_ALL_INSTANCE(hadc->Instance));
+    705            
+    706            /* Process locked */
+    707            __HAL_LOCK(hadc);
+   \        0x4   0xF105 0x043C      ADD      R4,R5,#+60
+   \        0x8   0x2000             MOVS     R0,#+0
+   \        0xA   0x7821             LDRB     R1,[R4, #+0]
+   \        0xC   0x2901             CMP      R1,#+1
+   \        0xE   0xD101             BNE.N    ??HAL_ADCEx_MultiModeStop_DMA_0
+   \       0x10   0x2002             MOVS     R0,#+2
+   \       0x12   0xBD32             POP      {R1,R4,R5,PC}
+   \                     ??HAL_ADCEx_MultiModeStop_DMA_0: (+1)
+   \       0x14   0x2101             MOVS     R1,#+1
+   \       0x16   0x7021             STRB     R1,[R4, #+0]
+    708            
+    709            /* Stop potential conversion on going, on regular and injected groups */
+    710            /* Disable ADC peripheral */
+    711            __HAL_ADC_DISABLE(hadc);
+   \       0x18   0x6829             LDR      R1,[R5, #+0]
+   \       0x1A   0x688A             LDR      R2,[R1, #+8]
+   \       0x1C   0x0852             LSRS     R2,R2,#+1
+   \       0x1E   0x0052             LSLS     R2,R2,#+1
+   \       0x20   0x608A             STR      R2,[R1, #+8]
+    712          
+    713            /* Pointer to the common control register to which is belonging hadc    */
+    714            /* (Depending on STM32F4 product, there may be up to 3 ADC and 1 common */
+    715            /* control register)                                                    */
+    716            tmpADC_Common = ADC_COMMON_REGISTER(hadc);
+    717          
+    718            /* Check if ADC is effectively disabled */
+    719            if(HAL_IS_BIT_CLR(hadc->Instance->CR2, ADC_CR2_ADON))
+   \       0x22   0x6829             LDR      R1,[R5, #+0]
+   \       0x24   0x688A             LDR      R2,[R1, #+8]
+   \       0x26   0x07D1             LSLS     R1,R2,#+31
+   \       0x28   0xD412             BMI.N    ??HAL_ADCEx_MultiModeStop_DMA_1
+    720            {
+    721              /* Disable the selected ADC DMA mode for multimode */
+    722              tmpADC_Common->CCR &= ~ADC_CCR_DDS;
+   \       0x2A   0x....             LDR.N    R0,??DataTable9  ;; 0x40012304
+   \       0x2C   0x6802             LDR      R2,[R0, #+0]
+   \       0x2E   0xF422 0x5200      BIC      R2,R2,#0x2000
+   \       0x32   0x6002             STR      R2,[R0, #+0]
+    723              
+    724              /* Disable the DMA channel (in case of DMA in circular mode or stop while */
+    725              /* DMA transfer is on going)                                              */
+    726              tmp_hal_status = HAL_DMA_Abort(hadc->DMA_Handle);
+   \       0x34   0x6BA8             LDR      R0,[R5, #+56]
+   \       0x36   0x....'....        BL       HAL_DMA_Abort
+    727              
+    728              /* Disable ADC overrun interrupt */
+    729              __HAL_ADC_DISABLE_IT(hadc, ADC_IT_OVR);
+   \       0x3A   0x6829             LDR      R1,[R5, #+0]
+   \       0x3C   0x684A             LDR      R2,[R1, #+4]
+   \       0x3E   0xF022 0x6280      BIC      R2,R2,#0x4000000
+   \       0x42   0x604A             STR      R2,[R1, #+4]
+    730              
+    731              /* Set ADC state */
+    732              ADC_STATE_CLR_SET(hadc->State,
+    733                                HAL_ADC_STATE_REG_BUSY | HAL_ADC_STATE_INJ_BUSY,
+    734                                HAL_ADC_STATE_READY);
+   \       0x44   0x6861             LDR      R1,[R4, #+4]
+   \       0x46   0xF421 0x5188      BIC      R1,R1,#0x1100
+   \       0x4A   0xF041 0x0101      ORR      R1,R1,#0x1
+   \       0x4E   0x6061             STR      R1,[R4, #+4]
+    735            }
+    736            
+    737            /* Process unlocked */
+    738            __HAL_UNLOCK(hadc);
+   \                     ??HAL_ADCEx_MultiModeStop_DMA_1: (+1)
+   \       0x50   0x2100             MOVS     R1,#+0
+   \       0x52   0x7021             STRB     R1,[R4, #+0]
+    739            
+    740            /* Return function status */
+    741            return tmp_hal_status;
+   \       0x54   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    742          }
+    743          
+    744          /**
+    745            * @brief  Returns the last ADC1, ADC2 and ADC3 regular conversions results 
+    746            *         data in the selected multi mode.
+    747            * @param  hadc pointer to a ADC_HandleTypeDef structure that contains
+    748            *         the configuration information for the specified ADC.
+    749            * @retval The converted data value.
+    750            */
+
+   \                                 In section .text, align 2, keep-with-next
+    751          uint32_t HAL_ADCEx_MultiModeGetValue(ADC_HandleTypeDef* hadc)
+    752          {
+    753            ADC_Common_TypeDef *tmpADC_Common;
+    754          
+    755            /* Pointer to the common control register to which is belonging hadc    */
+    756            /* (Depending on STM32F4 product, there may be up to 3 ADC and 1 common */
+    757            /* control register)                                                    */
+    758            tmpADC_Common = ADC_COMMON_REGISTER(hadc);
+    759          
+    760            /* Return the multi mode conversion value */
+    761            return tmpADC_Common->CDR;
+   \                     HAL_ADCEx_MultiModeGetValue: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable9_7  ;; 0x40012308
+   \        0x2   0x6800             LDR      R0,[R0, #+0]
+   \        0x4   0x4770             BX       LR               ;; return
+    762          }
+    763          
+    764          /**
+    765            * @brief  Injected conversion complete callback in non blocking mode 
+    766            * @param  hadc pointer to a ADC_HandleTypeDef structure that contains
+    767            *         the configuration information for the specified ADC.
+    768            * @retval None
+    769            */
+
+   \                                 In section .text, align 2
+    770          __weak void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef* hadc)
+    771          {
+    772            /* Prevent unused argument(s) compilation warning */
+    773            UNUSED(hadc);
+    774            /* NOTE : This function Should not be modified, when the callback is needed,
+    775                      the HAL_ADC_InjectedConvCpltCallback could be implemented in the user file
+    776             */
+    777          }
+   \                     HAL_ADCEx_InjectedConvCpltCallback: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+    778          
+    779          /**
+    780            * @brief  Configures for the selected ADC injected channel its corresponding
+    781            *         rank in the sequencer and its sample time.
+    782            * @param  hadc pointer to a ADC_HandleTypeDef structure that contains
+    783            *         the configuration information for the specified ADC.
+    784            * @param  sConfigInjected ADC configuration structure for injected channel. 
+    785            * @retval None
+    786            */
+
+   \                                 In section .text, align 2, keep-with-next
+    787          HAL_StatusTypeDef HAL_ADCEx_InjectedConfigChannel(ADC_HandleTypeDef* hadc, ADC_InjectionConfTypeDef* sConfigInjected)
+    788          {
+   \                     HAL_ADCEx_InjectedConfigChannel: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+    789            
+    790          #ifdef USE_FULL_ASSERT  
+    791            uint32_t tmp = 0U;
+    792            
+    793          #endif /* USE_FULL_ASSERT  */
+    794          
+    795            ADC_Common_TypeDef *tmpADC_Common;
+    796          
+    797            /* Check the parameters */
+    798            assert_param(IS_ADC_CHANNEL(sConfigInjected->InjectedChannel));
+    799            assert_param(IS_ADC_INJECTED_RANK(sConfigInjected->InjectedRank));
+    800            assert_param(IS_ADC_SAMPLE_TIME(sConfigInjected->InjectedSamplingTime));
+    801            assert_param(IS_ADC_EXT_INJEC_TRIG(sConfigInjected->ExternalTrigInjecConv));
+    802            assert_param(IS_ADC_INJECTED_LENGTH(sConfigInjected->InjectedNbrOfConversion));
+    803            assert_param(IS_FUNCTIONAL_STATE(sConfigInjected->AutoInjectedConv));
+    804            assert_param(IS_FUNCTIONAL_STATE(sConfigInjected->InjectedDiscontinuousConvMode));
+    805          
+    806          #ifdef USE_FULL_ASSERT
+    807            tmp = ADC_GET_RESOLUTION(hadc);
+    808            assert_param(IS_ADC_RANGE(tmp, sConfigInjected->InjectedOffset));
+    809          #endif /* USE_FULL_ASSERT  */
+    810          
+    811            if(sConfigInjected->ExternalTrigInjecConv != ADC_INJECTED_SOFTWARE_START)
+    812            {
+    813              assert_param(IS_ADC_EXT_INJEC_TRIG_EDGE(sConfigInjected->ExternalTrigInjecConvEdge));
+    814            }
+    815          
+    816            /* Process locked */
+    817            __HAL_LOCK(hadc);
+   \        0x2   0xF890 0x203C      LDRB     R2,[R0, #+60]
+   \        0x6   0x2A01             CMP      R2,#+1
+   \        0x8   0xD101             BNE.N    ??HAL_ADCEx_InjectedConfigChannel_0
+   \        0xA   0x2002             MOVS     R0,#+2
+   \        0xC   0xBD70             POP      {R4-R6,PC}
+   \                     ??HAL_ADCEx_InjectedConfigChannel_0: (+1)
+   \        0xE   0x2201             MOVS     R2,#+1
+   \       0x10   0xF880 0x203C      STRB     R2,[R0, #+60]
+    818            
+    819            /* if ADC_Channel_10 ... ADC_Channel_18 is selected */
+    820            if (sConfigInjected->InjectedChannel > ADC_CHANNEL_9)
+   \       0x14   0x2407             MOVS     R4,#+7
+   \       0x16   0x680A             LDR      R2,[R1, #+0]
+   \       0x18   0x6803             LDR      R3,[R0, #+0]
+   \       0x1A   0x2A0A             CMP      R2,#+10
+   \       0x1C   0xD312             BCC.N    ??HAL_ADCEx_InjectedConfigChannel_1
+    821            {
+    822              /* Clear the old sample time */
+    823              hadc->Instance->SMPR1 &= ~ADC_SMPR1(ADC_SMPR1_SMP10, sConfigInjected->InjectedChannel);
+   \       0x1E   0x3A0A             SUBS     R2,R2,#+10
+   \       0x20   0x68DD             LDR      R5,[R3, #+12]
+   \       0x22   0xEB02 0x0242      ADD      R2,R2,R2, LSL #+1
+   \       0x26   0x4094             LSLS     R4,R4,R2
+   \       0x28   0xEA25 0x0404      BIC      R4,R5,R4
+   \       0x2C   0x60DC             STR      R4,[R3, #+12]
+    824              
+    825              /* Set the new sample time */
+    826              hadc->Instance->SMPR1 |= ADC_SMPR1(sConfigInjected->InjectedSamplingTime, sConfigInjected->InjectedChannel);
+   \       0x2E   0x68DA             LDR      R2,[R3, #+12]
+   \       0x30   0x680D             LDR      R5,[R1, #+0]
+   \       0x32   0x688C             LDR      R4,[R1, #+8]
+   \       0x34   0xF1A5 0x060A      SUB      R6,R5,#+10
+   \       0x38   0xEB06 0x0646      ADD      R6,R6,R6, LSL #+1
+   \       0x3C   0x40B4             LSLS     R4,R4,R6
+   \       0x3E   0x4322             ORRS     R2,R4,R2
+   \       0x40   0x60DA             STR      R2,[R3, #+12]
+   \       0x42   0xE00F             B.N      ??HAL_ADCEx_InjectedConfigChannel_2
+    827            }
+    828            else /* ADC_Channel include in ADC_Channel_[0..9] */
+    829            {
+    830              /* Clear the old sample time */
+    831              hadc->Instance->SMPR2 &= ~ADC_SMPR2(ADC_SMPR2_SMP0, sConfigInjected->InjectedChannel);
+   \                     ??HAL_ADCEx_InjectedConfigChannel_1: (+1)
+   \       0x44   0x691D             LDR      R5,[R3, #+16]
+   \       0x46   0xEB02 0x0242      ADD      R2,R2,R2, LSL #+1
+   \       0x4A   0xFA04 0xF202      LSL      R2,R4,R2
+   \       0x4E   0xEA25 0x0202      BIC      R2,R5,R2
+   \       0x52   0x611A             STR      R2,[R3, #+16]
+    832              
+    833              /* Set the new sample time */
+    834              hadc->Instance->SMPR2 |= ADC_SMPR2(sConfigInjected->InjectedSamplingTime, sConfigInjected->InjectedChannel);
+   \       0x54   0x691A             LDR      R2,[R3, #+16]
+   \       0x56   0x680D             LDR      R5,[R1, #+0]
+   \       0x58   0x688C             LDR      R4,[R1, #+8]
+   \       0x5A   0xEB05 0x0545      ADD      R5,R5,R5, LSL #+1
+   \       0x5E   0x40AC             LSLS     R4,R4,R5
+   \       0x60   0x4322             ORRS     R2,R4,R2
+   \       0x62   0x611A             STR      R2,[R3, #+16]
+    835            }
+    836            
+    837            /*---------------------------- ADCx JSQR Configuration -----------------*/
+    838            hadc->Instance->JSQR &= ~(ADC_JSQR_JL);
+    839            hadc->Instance->JSQR |=  ADC_SQR1(sConfigInjected->InjectedNbrOfConversion);
+    840            
+    841            /* Rank configuration */
+    842            
+    843            /* Clear the old SQx bits for the selected rank */
+    844            hadc->Instance->JSQR &= ~ADC_JSQR(ADC_JSQR_JSQ1, sConfigInjected->InjectedRank,sConfigInjected->InjectedNbrOfConversion);
+   \                     ??HAL_ADCEx_InjectedConfigChannel_2: (+1)
+   \       0x64   0x251F             MOVS     R5,#+31
+   \       0x66   0x6B9A             LDR      R2,[R3, #+56]
+   \       0x68   0xF422 0x1240      BIC      R2,R2,#0x300000
+   \       0x6C   0x639A             STR      R2,[R3, #+56]
+   \       0x6E   0x6B9A             LDR      R2,[R3, #+56]
+   \       0x70   0x690C             LDR      R4,[R1, #+16]
+   \       0x72   0x1E64             SUBS     R4,R4,#+1
+   \       0x74   0xEA42 0x5204      ORR      R2,R2,R4, LSL #+20
+   \       0x78   0x639A             STR      R2,[R3, #+56]
+   \       0x7A   0x6B9C             LDR      R4,[R3, #+56]
+   \       0x7C   0x684E             LDR      R6,[R1, #+4]
+   \       0x7E   0x690A             LDR      R2,[R1, #+16]
+   \       0x80   0x....'....        BL       ?Subroutine9
+   \                     ??CrossCallReturnLabel_16: (+1)
+   \       0x84   0x43AC             BICS     R4,R4,R5
+   \       0x86   0x639C             STR      R4,[R3, #+56]
+    845             
+    846            /* Set the SQx bits for the selected rank */
+    847            hadc->Instance->JSQR |= ADC_JSQR(sConfigInjected->InjectedChannel, sConfigInjected->InjectedRank,sConfigInjected->InjectedNbrOfConversion);
+   \       0x88   0x6B9C             LDR      R4,[R3, #+56]
+   \       0x8A   0x684E             LDR      R6,[R1, #+4]
+   \       0x8C   0x690A             LDR      R2,[R1, #+16]
+   \       0x8E   0x880D             LDRH     R5,[R1, #+0]
+   \       0x90   0x....'....        BL       ?Subroutine9
+   \                     ??CrossCallReturnLabel_17: (+1)
+   \       0x94   0x432C             ORRS     R4,R5,R4
+   \       0x96   0x639C             STR      R4,[R3, #+56]
+    848          
+    849            /* Enable external trigger if trigger selection is different of software  */
+    850            /* start.                                                                 */
+    851            /* Note: This configuration keeps the hardware feature of parameter       */
+    852            /*       ExternalTrigConvEdge "trigger edge none" equivalent to           */
+    853            /*       software start.                                                  */ 
+    854            if(sConfigInjected->ExternalTrigInjecConv != ADC_INJECTED_SOFTWARE_START)
+   \       0x98   0x698A             LDR      R2,[R1, #+24]
+   \       0x9A   0x....             LDR.N    R4,??DataTable9_8  ;; 0xf0001
+   \       0x9C   0x42A2             CMP      R2,R4
+   \       0x9E   0x689A             LDR      R2,[R3, #+8]
+   \       0xA0   0xF422 0x2270      BIC      R2,R2,#0xF0000
+   \       0xA4   0x609A             STR      R2,[R3, #+8]
+   \       0xA6   0xD00C             BEQ.N    ??HAL_ADCEx_InjectedConfigChannel_3
+    855            {  
+    856              /* Select external trigger to start conversion */
+    857              hadc->Instance->CR2 &= ~(ADC_CR2_JEXTSEL);
+    858              hadc->Instance->CR2 |=  sConfigInjected->ExternalTrigInjecConv;
+   \       0xA8   0x689C             LDR      R4,[R3, #+8]
+   \       0xAA   0x698A             LDR      R2,[R1, #+24]
+   \       0xAC   0x4314             ORRS     R4,R2,R4
+   \       0xAE   0x609C             STR      R4,[R3, #+8]
+    859              
+    860              /* Select external trigger polarity */
+    861              hadc->Instance->CR2 &= ~(ADC_CR2_JEXTEN);
+   \       0xB0   0x689C             LDR      R4,[R3, #+8]
+   \       0xB2   0xF424 0x1440      BIC      R4,R4,#0x300000
+   \       0xB6   0x609C             STR      R4,[R3, #+8]
+    862              hadc->Instance->CR2 |= sConfigInjected->ExternalTrigInjecConvEdge;
+   \       0xB8   0x689C             LDR      R4,[R3, #+8]
+   \       0xBA   0x69CA             LDR      R2,[R1, #+28]
+   \       0xBC   0x4314             ORRS     R4,R2,R4
+   \       0xBE   0x609C             STR      R4,[R3, #+8]
+   \       0xC0   0xE003             B.N      ??HAL_ADCEx_InjectedConfigChannel_4
+    863            }
+    864            else
+    865            {
+    866              /* Reset the external trigger */
+    867              hadc->Instance->CR2 &= ~(ADC_CR2_JEXTSEL);
+    868              hadc->Instance->CR2 &= ~(ADC_CR2_JEXTEN);  
+   \                     ??HAL_ADCEx_InjectedConfigChannel_3: (+1)
+   \       0xC2   0x689A             LDR      R2,[R3, #+8]
+   \       0xC4   0xF422 0x1240      BIC      R2,R2,#0x300000
+   \       0xC8   0x609A             STR      R2,[R3, #+8]
+    869            }
+    870            
+    871            if (sConfigInjected->AutoInjectedConv != DISABLE)
+   \                     ??HAL_ADCEx_InjectedConfigChannel_4: (+1)
+   \       0xCA   0x7D4A             LDRB     R2,[R1, #+21]
+   \       0xCC   0x2A00             CMP      R2,#+0
+   \       0xCE   0x685A             LDR      R2,[R3, #+4]
+   \       0xD0   0xBF14             ITE      NE
+   \       0xD2   0xF442 0x6280      ORRNE    R2,R2,#0x400
+   \       0xD6   0xF422 0x6280      BICEQ    R2,R2,#0x400
+    872            {
+    873              /* Enable the selected ADC automatic injected group conversion */
+    874              hadc->Instance->CR1 |= ADC_CR1_JAUTO;
+    875            }
+    876            else
+    877            {
+    878              /* Disable the selected ADC automatic injected group conversion */
+    879              hadc->Instance->CR1 &= ~(ADC_CR1_JAUTO);
+   \       0xDA   0x605A             STR      R2,[R3, #+4]
+    880            }
+    881            
+    882            if (sConfigInjected->InjectedDiscontinuousConvMode != DISABLE)
+   \       0xDC   0x7D0A             LDRB     R2,[R1, #+20]
+   \       0xDE   0x2A00             CMP      R2,#+0
+   \       0xE0   0x685A             LDR      R2,[R3, #+4]
+   \       0xE2   0xBF14             ITE      NE
+   \       0xE4   0xF442 0x5280      ORRNE    R2,R2,#0x1000
+   \       0xE8   0xF422 0x5280      BICEQ    R2,R2,#0x1000
+    883            {
+    884              /* Enable the selected ADC injected discontinuous mode */
+    885              hadc->Instance->CR1 |= ADC_CR1_JDISCEN;
+    886            }
+    887            else
+    888            {
+    889              /* Disable the selected ADC injected discontinuous mode */
+    890              hadc->Instance->CR1 &= ~(ADC_CR1_JDISCEN);
+   \       0xEC   0x605A             STR      R2,[R3, #+4]
+    891            }
+    892            
+    893            switch(sConfigInjected->InjectedRank)
+   \       0xEE   0x684A             LDR      R2,[R1, #+4]
+   \       0xF0   0x2A01             CMP      R2,#+1
+   \       0xF2   0xD004             BEQ.N    ??HAL_ADCEx_InjectedConfigChannel_5
+   \       0xF4   0xD31E             BCC.N    ??HAL_ADCEx_InjectedConfigChannel_6
+   \       0xF6   0x2A03             CMP      R2,#+3
+   \       0xF8   0xD013             BEQ.N    ??HAL_ADCEx_InjectedConfigChannel_7
+   \       0xFA   0xD309             BCC.N    ??HAL_ADCEx_InjectedConfigChannel_8
+   \       0xFC   0xE01A             B.N      ??HAL_ADCEx_InjectedConfigChannel_6
+    894            {
+    895              case 1U:
+    896                /* Set injected channel 1 offset */
+    897                hadc->Instance->JOFR1 &= ~(ADC_JOFR1_JOFFSET1);
+   \                     ??HAL_ADCEx_InjectedConfigChannel_5: (+1)
+   \       0xFE   0x695C             LDR      R4,[R3, #+20]
+   \      0x100   0x0B24             LSRS     R4,R4,#+12
+   \      0x102   0x0324             LSLS     R4,R4,#+12
+   \      0x104   0x615C             STR      R4,[R3, #+20]
+    898                hadc->Instance->JOFR1 |= sConfigInjected->InjectedOffset;
+   \      0x106   0x695C             LDR      R4,[R3, #+20]
+   \      0x108   0x68CA             LDR      R2,[R1, #+12]
+   \      0x10A   0x4314             ORRS     R4,R2,R4
+   \      0x10C   0x615C             STR      R4,[R3, #+20]
+    899                break;
+   \      0x10E   0xE019             B.N      ??HAL_ADCEx_InjectedConfigChannel_9
+    900              case 2U:
+    901                /* Set injected channel 2 offset */
+    902                hadc->Instance->JOFR2 &= ~(ADC_JOFR2_JOFFSET2);
+   \                     ??HAL_ADCEx_InjectedConfigChannel_8: (+1)
+   \      0x110   0x699A             LDR      R2,[R3, #+24]
+   \      0x112   0x0B12             LSRS     R2,R2,#+12
+   \      0x114   0x0312             LSLS     R2,R2,#+12
+   \      0x116   0x619A             STR      R2,[R3, #+24]
+    903                hadc->Instance->JOFR2 |= sConfigInjected->InjectedOffset;
+   \      0x118   0x699C             LDR      R4,[R3, #+24]
+   \      0x11A   0x68CA             LDR      R2,[R1, #+12]
+   \      0x11C   0x4314             ORRS     R4,R2,R4
+   \      0x11E   0x619C             STR      R4,[R3, #+24]
+    904                break;
+   \      0x120   0xE010             B.N      ??HAL_ADCEx_InjectedConfigChannel_9
+    905              case 3U:
+    906                /* Set injected channel 3 offset */
+    907                hadc->Instance->JOFR3 &= ~(ADC_JOFR3_JOFFSET3);
+   \                     ??HAL_ADCEx_InjectedConfigChannel_7: (+1)
+   \      0x122   0x69DA             LDR      R2,[R3, #+28]
+   \      0x124   0x0B12             LSRS     R2,R2,#+12
+   \      0x126   0x0312             LSLS     R2,R2,#+12
+   \      0x128   0x61DA             STR      R2,[R3, #+28]
+    908                hadc->Instance->JOFR3 |= sConfigInjected->InjectedOffset;
+   \      0x12A   0x69DC             LDR      R4,[R3, #+28]
+   \      0x12C   0x68CA             LDR      R2,[R1, #+12]
+   \      0x12E   0x4314             ORRS     R4,R2,R4
+   \      0x130   0x61DC             STR      R4,[R3, #+28]
+    909                break;
+   \      0x132   0xE007             B.N      ??HAL_ADCEx_InjectedConfigChannel_9
+    910              default:
+    911                /* Set injected channel 4 offset */
+    912                hadc->Instance->JOFR4 &= ~(ADC_JOFR4_JOFFSET4);
+   \                     ??HAL_ADCEx_InjectedConfigChannel_6: (+1)
+   \      0x134   0x6A1A             LDR      R2,[R3, #+32]
+   \      0x136   0x0B12             LSRS     R2,R2,#+12
+   \      0x138   0x0312             LSLS     R2,R2,#+12
+   \      0x13A   0x621A             STR      R2,[R3, #+32]
+    913                hadc->Instance->JOFR4 |= sConfigInjected->InjectedOffset;
+   \      0x13C   0x6A1C             LDR      R4,[R3, #+32]
+   \      0x13E   0x68CA             LDR      R2,[R1, #+12]
+   \      0x140   0x4314             ORRS     R4,R2,R4
+   \      0x142   0x621C             STR      R4,[R3, #+32]
+    914                break;
+    915            }
+    916          
+    917            /* Pointer to the common control register to which is belonging hadc    */
+    918            /* (Depending on STM32F4 product, there may be up to 3 ADC and 1 common */
+    919            /* control register)                                                    */
+    920              tmpADC_Common = ADC_COMMON_REGISTER(hadc);
+    921          
+    922            /* if ADC1 Channel_18 is selected enable VBAT Channel */
+    923            if ((hadc->Instance == ADC1) && (sConfigInjected->InjectedChannel == ADC_CHANNEL_VBAT))
+   \                     ??HAL_ADCEx_InjectedConfigChannel_9: (+1)
+   \      0x144   0x....             LDR.N    R4,??DataTable9_2  ;; 0x40012000
+   \      0x146   0x42A3             CMP      R3,R4
+   \      0x148   0xD111             BNE.N    ??HAL_ADCEx_InjectedConfigChannel_10
+   \      0x14A   0x680B             LDR      R3,[R1, #+0]
+   \      0x14C   0x....             LDR.N    R2,??DataTable9  ;; 0x40012304
+   \      0x14E   0x2B12             CMP      R3,#+18
+   \      0x150   0xD103             BNE.N    ??HAL_ADCEx_InjectedConfigChannel_11
+    924            {
+    925              /* Enable the VBAT channel*/
+    926              tmpADC_Common->CCR |= ADC_CCR_VBATE;
+   \      0x152   0x6814             LDR      R4,[R2, #+0]
+   \      0x154   0xF444 0x0480      ORR      R4,R4,#0x400000
+   \      0x158   0x6014             STR      R4,[R2, #+0]
+   \                     ??HAL_ADCEx_InjectedConfigChannel_11: (+1)
+   \      0x15A   0x6809             LDR      R1,[R1, #+0]
+   \      0x15C   0x....             LDR.N    R3,??DataTable9_9  ;; 0x10000012
+   \      0x15E   0x4299             CMP      R1,R3
+   \      0x160   0xBF18             IT       NE
+   \      0x162   0x2911             CMPNE    R1,#+17
+   \      0x164   0xD103             BNE.N    ??HAL_ADCEx_InjectedConfigChannel_10
+    927            }
+    928            
+    929            /* if ADC1 Channel_16 or Channel_17 is selected enable TSVREFE Channel(Temperature sensor and VREFINT) */
+    930            if ((hadc->Instance == ADC1) && ((sConfigInjected->InjectedChannel == ADC_CHANNEL_TEMPSENSOR) || (sConfigInjected->InjectedChannel == ADC_CHANNEL_VREFINT)))
+    931            {
+    932              /* Enable the TSVREFE channel*/
+    933              tmpADC_Common->CCR |= ADC_CCR_TSVREFE;
+   \      0x166   0x6811             LDR      R1,[R2, #+0]
+   \      0x168   0xF441 0x0100      ORR      R1,R1,#0x800000
+   \      0x16C   0x6011             STR      R1,[R2, #+0]
+    934            }
+    935            
+    936            /* Process unlocked */
+    937            __HAL_UNLOCK(hadc);
+   \                     ??HAL_ADCEx_InjectedConfigChannel_10: (+1)
+   \      0x16E   0x2200             MOVS     R2,#+0
+   \      0x170   0xF880 0x203C      STRB     R2,[R0, #+60]
+    938            
+    939            /* Return function status */
+    940            return HAL_OK;
+   \      0x174   0x2000             MOVS     R0,#+0
+   \      0x176   0xBD70             POP      {R4-R6,PC}       ;; return
+    941          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine9: (+1)
+   \        0x0   0x1CF6             ADDS     R6,R6,#+3
+   \        0x2   0x1AB6             SUBS     R6,R6,R2
+   \        0x4   0xEB06 0x0686      ADD      R6,R6,R6, LSL #+2
+   \        0x8   0x40B5             LSLS     R5,R5,R6
+   \        0xA   0x4770             BX       LR
+    942          
+    943          /**
+    944            * @brief  Configures the ADC multi-mode 
+    945            * @param  hadc       pointer to a ADC_HandleTypeDef structure that contains
+    946            *                     the configuration information for the specified ADC.  
+    947            * @param  multimode  pointer to an ADC_MultiModeTypeDef structure that contains 
+    948            *                     the configuration information for  multimode.
+    949            * @retval HAL status
+    950            */
+
+   \                                 In section .text, align 2, keep-with-next
+    951          HAL_StatusTypeDef HAL_ADCEx_MultiModeConfigChannel(ADC_HandleTypeDef* hadc, ADC_MultiModeTypeDef* multimode)
+    952          {
+   \                     HAL_ADCEx_MultiModeConfigChannel: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+    953          
+    954            ADC_Common_TypeDef *tmpADC_Common;
+    955          
+    956            /* Check the parameters */
+    957            assert_param(IS_ADC_MODE(multimode->Mode));
+    958            assert_param(IS_ADC_DMA_ACCESS_MODE(multimode->DMAAccessMode));
+    959            assert_param(IS_ADC_SAMPLING_DELAY(multimode->TwoSamplingDelay));
+    960            
+    961            /* Process locked */
+    962            __HAL_LOCK(hadc);
+   \        0x2   0xF890 0x203C      LDRB     R2,[R0, #+60]
+   \        0x6   0x2A01             CMP      R2,#+1
+   \        0x8   0xD101             BNE.N    ??HAL_ADCEx_MultiModeConfigChannel_0
+   \        0xA   0x2002             MOVS     R0,#+2
+   \        0xC   0xBD30             POP      {R4,R5,PC}
+   \                     ??HAL_ADCEx_MultiModeConfigChannel_0: (+1)
+   \        0xE   0x2201             MOVS     R2,#+1
+    963          
+    964            /* Pointer to the common control register to which is belonging hadc    */
+    965            /* (Depending on STM32F4 product, there may be up to 3 ADC and 1 common */
+    966            /* control register)                                                    */
+    967            tmpADC_Common = ADC_COMMON_REGISTER(hadc);
+    968          
+    969            /* Set ADC mode */
+    970            tmpADC_Common->CCR &= ~(ADC_CCR_MULTI);
+   \       0x10   0x....             LDR.N    R3,??DataTable9  ;; 0x40012304
+   \       0x12   0xF880 0x203C      STRB     R2,[R0, #+60]
+   \       0x16   0x681C             LDR      R4,[R3, #+0]
+   \       0x18   0x0964             LSRS     R4,R4,#+5
+   \       0x1A   0x0164             LSLS     R4,R4,#+5
+   \       0x1C   0x601C             STR      R4,[R3, #+0]
+    971            tmpADC_Common->CCR |= multimode->Mode;
+   \       0x1E   0x681D             LDR      R5,[R3, #+0]
+   \       0x20   0x680A             LDR      R2,[R1, #+0]
+   \       0x22   0x4315             ORRS     R5,R2,R5
+   \       0x24   0x601D             STR      R5,[R3, #+0]
+    972            
+    973            /* Set the ADC DMA access mode */
+    974            tmpADC_Common->CCR &= ~(ADC_CCR_DMA);
+   \       0x26   0x681C             LDR      R4,[R3, #+0]
+   \       0x28   0xF424 0x4440      BIC      R4,R4,#0xC000
+   \       0x2C   0x601C             STR      R4,[R3, #+0]
+    975            tmpADC_Common->CCR |= multimode->DMAAccessMode;
+   \       0x2E   0x681D             LDR      R5,[R3, #+0]
+   \       0x30   0x684A             LDR      R2,[R1, #+4]
+   \       0x32   0x4315             ORRS     R5,R2,R5
+   \       0x34   0x601D             STR      R5,[R3, #+0]
+    976            
+    977            /* Set delay between two sampling phases */
+    978            tmpADC_Common->CCR &= ~(ADC_CCR_DELAY);
+    979            tmpADC_Common->CCR |= multimode->TwoSamplingDelay;
+    980            
+    981            /* Process unlocked */
+    982            __HAL_UNLOCK(hadc);
+   \       0x36   0x2200             MOVS     R2,#+0
+   \       0x38   0x681C             LDR      R4,[R3, #+0]
+   \       0x3A   0xF424 0x6470      BIC      R4,R4,#0xF00
+   \       0x3E   0x601C             STR      R4,[R3, #+0]
+   \       0x40   0x681D             LDR      R5,[R3, #+0]
+   \       0x42   0x6889             LDR      R1,[R1, #+8]
+   \       0x44   0x430D             ORRS     R5,R1,R5
+   \       0x46   0x601D             STR      R5,[R3, #+0]
+   \       0x48   0xF880 0x203C      STRB     R2,[R0, #+60]
+    983            
+    984            /* Return function status */
+    985            return HAL_OK;
+   \       0x4C   0x2000             MOVS     R0,#+0
+   \       0x4E   0xBD30             POP      {R4,R5,PC}       ;; return
+    986          }
+    987          
+    988          /**
+    989            * @}
+    990            */
+    991          
+    992          /**
+    993            * @brief  DMA transfer complete callback. 
+    994            * @param  hdma pointer to a DMA_HandleTypeDef structure that contains
+    995            *                the configuration information for the specified DMA module.
+    996            * @retval None
+    997            */
+
+   \                                 In section .text, align 4, keep-with-next
+    998          static void ADC_MultiModeDMAConvCplt(DMA_HandleTypeDef *hdma)   
+    999          {
+   1000            /* Retrieve ADC handle corresponding to current DMA handle */
+   1001            ADC_HandleTypeDef* hadc = ( ADC_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
+   \                     ADC_MultiModeDMAConvCplt: (+1)
+   \        0x0   0x6B81             LDR      R1,[R0, #+56]
+   1002            
+   1003            /* Update state machine on conversion status if not in error state */
+   1004            if (HAL_IS_BIT_CLR(hadc->State, HAL_ADC_STATE_ERROR_INTERNAL | HAL_ADC_STATE_ERROR_DMA))
+   \        0x2   0x6C0A             LDR      R2,[R1, #+64]
+   \        0x4   0xF012 0x0F50      TST      R2,#0x50
+   \        0x8   0xD124             BNE.N    ??ADC_MultiModeDMAConvCplt_0
+   1005            {
+   1006              /* Update ADC state machine */
+   1007              SET_BIT(hadc->State, HAL_ADC_STATE_REG_EOC);
+   \        0xA   0x6C08             LDR      R0,[R1, #+64]
+   \        0xC   0xF440 0x7000      ORR      R0,R0,#0x200
+   \       0x10   0x6408             STR      R0,[R1, #+64]
+   1008              
+   1009              /* Determine whether any further conversion upcoming on group regular   */
+   1010              /* by external trigger, continuous mode or scan sequence on going.      */
+   1011              /* Note: On STM32F4, there is no independent flag of end of sequence.   */
+   1012              /*       The test of scan sequence on going is done either with scan    */
+   1013              /*       sequence disabled or with end of conversion flag set to        */
+   1014              /*       of end of sequence.                                            */
+   1015              if(ADC_IS_SOFTWARE_START_REGULAR(hadc)                   &&
+   1016                 (hadc->Init.ContinuousConvMode == DISABLE)            &&
+   1017                 (HAL_IS_BIT_CLR(hadc->Instance->SQR1, ADC_SQR1_L) || 
+   1018                  HAL_IS_BIT_CLR(hadc->Instance->CR2, ADC_CR2_EOCS)  )   )
+   \       0x12   0x680A             LDR      R2,[R1, #+0]
+   \       0x14   0x6890             LDR      R0,[R2, #+8]
+   \       0x16   0xF010 0x5F40      TST      R0,#0x30000000
+   \       0x1A   0xBF04             ITT      EQ
+   \       0x1C   0x7E08             LDRBEQ   R0,[R1, #+24]
+   \       0x1E   0x2800             CMPEQ    R0,#+0
+   \       0x20   0xD115             BNE.N    ??ADC_MultiModeDMAConvCplt_1
+   \       0x22   0x6AD0             LDR      R0,[R2, #+44]
+   \       0x24   0xF410 0x0F70      TST      R0,#0xF00000
+   \       0x28   0xD002             BEQ.N    ??ADC_MultiModeDMAConvCplt_2
+   \       0x2A   0x6890             LDR      R0,[R2, #+8]
+   \       0x2C   0x0543             LSLS     R3,R0,#+21
+   \       0x2E   0xD40E             BMI.N    ??ADC_MultiModeDMAConvCplt_1
+   1019              {
+   1020                /* Disable ADC end of single conversion interrupt on group regular */
+   1021                /* Note: Overrun interrupt was enabled with EOC interrupt in          */
+   1022                /* HAL_ADC_Start_IT(), but is not disabled here because can be used   */
+   1023                /* by overrun IRQ process below.                                      */
+   1024                __HAL_ADC_DISABLE_IT(hadc, ADC_IT_EOC);
+   \                     ??ADC_MultiModeDMAConvCplt_2: (+1)
+   \       0x30   0x6850             LDR      R0,[R2, #+4]
+   \       0x32   0xF020 0x0020      BIC      R0,R0,#0x20
+   \       0x36   0x6050             STR      R0,[R2, #+4]
+   1025                
+   1026                /* Set ADC state */
+   1027                CLEAR_BIT(hadc->State, HAL_ADC_STATE_REG_BUSY);   
+   \       0x38   0x6C08             LDR      R0,[R1, #+64]
+   \       0x3A   0xF420 0x7080      BIC      R0,R0,#0x100
+   \       0x3E   0x6408             STR      R0,[R1, #+64]
+   1028                
+   1029                if (HAL_IS_BIT_CLR(hadc->State, HAL_ADC_STATE_INJ_BUSY))
+   \       0x40   0x6C08             LDR      R0,[R1, #+64]
+   \       0x42   0x04C2             LSLS     R2,R0,#+19
+   \       0x44   0xD403             BMI.N    ??ADC_MultiModeDMAConvCplt_1
+   1030                {
+   1031                  SET_BIT(hadc->State, HAL_ADC_STATE_READY);
+   \       0x46   0x6C08             LDR      R0,[R1, #+64]
+   \       0x48   0xF040 0x0001      ORR      R0,R0,#0x1
+   \       0x4C   0x6408             STR      R0,[R1, #+64]
+   1032                }
+   1033              }
+   1034              
+   1035              /* Conversion complete callback */
+   1036              HAL_ADC_ConvCpltCallback(hadc);
+   \                     ??ADC_MultiModeDMAConvCplt_1: (+1)
+   \       0x4E   0x4608             MOV      R0,R1
+   \       0x50   0x....'....        B.W      HAL_ADC_ConvCpltCallback
+   1037            }
+   1038            else
+   1039            {
+   1040              /* Call DMA error callback */
+   1041              hadc->DMA_Handle->XferErrorCallback(hdma);
+   \                     ??ADC_MultiModeDMAConvCplt_0: (+1)
+   \       0x54   0x6B89             LDR      R1,[R1, #+56]
+   \       0x56   0x6CCA             LDR      R2,[R1, #+76]
+   \       0x58   0x4710             BX       R2
+   1042            }
+   1043          }
+   1044          
+   1045          /**
+   1046            * @brief  DMA half transfer complete callback. 
+   1047            * @param  hdma pointer to a DMA_HandleTypeDef structure that contains
+   1048            *                the configuration information for the specified DMA module.
+   1049            * @retval None
+   1050            */
+
+   \                                 In section .text, align 4, keep-with-next
+   1051          static void ADC_MultiModeDMAHalfConvCplt(DMA_HandleTypeDef *hdma)   
+   1052          {
+   1053              ADC_HandleTypeDef* hadc = ( ADC_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
+   1054              /* Conversion complete callback */
+   1055              HAL_ADC_ConvHalfCpltCallback(hadc); 
+   \                     ADC_MultiModeDMAHalfConvCplt: (+1)
+   \        0x0   0x6B80             LDR      R0,[R0, #+56]
+   \        0x2   0x....'....        B.W      HAL_ADC_ConvHalfCpltCallback
+   1056          }
+   1057          
+   1058          /**
+   1059            * @brief  DMA error callback 
+   1060            * @param  hdma pointer to a DMA_HandleTypeDef structure that contains
+   1061            *                the configuration information for the specified DMA module.
+   1062            * @retval None
+   1063            */
+
+   \                                 In section .text, align 4, keep-with-next
+   1064          static void ADC_MultiModeDMAError(DMA_HandleTypeDef *hdma)   
+   1065          {
+   1066              ADC_HandleTypeDef* hadc = ( ADC_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
+   \                     ADC_MultiModeDMAError: (+1)
+   \        0x0   0x6B80             LDR      R0,[R0, #+56]
+   1067              hadc->State= HAL_ADC_STATE_ERROR_DMA;
+   \        0x2   0x2140             MOVS     R1,#+64
+   \        0x4   0x6401             STR      R1,[R0, #+64]
+   1068              /* Set ADC error code to DMA error */
+   1069              hadc->ErrorCode |= HAL_ADC_ERROR_DMA;
+   \        0x6   0x6C42             LDR      R2,[R0, #+68]
+   \        0x8   0xF042 0x0204      ORR      R2,R2,#0x4
+   \        0xC   0x6442             STR      R2,[R0, #+68]
+   1070              HAL_ADC_ErrorCallback(hadc); 
+   \        0xE   0x....'....        B.W      HAL_ADC_ErrorCallback
+   1071          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9:
+   \        0x0   0x4001'2304        DC32     0x40012304
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9_1:
+   \        0x0   0xFFFF'DFFE        DC32     0xffffdffe
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9_2:
+   \        0x0   0x4001'2000        DC32     0x40012000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9_3:
+   \        0x0   0x4001'2008        DC32     0x40012008
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9_4:
+   \        0x0   0x000F'4240        DC32     0xf4240
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9_5:
+   \        0x0   0x....'....        DC32     SystemCoreClock
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9_6:
+   \        0x0   0xFFFF'F9FE        DC32     0xfffff9fe
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9_7:
+   \        0x0   0x4001'2308        DC32     0x40012308
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9_8:
+   \        0x0   0x000F'0001        DC32     0xf0001
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9_9:
+   \        0x0   0x1000'0012        DC32     0x10000012
+   1072          
+   1073          /**
+   1074            * @}
+   1075            */
+   1076          
+   1077          #endif /* HAL_ADC_MODULE_ENABLED */
+   1078          /**
+   1079            * @}
+   1080            */ 
+   1081          
+   1082          /**
+   1083            * @}
+   1084            */ 
+   1085          
+   1086          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   ADC_MultiModeDMAConvCplt
+         0   -- Indirect call
+         0   -> HAL_ADC_ConvCpltCallback
+       0   ADC_MultiModeDMAError
+         0   -> HAL_ADC_ErrorCallback
+       0   ADC_MultiModeDMAHalfConvCplt
+         0   -> HAL_ADC_ConvHalfCpltCallback
+      16   HAL_ADCEx_InjectedConfigChannel
+       0   HAL_ADCEx_InjectedConvCpltCallback
+       4   HAL_ADCEx_InjectedGetValue
+      16   HAL_ADCEx_InjectedPollForConversion
+        16   -> HAL_GetTick
+      16   HAL_ADCEx_InjectedStart
+      16   HAL_ADCEx_InjectedStart_IT
+      12   HAL_ADCEx_InjectedStop
+      12   HAL_ADCEx_InjectedStop_IT
+      12   HAL_ADCEx_MultiModeConfigChannel
+       0   HAL_ADCEx_MultiModeGetValue
+      24   HAL_ADCEx_MultiModeStart_DMA
+        24   -> HAL_DMA_Start_IT
+      16   HAL_ADCEx_MultiModeStop_DMA
+        16   -> HAL_DMA_Abort
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable9
+       4  ??DataTable9_1
+       4  ??DataTable9_2
+       4  ??DataTable9_3
+       4  ??DataTable9_4
+       4  ??DataTable9_5
+       4  ??DataTable9_6
+       4  ??DataTable9_7
+       4  ??DataTable9_8
+       4  ??DataTable9_9
+       8  ?Subroutine0
+      62  ?Subroutine1
+      30  ?Subroutine2
+      16  ?Subroutine3
+      20  ?Subroutine4
+      14  ?Subroutine5
+      14  ?Subroutine6
+      12  ?Subroutine7
+      12  ?Subroutine8
+      12  ?Subroutine9
+      90  ADC_MultiModeDMAConvCplt
+      18  ADC_MultiModeDMAError
+       6  ADC_MultiModeDMAHalfConvCplt
+     376  HAL_ADCEx_InjectedConfigChannel
+       2  HAL_ADCEx_InjectedConvCpltCallback
+      52  HAL_ADCEx_InjectedGetValue
+     142  HAL_ADCEx_InjectedPollForConversion
+      86  HAL_ADCEx_InjectedStart
+      96  HAL_ADCEx_InjectedStart_IT
+      58  HAL_ADCEx_InjectedStop
+      64  HAL_ADCEx_InjectedStop_IT
+      80  HAL_ADCEx_MultiModeConfigChannel
+       6  HAL_ADCEx_MultiModeGetValue
+     230  HAL_ADCEx_MultiModeStart_DMA
+      86  HAL_ADCEx_MultiModeStop_DMA
+
+ 
+ 1'632 bytes in section .text
+ 
+ 1'630 bytes of CODE memory (+ 2 bytes shared)
+
+Errors: none
+Warnings: none

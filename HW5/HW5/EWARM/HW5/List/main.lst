@@ -1,0 +1,664 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         20/Feb/2020  09:20:08
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps projects\HW5\HW5\Src\main.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EW8EF7.tmp
+#        ("C:\Users\mohit\Desktop\Microapps projects\HW5\HW5\Src\main.c" -D
+#        USE_HAL_DRIVER -D STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\HW5\HW5\EWARM\HW5\List" -o "C:\Users\mohit\Desktop\Microapps
+#        projects\HW5\HW5\EWARM\HW5\Obj" --debug --endian=little
+#        --cpu=Cortex-M4 -e --fpu=VFPv4_sp --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.4\arm\inc\c\DLib_Config_Full.h"
+#        -I "C:\Users\mohit\Desktop\Microapps projects\HW5\HW5\EWARM/../Inc\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\HW5\HW5\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\HW5\HW5\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\HW5\HW5\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\HW5\HW5\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW5\HW5\EWARM\HW5\List\main.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps projects\HW5\HW5\EWARM\HW5\Obj\main.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\HW5\HW5\Src\main.c
+      1          /* USER CODE BEGIN Header */
+      2          /**
+      3            ******************************************************************************
+      4            * @file           : main.c
+      5            * @brief          : Main program body
+      6            ******************************************************************************
+      7            * @attention
+      8            *
+      9            * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+     10            * All rights reserved.</center></h2>
+     11            *
+     12            * This software component is licensed by ST under BSD 3-Clause license,
+     13            * the "License"; You may not use this file except in compliance with the
+     14            * License. You may obtain a copy of the License at:
+     15            *                        opensource.org/licenses/BSD-3-Clause
+     16            *
+     17            ******************************************************************************
+     18            */
+     19          /* USER CODE END Header */
+     20          
+     21          /* Includes ------------------------------------------------------------------*/
+     22          #include "main.h"
+     23          
+     24          /* Private includes ----------------------------------------------------------*/
+     25          /* USER CODE BEGIN Includes */
+     26          extern float freq;
+     27          /* USER CODE END Includes */
+     28          
+     29          /* Private typedef -----------------------------------------------------------*/
+     30          /* USER CODE BEGIN PTD */
+     31          
+     32          /* USER CODE END PTD */
+     33          
+     34          /* Private define ------------------------------------------------------------*/
+     35          /* USER CODE BEGIN PD */
+     36          /* USER CODE END PD */
+     37          
+     38          /* Private macro -------------------------------------------------------------*/
+     39          /* USER CODE BEGIN PM */
+     40          
+     41          /* USER CODE END PM */
+     42          
+     43          /* Private variables ---------------------------------------------------------*/
+
+   \                                 In section .bss, align 4
+     44          TIM_HandleTypeDef htim3;
+   \                     htim3:
+   \        0x0                      DS8 64
+     45          
+     46          /* USER CODE BEGIN PV */
+     47          
+     48          /* USER CODE END PV */
+     49          
+     50          /* Private function prototypes -----------------------------------------------*/
+     51          void SystemClock_Config(void);
+     52          static void MX_GPIO_Init(void);
+     53          static void MX_TIM3_Init(void);
+     54          /* USER CODE BEGIN PFP */
+     55          
+     56          /* USER CODE END PFP */
+     57          
+     58          /* Private user code ---------------------------------------------------------*/
+     59          /* USER CODE BEGIN 0 */
+     60          
+     61          /* USER CODE END 0 */
+     62          
+     63          /**
+     64            * @brief  The application entry point.
+     65            * @retval int
+     66            */
+
+   \                                 In section .text, align 4, keep-with-next
+     67          int main(void)
+     68          {
+   \                     main: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+   \        0x2   0xED2D 0x8B04      VPUSH    {D8-D9}
+   \        0x6   0xB08A             SUB      SP,SP,#+40
+     69            /* USER CODE BEGIN 1 */
+     70          
+     71            /* USER CODE END 1 */
+     72            
+     73          
+     74            /* MCU Configuration--------------------------------------------------------*/
+     75          
+     76            /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+     77            HAL_Init();
+   \        0x8   0x....'....        BL       HAL_Init
+     78          
+     79            /* USER CODE BEGIN Init */
+     80          
+     81            /* USER CODE END Init */
+     82          
+     83            /* Configure the system clock */
+     84            SystemClock_Config();
+   \        0xC   0x....'....        BL       SystemClock_Config
+     85          
+     86            /* USER CODE BEGIN SysInit */
+     87            /* USER CODE END SysInit */
+     88          
+     89            /* Initialize all configured peripherals */
+     90            MX_GPIO_Init();
+   \       0x10   0x....'....        BL       ?Subroutine0
+   \                     ??CrossCallReturnLabel_0: (+1)
+   \       0x14   0x2000             MOVS     R0,#+0
+   \       0x16   0x9000             STR      R0,[SP, #+0]
+   \       0x18   0xED9F 0x....      VLDR.W   S16,??DataTable1  ;; 0x472be000
+   \       0x1C   0x....             LDR.N    R0,??DataTable1_3  ;; 0x40023830
+   \       0x1E   0x....             LDR.N    R4,??DataTable1_4  ;; 0x40021800
+   \       0x20   0x6801             LDR      R1,[R0, #+0]
+   \       0x22   0x....             LDR.N    R5,??DataTable1_5
+   \       0x24   0xF041 0x0180      ORR      R1,R1,#0x80
+   \       0x28   0x6001             STR      R1,[R0, #+0]
+   \       0x2A   0xEDDF 0x....      VLDR.W   S17,??DataTable1_1  ;; 0x476a6000
+   \       0x2E   0x6802             LDR      R2,[R0, #+0]
+   \       0x30   0xF002 0x0280      AND      R2,R2,#0x80
+   \       0x34   0x9200             STR      R2,[SP, #+0]
+   \       0x36   0x2200             MOVS     R2,#+0
+   \       0x38   0x9900             LDR      R1,[SP, #+0]
+   \       0x3A   0x9200             STR      R2,[SP, #+0]
+   \       0x3C   0xED9F 0x....      VLDR.W   S18,??DataTable1_2  ;; 0x45fa0000
+   \       0x40   0x6803             LDR      R3,[R0, #+0]
+   \       0x42   0xF043 0x0301      ORR      R3,R3,#0x1
+   \       0x46   0x6003             STR      R3,[R0, #+0]
+   \       0x48   0x6801             LDR      R1,[R0, #+0]
+   \       0x4A   0xF001 0x0101      AND      R1,R1,#0x1
+   \       0x4E   0x9100             STR      R1,[SP, #+0]
+   \       0x50   0x9900             LDR      R1,[SP, #+0]
+   \       0x52   0x9200             STR      R2,[SP, #+0]
+   \       0x54   0xF44F 0x41C0      MOV      R1,#+24576
+   \       0x58   0x6803             LDR      R3,[R0, #+0]
+   \       0x5A   0xF043 0x0340      ORR      R3,R3,#0x40
+   \       0x5E   0x6003             STR      R3,[R0, #+0]
+   \       0x60   0x6800             LDR      R0,[R0, #+0]
+   \       0x62   0xF000 0x0040      AND      R0,R0,#0x40
+   \       0x66   0x9000             STR      R0,[SP, #+0]
+   \       0x68   0x9800             LDR      R0,[SP, #+0]
+   \       0x6A   0x....'....        BL       ??Subroutine1_0
+   \                     ??CrossCallReturnLabel_3: (+1)
+   \       0x6E   0xF44F 0x41C0      MOV      R1,#+24576
+   \       0x72   0x9101             STR      R1,[SP, #+4]
+   \       0x74   0x2201             MOVS     R2,#+1
+   \       0x76   0x9202             STR      R2,[SP, #+8]
+   \       0x78   0x2100             MOVS     R1,#+0
+   \       0x7A   0x9103             STR      R1,[SP, #+12]
+   \       0x7C   0x2203             MOVS     R2,#+3
+   \       0x7E   0x9204             STR      R2,[SP, #+16]
+   \       0x80   0xA901             ADD      R1,SP,#+4
+   \       0x82   0x4620             MOV      R0,R4
+   \       0x84   0x....'....        BL       HAL_GPIO_Init
+     91            MX_TIM3_Init();
+   \       0x88   0x2210             MOVS     R2,#+16
+   \       0x8A   0x2100             MOVS     R1,#+0
+   \       0x8C   0xA806             ADD      R0,SP,#+24
+   \       0x8E   0x....'....        BL       memset
+   \       0x92   0x2208             MOVS     R2,#+8
+   \       0x94   0x2100             MOVS     R1,#+0
+   \       0x96   0x4668             MOV      R0,SP
+   \       0x98   0x....'....        BL       memset
+   \       0x9C   0x2210             MOVS     R2,#+16
+   \       0x9E   0x2100             MOVS     R1,#+0
+   \       0xA0   0xA802             ADD      R0,SP,#+8
+   \       0xA2   0x....'....        BL       memset
+   \       0xA6   0x....             LDR.N    R0,??DataTable1_6  ;; 0x40000400
+   \       0xA8   0x6028             STR      R0,[R5, #+0]
+   \       0xAA   0x2100             MOVS     R1,#+0
+   \       0xAC   0xF64F 0x70FE      MOVW     R0,#+65534
+   \       0xB0   0x60E8             STR      R0,[R5, #+12]
+   \       0xB2   0x6069             STR      R1,[R5, #+4]
+   \       0xB4   0x60A9             STR      R1,[R5, #+8]
+   \       0xB6   0x6129             STR      R1,[R5, #+16]
+   \       0xB8   0x61A9             STR      R1,[R5, #+24]
+   \       0xBA   0x4628             MOV      R0,R5
+   \       0xBC   0x....'....        BL       HAL_TIM_Base_Init
+   \       0xC0   0xF44F 0x5080      MOV      R0,#+4096
+   \       0xC4   0x9006             STR      R0,[SP, #+24]
+   \       0xC6   0xA906             ADD      R1,SP,#+24
+   \       0xC8   0x4628             MOV      R0,R5
+   \       0xCA   0x....'....        BL       HAL_TIM_ConfigClockSource
+   \       0xCE   0x4628             MOV      R0,R5
+   \       0xD0   0x....'....        BL       HAL_TIM_IC_Init
+   \       0xD4   0x2100             MOVS     R1,#+0
+   \       0xD6   0x9100             STR      R1,[SP, #+0]
+   \       0xD8   0x9101             STR      R1,[SP, #+4]
+   \       0xDA   0x4628             MOV      R0,R5
+   \       0xDC   0x4669             MOV      R1,SP
+   \       0xDE   0x....'....        BL       HAL_TIMEx_MasterConfigSynchronization
+   \       0xE2   0x2201             MOVS     R2,#+1
+   \       0xE4   0x9203             STR      R2,[SP, #+12]
+   \       0xE6   0x2100             MOVS     R1,#+0
+   \       0xE8   0x9102             STR      R1,[SP, #+8]
+   \       0xEA   0x9104             STR      R1,[SP, #+16]
+   \       0xEC   0x2200             MOVS     R2,#+0
+   \       0xEE   0x9205             STR      R2,[SP, #+20]
+   \       0xF0   0xA902             ADD      R1,SP,#+8
+   \       0xF2   0x4628             MOV      R0,R5
+   \       0xF4   0x....'....        BL       HAL_TIM_IC_ConfigChannel
+     92            /* USER CODE BEGIN 2 */
+     93            HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_1);
+   \       0xF8   0x2100             MOVS     R1,#+0
+   \       0xFA   0x4628             MOV      R0,R5
+   \       0xFC   0x....'....        BL       HAL_TIM_IC_Start_IT
+   \      0x100   0xE007             B.N      ??CrossCallReturnLabel_2
+     94            /* USER CODE END 2 */
+     95           
+     96           
+     97          
+     98            /* Infinite loop */
+     99            /* USER CODE BEGIN WHILE */
+    100            while (1)
+    101            {
+    102               if ((freq < 8000 && freq >= 0) || freq >= 60000)
+    103            {
+    104              HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13,1);
+                                                          ^
+Warning[Pe188]: enumerated type mixed with another type
+   \                     ??main_0: (+1)
+   \      0x102   0x2201             MOVS     R2,#+1
+   \                     ??main_1: (+1)
+   \      0x104   0x....'....        BL       ?Subroutine1
+    105              HAL_GPIO_WritePin(GPIOG, GPIO_PIN_14,1);
+                                                          ^
+Warning[Pe188]: enumerated type mixed with another type
+   \                     ??CrossCallReturnLabel_5: (+1)
+   \      0x108   0x2201             MOVS     R2,#+1
+   \                     ??main_2: (+1)
+   \      0x10A   0xF44F 0x4180      MOV      R1,#+16384
+    106            }
+   \      0x10E   0x....'....        BL       ??Subroutine1_0
+   \                     ??CrossCallReturnLabel_2: (+1)
+   \      0x112   0x....             LDR.N    R0,??DataTable1_7
+   \      0x114   0xED90 0x0A00      VLDR     S0,[R0, #0]
+   \      0x118   0xEEB4 0x0A49      VCMP.F32 S0,S18
+   \      0x11C   0xEEF1 0xFA10      FMSTAT
+   \      0x120   0xD504             BPL.N    ??main_3
+   \      0x122   0xEEB5 0x0A40      VCMP.F32 S0,#0.0
+   \      0x126   0xEEF1 0xFA10      FMSTAT
+   \      0x12A   0xDAEA             BGE.N    ??main_0
+   \                     ??main_3: (+1)
+   \      0x12C   0xEEB4 0x0A68      VCMP.F32 S0,S17
+   \      0x130   0xEEF1 0xFA10      FMSTAT
+   \      0x134   0xDAE5             BGE.N    ??main_0
+    107              else if (freq >= 8000 && freq < 44000)
+   \      0x136   0xEEB4 0x0A49      VCMP.F32 S0,S18
+   \      0x13A   0xEEF1 0xFA10      FMSTAT
+   \      0x13E   0xDB06             BLT.N    ??main_4
+   \      0x140   0xEEB4 0x0A48      VCMP.F32 S0,S16
+   \      0x144   0xEEF1 0xFA10      FMSTAT
+   \      0x148   0xBF48             IT       MI
+   \      0x14A   0x2200             MOVMI    R2,#+0
+    108            {
+    109              HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13,0);
+                                                          ^
+Warning[Pe188]: enumerated type mixed with another type
+   \      0x14C   0xD4DA             BMI.N    ??main_1
+    110              HAL_GPIO_WritePin(GPIOG, GPIO_PIN_14,1);
+                                                          ^
+Warning[Pe188]: enumerated type mixed with another type
+    111            }
+    112             else if( freq >= 44000 && freq < 60000)
+   \                     ??main_4: (+1)
+   \      0x14E   0xEEB4 0x0A48      VCMP.F32 S0,S16
+   \      0x152   0xEEF1 0xFA10      FMSTAT
+   \      0x156   0xDBDC             BLT.N    ??CrossCallReturnLabel_2
+   \      0x158   0xEEB4 0x0A68      VCMP.F32 S0,S17
+   \      0x15C   0xEEF1 0xFA10      FMSTAT
+   \      0x160   0xD5D7             BPL.N    ??CrossCallReturnLabel_2
+    113            {
+    114              HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13,1);
+                                                          ^
+Warning[Pe188]: enumerated type mixed with another type
+   \      0x162   0x2201             MOVS     R2,#+1
+   \      0x164   0x....'....        BL       ?Subroutine1
+    115              HAL_GPIO_WritePin(GPIOG, GPIO_PIN_14,0);
+                                                          ^
+Warning[Pe188]: enumerated type mixed with another type
+   \                     ??CrossCallReturnLabel_4: (+1)
+   \      0x168   0x2200             MOVS     R2,#+0
+   \      0x16A   0xE7CE             B.N      ??main_2
+    116            }
+    117              /* USER CODE END WHILE */
+    118          
+    119              /* USER CODE BEGIN 3 */
+    120            }
+    121            /* USER CODE END 3 */
+    122          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine1: (+1)
+   \        0x0   0xF44F 0x5100      MOV      R1,#+8192
+   \                     ??Subroutine1_0: (+1)
+   \        0x4   0x4620             MOV      R0,R4
+   \        0x6   0x....'....        B.W      HAL_GPIO_WritePin
+    123          
+    124          /**
+    125            * @brief System Clock Configuration
+    126            * @retval None
+    127            */
+
+   \                                 In section .text, align 2, keep-with-next
+    128          void SystemClock_Config(void)
+    129          {
+   \                     SystemClock_Config: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+   \        0x2   0xB092             SUB      SP,SP,#+72
+   \        0x4   0x2230             MOVS     R2,#+48
+   \        0x6   0x2100             MOVS     R1,#+0
+   \        0x8   0xA806             ADD      R0,SP,#+24
+   \        0xA   0x....'....        BL       memset
+   \        0xE   0x....'....        BL       ?Subroutine0
+    130            RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+    131            RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+    132          
+    133            /** Configure the main internal regulator output voltage 
+    134            */
+    135            __HAL_RCC_PWR_CLK_ENABLE();
+   \                     ??CrossCallReturnLabel_1: (+1)
+   \       0x12   0x2000             MOVS     R0,#+0
+   \       0x14   0x9000             STR      R0,[SP, #+0]
+    136            __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
+    137            /** Initializes the CPU, AHB and APB busses clocks 
+    138            */
+    139            RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+    140            RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+   \       0x16   0xF44F 0x3380      MOV      R3,#+65536
+   \       0x1A   0x....             LDR.N    R0,??DataTable1_8  ;; 0x40023840
+   \       0x1C   0x6801             LDR      R1,[R0, #+0]
+   \       0x1E   0xF041 0x5180      ORR      R1,R1,#0x10000000
+   \       0x22   0x6001             STR      R1,[R0, #+0]
+   \       0x24   0x2100             MOVS     R1,#+0
+   \       0x26   0x6800             LDR      R0,[R0, #+0]
+   \       0x28   0xF000 0x5080      AND      R0,R0,#0x10000000
+   \       0x2C   0x9000             STR      R0,[SP, #+0]
+   \       0x2E   0x9800             LDR      R0,[SP, #+0]
+   \       0x30   0x....             LDR.N    R0,??DataTable1_9  ;; 0x40007000
+   \       0x32   0x9100             STR      R1,[SP, #+0]
+   \       0x34   0x6802             LDR      R2,[R0, #+0]
+   \       0x36   0xF422 0x4240      BIC      R2,R2,#0xC000
+   \       0x3A   0xF442 0x4280      ORR      R2,R2,#0x4000
+   \       0x3E   0x6002             STR      R2,[R0, #+0]
+   \       0x40   0x2201             MOVS     R2,#+1
+   \       0x42   0x6800             LDR      R0,[R0, #+0]
+   \       0x44   0xF400 0x4040      AND      R0,R0,#0xC000
+   \       0x48   0x9000             STR      R0,[SP, #+0]
+    141            RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+    142            RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+    143            RCC_OscInitStruct.PLL.PLLM = 4;
+    144            RCC_OscInitStruct.PLL.PLLN = 100;
+    145            RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+    146            RCC_OscInitStruct.PLL.PLLQ = 4;
+    147            if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+   \       0x4A   0xA806             ADD      R0,SP,#+24
+   \       0x4C   0x9900             LDR      R1,[SP, #+0]
+   \       0x4E   0x9206             STR      R2,[SP, #+24]
+   \       0x50   0x2102             MOVS     R1,#+2
+   \       0x52   0xF44F 0x0280      MOV      R2,#+4194304
+   \       0x56   0x910C             STR      R1,[SP, #+48]
+   \       0x58   0x920D             STR      R2,[SP, #+52]
+   \       0x5A   0x2104             MOVS     R1,#+4
+   \       0x5C   0x2264             MOVS     R2,#+100
+   \       0x5E   0x910E             STR      R1,[SP, #+56]
+   \       0x60   0x920F             STR      R2,[SP, #+60]
+   \       0x62   0x2102             MOVS     R1,#+2
+   \       0x64   0x2204             MOVS     R2,#+4
+   \       0x66   0x9307             STR      R3,[SP, #+28]
+   \       0x68   0x9110             STR      R1,[SP, #+64]
+   \       0x6A   0x9211             STR      R2,[SP, #+68]
+   \       0x6C   0x....'....        BL       HAL_RCC_OscConfig
+    148            {
+    149              Error_Handler();
+    150            }
+    151            /** Initializes the CPU, AHB and APB busses clocks 
+    152            */
+    153            RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+    154                                        |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+    155            RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+   \       0x70   0x2102             MOVS     R1,#+2
+   \       0x72   0x9102             STR      R1,[SP, #+8]
+    156            RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+   \       0x74   0x2200             MOVS     R2,#+0
+   \       0x76   0x9203             STR      R2,[SP, #+12]
+   \       0x78   0x200F             MOVS     R0,#+15
+    157            RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+   \       0x7A   0xF44F 0x51A0      MOV      R1,#+5120
+   \       0x7E   0x9001             STR      R0,[SP, #+4]
+   \       0x80   0x9104             STR      R1,[SP, #+16]
+    158            RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+   \       0x82   0xF44F 0x5280      MOV      R2,#+4096
+   \       0x86   0x9205             STR      R2,[SP, #+20]
+    159          
+    160            if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
+   \       0x88   0x2103             MOVS     R1,#+3
+   \       0x8A   0xA801             ADD      R0,SP,#+4
+   \       0x8C   0x....'....        BL       HAL_RCC_ClockConfig
+    161            {
+    162              Error_Handler();
+    163            }
+    164          }
+   \       0x90   0xB013             ADD      SP,SP,#+76
+   \       0x92   0xBD00             POP      {PC}             ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine0: (+1)
+   \        0x0   0x2214             MOVS     R2,#+20
+   \        0x2   0x2100             MOVS     R1,#+0
+   \        0x4   0xA801             ADD      R0,SP,#+4
+   \        0x6   0x....'....        B.W      memset
+    165          
+    166          /**
+    167            * @brief TIM3 Initialization Function
+    168            * @param None
+    169            * @retval None
+    170            */
+    171          static void MX_TIM3_Init(void)
+    172          {
+    173          
+    174            /* USER CODE BEGIN TIM3_Init 0 */
+    175          
+    176            /* USER CODE END TIM3_Init 0 */
+    177          
+    178            TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+    179            TIM_MasterConfigTypeDef sMasterConfig = {0};
+    180            TIM_IC_InitTypeDef sConfigIC = {0};
+    181          
+    182            /* USER CODE BEGIN TIM3_Init 1 */
+    183          
+    184            /* USER CODE END TIM3_Init 1 */
+    185            htim3.Instance = TIM3;
+    186            htim3.Init.Prescaler = 0;
+    187            htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+    188            htim3.Init.Period = 0xffff-1;
+    189            htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    190            htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    191            if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
+    192            {
+    193              Error_Handler();
+    194            }
+    195            sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+    196            if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
+    197            {
+    198              Error_Handler();
+    199            }
+    200            if (HAL_TIM_IC_Init(&htim3) != HAL_OK)
+    201            {
+    202              Error_Handler();
+    203            }
+    204            sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+    205            sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+    206            if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
+    207            {
+    208              Error_Handler();
+    209            }
+    210            sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+    211            sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
+    212            sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
+    213            sConfigIC.ICFilter = 0;
+    214            if (HAL_TIM_IC_ConfigChannel(&htim3, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
+    215            {
+    216              Error_Handler();
+    217            }
+    218            /* USER CODE BEGIN TIM3_Init 2 */
+    219          
+    220            /* USER CODE END TIM3_Init 2 */
+    221          
+    222          }
+    223          
+    224          /**
+    225            * @brief GPIO Initialization Function
+    226            * @param None
+    227            * @retval None
+    228            */
+    229          static void MX_GPIO_Init(void)
+    230          {
+    231            GPIO_InitTypeDef GPIO_InitStruct = {0};
+    232          
+    233            /* GPIO Ports Clock Enable */
+    234            __HAL_RCC_GPIOH_CLK_ENABLE();
+    235            __HAL_RCC_GPIOA_CLK_ENABLE();
+    236            __HAL_RCC_GPIOG_CLK_ENABLE();
+    237          
+    238            /*Configure GPIO pin Output Level */
+    239            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13|GPIO_PIN_14, GPIO_PIN_RESET);
+    240          
+    241            /*Configure GPIO pins : PG13 PG14 */
+    242            GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_14;
+    243            GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    244            GPIO_InitStruct.Pull = GPIO_NOPULL;
+    245            GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    246            HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+    247          
+    248          }
+    249          
+    250          /* USER CODE BEGIN 4 */
+    251          
+    252          /* USER CODE END 4 */
+    253          
+    254          /**
+    255            * @brief  This function is executed in case of error occurrence.
+    256            * @retval None
+    257            */
+
+   \                                 In section .text, align 2, keep-with-next
+    258          void Error_Handler(void)
+    259          {
+    260            /* USER CODE BEGIN Error_Handler_Debug */
+    261            /* User can add his own implementation to report the HAL error return state */
+    262          
+    263            /* USER CODE END Error_Handler_Debug */
+    264          }
+   \                     Error_Handler: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1:
+   \        0x0   0x472B'E000        DC32     0x472be000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_1:
+   \        0x0   0x476A'6000        DC32     0x476a6000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_2:
+   \        0x0   0x45FA'0000        DC32     0x45fa0000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_3:
+   \        0x0   0x4002'3830        DC32     0x40023830
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_4:
+   \        0x0   0x4002'1800        DC32     0x40021800
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_5:
+   \        0x0   0x....'....        DC32     htim3
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_6:
+   \        0x0   0x4000'0400        DC32     0x40000400
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_7:
+   \        0x0   0x....'....        DC32     freq
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_8:
+   \        0x0   0x4002'3840        DC32     0x40023840
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_9:
+   \        0x0   0x4000'7000        DC32     0x40007000
+    265          
+    266          #ifdef  USE_FULL_ASSERT
+    267          /**
+    268            * @brief  Reports the name of the source file and the source line number
+    269            *         where the assert_param error has occurred.
+    270            * @param  file: pointer to the source file name
+    271            * @param  line: assert_param error line source number
+    272            * @retval None
+    273            */
+    274          void assert_failed(uint8_t *file, uint32_t line)
+    275          { 
+    276            /* USER CODE BEGIN 6 */
+    277            /* User can add his own implementation to report the file name and line number,
+    278               tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+    279            /* USER CODE END 6 */
+    280          }
+    281          #endif /* USE_FULL_ASSERT */
+    282          
+    283          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   Error_Handler
+      80   SystemClock_Config
+        80   -> HAL_RCC_ClockConfig
+        80   -> HAL_RCC_OscConfig
+        80   -> memset
+      72   main
+        72   -> HAL_GPIO_Init
+        72   -> HAL_GPIO_WritePin
+        72   -> HAL_Init
+        72   -> HAL_TIMEx_MasterConfigSynchronization
+        72   -> HAL_TIM_Base_Init
+        72   -> HAL_TIM_ConfigClockSource
+        72   -> HAL_TIM_IC_ConfigChannel
+        72   -> HAL_TIM_IC_Init
+        72   -> HAL_TIM_IC_Start_IT
+        72   -> SystemClock_Config
+        72   -> memset
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable1
+       4  ??DataTable1_1
+       4  ??DataTable1_2
+       4  ??DataTable1_3
+       4  ??DataTable1_4
+       4  ??DataTable1_5
+       4  ??DataTable1_6
+       4  ??DataTable1_7
+       4  ??DataTable1_8
+       4  ??DataTable1_9
+      10  ?Subroutine0
+      10  ?Subroutine1
+       2  Error_Handler
+     148  SystemClock_Config
+      64  htim3
+     364  main
+
+ 
+  64 bytes in section .bss
+ 574 bytes in section .text
+ 
+ 574 bytes of CODE memory
+  64 bytes of DATA memory
+
+Errors: none
+Warnings: 6

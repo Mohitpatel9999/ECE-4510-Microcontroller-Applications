@@ -1,0 +1,596 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         10/Mar/2020  09:52:01
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dac_ex.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EW6CB0.tmp
+#        ("C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dac_ex.c"
+#        -D USE_HAL_DRIVER -D STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM\HW6\List" -o "C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM\HW6\Obj" --debug --endian=little
+#        --cpu=Cortex-M4 -e --fpu=VFPv4_sp --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.4\arm\inc\c\DLib_Config_Full.h"
+#        -I "C:\Users\mohit\Desktop\Microapps projects\HW6\HW6\EWARM/../Inc\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM\HW6\List\stm32f4xx_hal_dac_ex.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW6\HW6\EWARM\HW6\Obj\stm32f4xx_hal_dac_ex.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\HW6\HW6\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dac_ex.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    stm32f4xx_hal_dac_ex.c
+      4            * @author  MCD Application Team
+      5            * @brief   DAC HAL module driver.
+      6            *         This file provides firmware functions to manage the following 
+      7            *         functionalities of DAC extension peripheral:
+      8            *           + Extended features functions
+      9            *     
+     10            *
+     11            @verbatim      
+     12            ==============================================================================
+     13                                ##### How to use this driver #####
+     14            ==============================================================================
+     15              [..]          
+     16                (+) When Dual mode is enabled (i.e DAC Channel1 and Channel2 are used simultaneously) :
+     17                    Use HAL_DACEx_DualGetValue() to get digital data to be converted and use
+     18                    HAL_DACEx_DualSetValue() to set digital value to converted simultaneously in Channel 1 and Channel 2.  
+     19                (+) Use HAL_DACEx_TriangleWaveGenerate() to generate Triangle signal.
+     20                (+) Use HAL_DACEx_NoiseWaveGenerate() to generate Noise signal.
+     21             
+     22           @endverbatim    
+     23            ******************************************************************************
+     24            * @attention
+     25            *
+     26            * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+     27            * All rights reserved.</center></h2>
+     28            *
+     29            * This software component is licensed by ST under BSD 3-Clause license,
+     30            * the "License"; You may not use this file except in compliance with the
+     31            * License. You may obtain a copy of the License at:
+     32            *                        opensource.org/licenses/BSD-3-Clause
+     33            *
+     34            ******************************************************************************
+     35            */ 
+     36          
+     37          
+     38          /* Includes ------------------------------------------------------------------*/
+     39          #include "stm32f4xx_hal.h"
+     40          
+     41          /** @addtogroup STM32F4xx_HAL_Driver
+     42            * @{
+     43            */
+     44          
+     45          /** @defgroup DACEx DACEx
+     46            * @brief DAC driver modules
+     47            * @{
+     48            */ 
+     49          
+     50          #ifdef HAL_DAC_MODULE_ENABLED
+     51          
+     52          #if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx) ||\
+     53              defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) ||\
+     54              defined(STM32F410Tx) || defined(STM32F410Cx) || defined(STM32F410Rx) || defined(STM32F446xx) ||\
+     55              defined(STM32F469xx) || defined(STM32F479xx) || defined(STM32F413xx) || defined(STM32F423xx)
+     56          /* Private typedef -----------------------------------------------------------*/
+     57          /* Private define ------------------------------------------------------------*/
+     58          /* Private macro -------------------------------------------------------------*/
+     59          /* Private variables ---------------------------------------------------------*/
+     60          /* Private function prototypes -----------------------------------------------*/
+     61          /* Private functions ---------------------------------------------------------*/
+     62          /* Exported functions --------------------------------------------------------*/
+     63          /** @defgroup DACEx_Exported_Functions DAC Exported Functions
+     64            * @{
+     65            */
+     66          
+     67          /** @defgroup DACEx_Exported_Functions_Group1 Extended features functions
+     68           *  @brief    Extended features functions 
+     69           *
+     70          @verbatim   
+     71            ==============================================================================
+     72                           ##### Extended features functions #####
+     73            ==============================================================================  
+     74              [..]  This section provides functions allowing to:
+     75                (+) Start conversion.
+     76                (+) Stop conversion.
+     77                (+) Start conversion and enable DMA transfer.
+     78                (+) Stop conversion and disable DMA transfer.
+     79                (+) Get result of conversion.
+     80                (+) Get result of dual mode conversion.
+     81                               
+     82          @endverbatim
+     83            * @{
+     84            */
+     85          
+     86          /**
+     87            * @brief  Returns the last data output value of the selected DAC channel.
+     88            * @param  hdac pointer to a DAC_HandleTypeDef structure that contains
+     89            *         the configuration information for the specified DAC.
+     90            * @retval The selected DAC channel data output value.
+     91            */
+
+   \                                 In section .text, align 2, keep-with-next
+     92          uint32_t HAL_DACEx_DualGetValue(DAC_HandleTypeDef* hdac)
+     93          {
+     94            uint32_t tmp = 0U;
+     95            
+     96            tmp |= hdac->Instance->DOR1;
+   \                     HAL_DACEx_DualGetValue: (+1)
+   \        0x0   0x6801             LDR      R1,[R0, #+0]
+   \        0x2   0x6AC8             LDR      R0,[R1, #+44]
+     97            
+     98            tmp |= hdac->Instance->DOR2 << 16U;
+   \        0x4   0x6B09             LDR      R1,[R1, #+48]
+     99            
+    100            /* Returns the DAC channel data output register value */
+    101            return tmp;
+   \        0x6   0xEA40 0x4001      ORR      R0,R0,R1, LSL #+16
+   \        0xA   0x4770             BX       LR               ;; return
+    102          }
+    103          
+    104          /**
+    105            * @brief  Enables or disables the selected DAC channel wave generation.
+    106            * @param  hdac pointer to a DAC_HandleTypeDef structure that contains
+    107            *         the configuration information for the specified DAC.
+    108            * @param  Channel The selected DAC channel. 
+    109            *          This parameter can be one of the following values:
+    110            *            DAC_CHANNEL_1 / DAC_CHANNEL_2
+    111            * @param  Amplitude Select max triangle amplitude. 
+    112            *          This parameter can be one of the following values:
+    113            *            @arg DAC_TRIANGLEAMPLITUDE_1: Select max triangle amplitude of 1
+    114            *            @arg DAC_TRIANGLEAMPLITUDE_3: Select max triangle amplitude of 3
+    115            *            @arg DAC_TRIANGLEAMPLITUDE_7: Select max triangle amplitude of 7
+    116            *            @arg DAC_TRIANGLEAMPLITUDE_15: Select max triangle amplitude of 15
+    117            *            @arg DAC_TRIANGLEAMPLITUDE_31: Select max triangle amplitude of 31
+    118            *            @arg DAC_TRIANGLEAMPLITUDE_63: Select max triangle amplitude of 63
+    119            *            @arg DAC_TRIANGLEAMPLITUDE_127: Select max triangle amplitude of 127
+    120            *            @arg DAC_TRIANGLEAMPLITUDE_255: Select max triangle amplitude of 255
+    121            *            @arg DAC_TRIANGLEAMPLITUDE_511: Select max triangle amplitude of 511
+    122            *            @arg DAC_TRIANGLEAMPLITUDE_1023: Select max triangle amplitude of 1023
+    123            *            @arg DAC_TRIANGLEAMPLITUDE_2047: Select max triangle amplitude of 2047
+    124            *            @arg DAC_TRIANGLEAMPLITUDE_4095: Select max triangle amplitude of 4095                               
+    125            * @retval HAL status
+    126            */
+
+   \                                 In section .text, align 2, keep-with-next
+    127          HAL_StatusTypeDef HAL_DACEx_TriangleWaveGenerate(DAC_HandleTypeDef* hdac, uint32_t Channel, uint32_t Amplitude)
+    128          {  
+   \                     HAL_DACEx_TriangleWaveGenerate: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+    129            /* Check the parameters */
+    130            assert_param(IS_DAC_CHANNEL(Channel));
+    131            assert_param(IS_DAC_LFSR_UNMASK_TRIANGLE_AMPLITUDE(Amplitude));
+    132            
+    133            /* Process locked */
+    134            __HAL_LOCK(hdac);
+   \        0x2   0x7943             LDRB     R3,[R0, #+5]
+   \        0x4   0x2B01             CMP      R3,#+1
+   \        0x6   0xD101             BNE.N    ??HAL_DACEx_TriangleWaveGenerate_0
+   \        0x8   0x2002             MOVS     R0,#+2
+   \        0xA   0xBD30             POP      {R4,R5,PC}
+   \                     ??HAL_DACEx_TriangleWaveGenerate_0: (+1)
+   \        0xC   0x....'....        BL       ?Subroutine2
+    135            
+    136            /* Change DAC state */
+    137            hdac->State = HAL_DAC_STATE_BUSY;
+    138            
+    139            /* Enable the selected wave generation for the selected DAC channel */
+    140            MODIFY_REG(hdac->Instance->CR, (DAC_CR_WAVE1 | DAC_CR_MAMP1) << Channel, (DAC_CR_WAVE1_1 | Amplitude) << Channel);
+   \                     ??CrossCallReturnLabel_0: (+1)
+   \       0x10   0xF042 0x0280      ORR      R2,R2,#0x80
+   \       0x14   0x....             B.N      ?Subroutine0
+    141            
+    142            /* Change DAC state */
+    143            hdac->State = HAL_DAC_STATE_READY;
+    144            
+    145            /* Process unlocked */
+    146            __HAL_UNLOCK(hdac);
+    147            
+    148            /* Return function status */
+    149            return HAL_OK;
+    150          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine0: (+1)
+   \        0x0   0x43A5             BICS     R5,R5,R4
+   \        0x2   0xFA02 0xF101      LSL      R1,R2,R1
+   \        0x6   0x4329             ORRS     R1,R1,R5
+   \        0x8   0x6019             STR      R1,[R3, #+0]
+   \        0xA   0x2200             MOVS     R2,#+0
+   \        0xC   0x2101             MOVS     R1,#+1
+   \        0xE   0x7101             STRB     R1,[R0, #+4]
+   \       0x10   0x7142             STRB     R2,[R0, #+5]
+   \       0x12   0x2000             MOVS     R0,#+0
+   \       0x14   0xBD30             POP      {R4,R5,PC}       ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine2: (+1)
+   \        0x0   0x2301             MOVS     R3,#+1
+   \        0x2   0x7143             STRB     R3,[R0, #+5]
+   \        0x4   0x2402             MOVS     R4,#+2
+   \        0x6   0x7104             STRB     R4,[R0, #+4]
+   \        0x8   0xF44F 0x647C      MOV      R4,#+4032
+   \        0xC   0x6803             LDR      R3,[R0, #+0]
+   \        0xE   0x681D             LDR      R5,[R3, #+0]
+   \       0x10   0x408C             LSLS     R4,R4,R1
+   \       0x12   0x4770             BX       LR
+    151          
+    152          /**
+    153            * @brief  Enables or disables the selected DAC channel wave generation.
+    154            * @param  hdac pointer to a DAC_HandleTypeDef structure that contains
+    155            *         the configuration information for the specified DAC. 
+    156            * @param  Channel The selected DAC channel. 
+    157            *          This parameter can be one of the following values:
+    158            *            DAC_CHANNEL_1 / DAC_CHANNEL_2
+    159            * @param  Amplitude Unmask DAC channel LFSR for noise wave generation. 
+    160            *          This parameter can be one of the following values: 
+    161            *            @arg DAC_LFSRUNMASK_BIT0: Unmask DAC channel LFSR bit0 for noise wave generation
+    162            *            @arg DAC_LFSRUNMASK_BITS1_0: Unmask DAC channel LFSR bit[1:0] for noise wave generation  
+    163            *            @arg DAC_LFSRUNMASK_BITS2_0: Unmask DAC channel LFSR bit[2:0] for noise wave generation
+    164            *            @arg DAC_LFSRUNMASK_BITS3_0: Unmask DAC channel LFSR bit[3:0] for noise wave generation 
+    165            *            @arg DAC_LFSRUNMASK_BITS4_0: Unmask DAC channel LFSR bit[4:0] for noise wave generation 
+    166            *            @arg DAC_LFSRUNMASK_BITS5_0: Unmask DAC channel LFSR bit[5:0] for noise wave generation 
+    167            *            @arg DAC_LFSRUNMASK_BITS6_0: Unmask DAC channel LFSR bit[6:0] for noise wave generation 
+    168            *            @arg DAC_LFSRUNMASK_BITS7_0: Unmask DAC channel LFSR bit[7:0] for noise wave generation 
+    169            *            @arg DAC_LFSRUNMASK_BITS8_0: Unmask DAC channel LFSR bit[8:0] for noise wave generation 
+    170            *            @arg DAC_LFSRUNMASK_BITS9_0: Unmask DAC channel LFSR bit[9:0] for noise wave generation 
+    171            *            @arg DAC_LFSRUNMASK_BITS10_0: Unmask DAC channel LFSR bit[10:0] for noise wave generation 
+    172            *            @arg DAC_LFSRUNMASK_BITS11_0: Unmask DAC channel LFSR bit[11:0] for noise wave generation 
+    173            * @retval HAL status
+    174            */
+
+   \                                 In section .text, align 2, keep-with-next
+    175          HAL_StatusTypeDef HAL_DACEx_NoiseWaveGenerate(DAC_HandleTypeDef* hdac, uint32_t Channel, uint32_t Amplitude)
+    176          {  
+   \                     HAL_DACEx_NoiseWaveGenerate: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+    177            /* Check the parameters */
+    178            assert_param(IS_DAC_CHANNEL(Channel));
+    179            assert_param(IS_DAC_LFSR_UNMASK_TRIANGLE_AMPLITUDE(Amplitude));
+    180            
+    181            /* Process locked */
+    182            __HAL_LOCK(hdac);
+   \        0x2   0x7943             LDRB     R3,[R0, #+5]
+   \        0x4   0x2B01             CMP      R3,#+1
+   \        0x6   0xD101             BNE.N    ??HAL_DACEx_NoiseWaveGenerate_0
+   \        0x8   0x2002             MOVS     R0,#+2
+   \        0xA   0xBD30             POP      {R4,R5,PC}
+   \                     ??HAL_DACEx_NoiseWaveGenerate_0: (+1)
+   \        0xC   0x....'....        BL       ?Subroutine2
+    183            
+    184            /* Change DAC state */
+    185            hdac->State = HAL_DAC_STATE_BUSY;
+    186            
+    187            /* Enable the selected wave generation for the selected DAC channel */
+    188            MODIFY_REG(hdac->Instance->CR, (DAC_CR_WAVE1 | DAC_CR_MAMP1) << Channel, (DAC_CR_WAVE1_0 | Amplitude) << Channel);
+   \                     ??CrossCallReturnLabel_1: (+1)
+   \       0x10   0xF042 0x0240      ORR      R2,R2,#0x40
+   \       0x14                      REQUIRE ?Subroutine0
+   \       0x14                      ;; // Fall through to label ?Subroutine0
+    189            
+    190            /* Change DAC state */
+    191            hdac->State = HAL_DAC_STATE_READY;
+    192            
+    193            /* Process unlocked */
+    194            __HAL_UNLOCK(hdac);
+    195            
+    196            /* Return function status */
+    197            return HAL_OK;
+    198          }
+    199          
+    200          /**
+    201            * @brief  Set the specified data holding register value for dual DAC channel.
+    202            * @param  hdac pointer to a DAC_HandleTypeDef structure that contains
+    203            *               the configuration information for the specified DAC.
+    204            * @param  Alignment Specifies the data alignment for dual channel DAC.
+    205            *          This parameter can be one of the following values:
+    206            *            DAC_ALIGN_8B_R: 8bit right data alignment selected
+    207            *            DAC_ALIGN_12B_L: 12bit left data alignment selected
+    208            *            DAC_ALIGN_12B_R: 12bit right data alignment selected
+    209            * @param  Data1 Data for DAC Channel2 to be loaded in the selected data holding register.
+    210            * @param  Data2 Data for DAC Channel1 to be loaded in the selected data  holding register.
+    211            * @note   In dual mode, a unique register access is required to write in both
+    212            *          DAC channels at the same time.
+    213            * @retval HAL status
+    214            */
+
+   \                                 In section .text, align 2, keep-with-next
+    215          HAL_StatusTypeDef HAL_DACEx_DualSetValue(DAC_HandleTypeDef* hdac, uint32_t Alignment, uint32_t Data1, uint32_t Data2)
+    216          {  
+    217            uint32_t data = 0U, tmp = 0U;
+    218            
+    219            /* Check the parameters */
+    220            assert_param(IS_DAC_ALIGN(Alignment));
+    221            assert_param(IS_DAC_DATA(Data1));
+    222            assert_param(IS_DAC_DATA(Data2));
+    223            
+    224            /* Calculate and set dual DAC data holding register value */
+    225            if (Alignment == DAC_ALIGN_8B_R)
+   \                     HAL_DACEx_DualSetValue: (+1)
+   \        0x0   0x2908             CMP      R1,#+8
+    226            {
+    227              data = ((uint32_t)Data2 << 8U) | Data1; 
+    228            }
+    229            else
+    230            {
+    231              data = ((uint32_t)Data2 << 16U) | Data1;
+    232            }
+    233            
+    234            tmp = (uint32_t)hdac->Instance;
+    235            tmp += DAC_DHR12RD_ALIGNMENT(Alignment);
+    236          
+    237            /* Set the dual DAC selected data holding register */
+    238            *(__IO uint32_t *)tmp = data;
+   \        0x2   0x6800             LDR      R0,[R0, #+0]
+   \        0x4   0xBF0C             ITE      EQ
+   \        0x6   0xEA42 0x2203      ORREQ    R2,R2,R3, LSL #+8
+   \        0xA   0xEA42 0x4203      ORRNE    R2,R2,R3, LSL #+16
+   \        0xE   0x1809             ADDS     R1,R1,R0
+    239            
+    240            /* Return function status */
+    241            return HAL_OK;
+   \       0x10   0x2000             MOVS     R0,#+0
+   \       0x12   0xF841 0x2F20      STR      R2,[R1, #+32]!
+   \       0x16   0x4770             BX       LR               ;; return
+    242          }
+    243          
+    244          /**
+    245            * @}
+    246            */
+    247          
+    248          /**
+    249            * @brief  Conversion complete callback in non blocking mode for Channel2 
+    250            * @param  hdac pointer to a DAC_HandleTypeDef structure that contains
+    251            *         the configuration information for the specified DAC.
+    252            * @retval None
+    253            */
+
+   \                                 In section .text, align 2
+    254          __weak void HAL_DACEx_ConvCpltCallbackCh2(DAC_HandleTypeDef* hdac)
+    255          {
+    256            /* Prevent unused argument(s) compilation warning */
+    257            UNUSED(hdac);
+    258            /* NOTE : This function Should not be modified, when the callback is needed,
+    259                      the HAL_DAC_ConvCpltCallback could be implemented in the user file
+    260             */
+    261          }
+   \                     HAL_DACEx_ConvCpltCallbackCh2: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+    262          
+    263          /**
+    264            * @brief  Conversion half DMA transfer callback in non blocking mode for Channel2 
+    265            * @param  hdac pointer to a DAC_HandleTypeDef structure that contains
+    266            *         the configuration information for the specified DAC.
+    267            * @retval None
+    268            */
+
+   \                                 In section .text, align 2
+    269          __weak void HAL_DACEx_ConvHalfCpltCallbackCh2(DAC_HandleTypeDef* hdac)
+    270          {
+    271            /* Prevent unused argument(s) compilation warning */
+    272            UNUSED(hdac);
+    273            /* NOTE : This function Should not be modified, when the callback is needed,
+    274                      the HAL_DAC_ConvHalfCpltCallbackCh2 could be implemented in the user file
+    275             */
+    276          }
+   \                     HAL_DACEx_ConvHalfCpltCallbackCh2: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+    277          
+    278          /**
+    279            * @brief  Error DAC callback for Channel2.
+    280            * @param  hdac pointer to a DAC_HandleTypeDef structure that contains
+    281            *         the configuration information for the specified DAC.
+    282            * @retval None
+    283            */
+
+   \                                 In section .text, align 2
+    284          __weak void HAL_DACEx_ErrorCallbackCh2(DAC_HandleTypeDef *hdac)
+    285          {
+    286            /* Prevent unused argument(s) compilation warning */
+    287            UNUSED(hdac);
+    288            /* NOTE : This function Should not be modified, when the callback is needed,
+    289                      the HAL_DAC_ErrorCallback could be implemented in the user file
+    290             */
+    291          }
+   \                     HAL_DACEx_ErrorCallbackCh2: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+    292          
+    293          /**
+    294            * @brief  DMA underrun DAC callback for channel2.
+    295            * @param  hdac pointer to a DAC_HandleTypeDef structure that contains
+    296            *         the configuration information for the specified DAC.
+    297            * @retval None
+    298            */
+
+   \                                 In section .text, align 2
+    299          __weak void HAL_DACEx_DMAUnderrunCallbackCh2(DAC_HandleTypeDef *hdac)
+    300          {
+    301            /* Prevent unused argument(s) compilation warning */
+    302            UNUSED(hdac);
+    303            /* NOTE : This function Should not be modified, when the callback is needed,
+    304                      the HAL_DAC_DMAUnderrunCallbackCh2 could be implemented in the user file
+    305             */
+    306          }
+   \                     HAL_DACEx_DMAUnderrunCallbackCh2: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+    307          
+    308          /**
+    309            * @brief  DMA conversion complete callback. 
+    310            * @param  hdma pointer to a DMA_HandleTypeDef structure that contains
+    311            *                the configuration information for the specified DMA module.
+    312            * @retval None
+    313            */
+
+   \                                 In section .text, align 2, keep-with-next
+    314          void DAC_DMAConvCpltCh2(DMA_HandleTypeDef *hdma)   
+    315          {
+   \                     DAC_DMAConvCpltCh2: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    316            DAC_HandleTypeDef* hdac = ( DAC_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
+   \        0x2   0x6B84             LDR      R4,[R0, #+56]
+    317            
+    318          #if (USE_HAL_DAC_REGISTER_CALLBACKS == 1)
+    319            hdac->ConvCpltCallbackCh2(hdac);
+    320          #else
+    321            HAL_DACEx_ConvCpltCallbackCh2(hdac); 
+   \        0x4   0x4620             MOV      R0,R4
+   \        0x6   0x....'....        BL       HAL_DACEx_ConvCpltCallbackCh2
+    322          #endif /* USE_HAL_DAC_REGISTER_CALLBACKS */
+    323            
+    324            hdac->State= HAL_DAC_STATE_READY;
+   \        0xA   0x....             B.N      ?Subroutine1
+    325          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine1: (+1)
+   \        0x0   0x2101             MOVS     R1,#+1
+   \        0x2   0x7121             STRB     R1,[R4, #+4]
+   \        0x4   0xBD10             POP      {R4,PC}          ;; return
+    326          
+    327          /**
+    328            * @brief  DMA half transfer complete callback. 
+    329            * @param  hdma pointer to a DMA_HandleTypeDef structure that contains
+    330            *                the configuration information for the specified DMA module.
+    331            * @retval None
+    332            */
+
+   \                                 In section .text, align 2, keep-with-next
+    333          void DAC_DMAHalfConvCpltCh2(DMA_HandleTypeDef *hdma)   
+    334          {
+    335              DAC_HandleTypeDef* hdac = ( DAC_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
+    336              /* Conversion complete callback */
+    337          #if (USE_HAL_DAC_REGISTER_CALLBACKS == 1)
+    338            hdac->ConvHalfCpltCallbackCh2(hdac);
+    339          #else
+    340              HAL_DACEx_ConvHalfCpltCallbackCh2(hdac); 
+   \                     DAC_DMAHalfConvCpltCh2: (+1)
+   \        0x0   0x6B80             LDR      R0,[R0, #+56]
+   \        0x2   0x....'....        B.W      HAL_DACEx_ConvHalfCpltCallbackCh2
+    341          #endif /* USE_HAL_DAC_REGISTER_CALLBACKS */
+    342          }
+    343          
+    344          /**
+    345            * @brief  DMA error callback 
+    346            * @param  hdma pointer to a DMA_HandleTypeDef structure that contains
+    347            *                the configuration information for the specified DMA module.
+    348            * @retval None
+    349            */
+
+   \                                 In section .text, align 2, keep-with-next
+    350          void DAC_DMAErrorCh2(DMA_HandleTypeDef *hdma)   
+    351          {
+   \                     DAC_DMAErrorCh2: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    352            DAC_HandleTypeDef* hdac = ( DAC_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
+   \        0x2   0x6B84             LDR      R4,[R0, #+56]
+    353              
+    354            /* Set DAC error code to DMA error */
+    355            hdac->ErrorCode |= HAL_DAC_ERROR_DMA;
+   \        0x4   0x6921             LDR      R1,[R4, #+16]
+   \        0x6   0xF041 0x0104      ORR      R1,R1,#0x4
+   \        0xA   0x6121             STR      R1,[R4, #+16]
+    356              
+    357          #if (USE_HAL_DAC_REGISTER_CALLBACKS == 1)
+    358            hdac->ErrorCallbackCh2(hdac);
+    359          #else
+    360            HAL_DACEx_ErrorCallbackCh2(hdac); 
+   \        0xC   0x4620             MOV      R0,R4
+   \        0xE   0x....'....        BL       HAL_DACEx_ErrorCallbackCh2
+    361          #endif /* USE_HAL_DAC_REGISTER_CALLBACKS */
+    362              
+    363            hdac->State= HAL_DAC_STATE_READY;
+   \       0x12                      REQUIRE ?Subroutine1
+   \       0x12                      ;; // Fall through to label ?Subroutine1
+    364          }
+    365          
+    366          /**
+    367            * @}
+    368            */
+    369          
+    370          #endif /* STM32F405xx || STM32F415xx || STM32F407xx || STM32F417xx ||\
+    371                    STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx ||\
+    372                    STM32F410xx || STM32F446xx || STM32F469xx || STM32F479xx ||\
+    373          		  STM32F413xx || STM32F423xx */
+    374          
+    375          #endif /* HAL_DAC_MODULE_ENABLED */
+    376          
+    377          /**
+    378            * @}
+    379            */
+    380          
+    381          /**
+    382            * @}
+    383            */
+    384          
+    385          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   DAC_DMAConvCpltCh2
+         8   -> HAL_DACEx_ConvCpltCallbackCh2
+       8   DAC_DMAErrorCh2
+         8   -> HAL_DACEx_ErrorCallbackCh2
+       0   DAC_DMAHalfConvCpltCh2
+         0   -> HAL_DACEx_ConvHalfCpltCallbackCh2
+       0   HAL_DACEx_ConvCpltCallbackCh2
+       0   HAL_DACEx_ConvHalfCpltCallbackCh2
+       0   HAL_DACEx_DMAUnderrunCallbackCh2
+       0   HAL_DACEx_DualGetValue
+       0   HAL_DACEx_DualSetValue
+       0   HAL_DACEx_ErrorCallbackCh2
+      12   HAL_DACEx_NoiseWaveGenerate
+      12   HAL_DACEx_TriangleWaveGenerate
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      22  ?Subroutine0
+       6  ?Subroutine1
+      20  ?Subroutine2
+      12  DAC_DMAConvCpltCh2
+      18  DAC_DMAErrorCh2
+       6  DAC_DMAHalfConvCpltCh2
+       2  HAL_DACEx_ConvCpltCallbackCh2
+       2  HAL_DACEx_ConvHalfCpltCallbackCh2
+       2  HAL_DACEx_DMAUnderrunCallbackCh2
+      12  HAL_DACEx_DualGetValue
+      24  HAL_DACEx_DualSetValue
+       2  HAL_DACEx_ErrorCallbackCh2
+      20  HAL_DACEx_NoiseWaveGenerate
+      22  HAL_DACEx_TriangleWaveGenerate
+
+ 
+ 170 bytes in section .text
+ 
+ 162 bytes of CODE memory (+ 8 bytes shared)
+
+Errors: none
+Warnings: none

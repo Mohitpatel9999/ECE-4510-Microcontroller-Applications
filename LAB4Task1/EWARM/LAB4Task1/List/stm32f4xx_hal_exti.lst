@@ -1,0 +1,925 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         04/Feb/2020  10:25:15
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_exti.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EW1377.tmp
+#        ("C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_exti.c"
+#        -D USE_HAL_DRIVER -D STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM\LAB4Task1\List" -o
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM\LAB4Task1\Obj" --debug --endian=little
+#        --cpu=Cortex-M4 -e --fpu=VFPv4_sp --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.4\arm\inc\c\DLib_Config_Full.h"
+#        -I "C:\Users\mohit\Desktop\Microapps projects\LAB4Task1\EWARM/../Inc\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM\LAB4Task1\List\stm32f4xx_hal_exti.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\LAB4Task1\EWARM\LAB4Task1\Obj\stm32f4xx_hal_exti.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\LAB4Task1\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_exti.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    stm32f4xx_hal_exti.c
+      4            * @author  MCD Application Team
+      5            * @brief   EXTI HAL module driver.
+      6            *          This file provides firmware functions to manage the following
+      7            *          functionalities of the Extended Interrupts and events controller (EXTI) peripheral:
+      8            *           + Initialization and de-initialization functions
+      9            *           + IO operation functions
+     10            *
+     11            @verbatim
+     12            ==============================================================================
+     13                              ##### EXTI Peripheral features #####
+     14            ==============================================================================
+     15            [..]
+     16              (+) Each Exti line can be configured within this driver.
+     17          
+     18              (+) Exti line can be configured in 3 different modes
+     19                  (++) Interrupt
+     20                  (++) Event
+     21                  (++) Both of them
+     22          
+     23              (+) Configurable Exti lines can be configured with 3 different triggers
+     24                  (++) Rising
+     25                  (++) Falling
+     26                  (++) Both of them
+     27          
+     28              (+) When set in interrupt mode, configurable Exti lines have two different
+     29                  interrupts pending registers which allow to distinguish which transition
+     30                  occurs:
+     31                  (++) Rising edge pending interrupt
+     32                  (++) Falling
+     33          
+     34              (+) Exti lines 0 to 15 are linked to gpio pin number 0 to 15. Gpio port can
+     35                  be selected through multiplexer.
+     36          
+     37                               ##### How to use this driver #####
+     38            ==============================================================================
+     39            [..]
+     40          
+     41              (#) Configure the EXTI line using HAL_EXTI_SetConfigLine().
+     42                  (++) Choose the interrupt line number by setting "Line" member from
+     43                       EXTI_ConfigTypeDef structure.
+     44                  (++) Configure the interrupt and/or event mode using "Mode" member from
+     45                       EXTI_ConfigTypeDef structure.
+     46                  (++) For configurable lines, configure rising and/or falling trigger
+     47                       "Trigger" member from EXTI_ConfigTypeDef structure.
+     48                  (++) For Exti lines linked to gpio, choose gpio port using "GPIOSel"
+     49                       member from GPIO_InitTypeDef structure.
+     50          
+     51              (#) Get current Exti configuration of a dedicated line using
+     52                  HAL_EXTI_GetConfigLine().
+     53                  (++) Provide exiting handle as parameter.
+     54                  (++) Provide pointer on EXTI_ConfigTypeDef structure as second parameter.
+     55          
+     56              (#) Clear Exti configuration of a dedicated line using HAL_EXTI_GetConfigLine().
+     57                  (++) Provide exiting handle as parameter.
+     58          
+     59              (#) Register callback to treat Exti interrupts using HAL_EXTI_RegisterCallback().
+     60                  (++) Provide exiting handle as first parameter.
+     61                  (++) Provide which callback will be registered using one value from
+     62                       EXTI_CallbackIDTypeDef.
+     63                  (++) Provide callback function pointer.
+     64          
+     65              (#) Get interrupt pending bit using HAL_EXTI_GetPending().
+     66          
+     67              (#) Clear interrupt pending bit using HAL_EXTI_GetPending().
+     68          
+     69              (#) Generate software interrupt using HAL_EXTI_GenerateSWI().
+     70          
+     71            @endverbatim
+     72            ******************************************************************************
+     73            * @attention
+     74            *
+     75            * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
+     76            * All rights reserved.</center></h2>
+     77            *
+     78            * This software component is licensed by ST under BSD 3-Clause license,
+     79            * the "License"; You may not use this file except in compliance with the
+     80            * License. You may obtain a copy of the License at:
+     81            *                        opensource.org/licenses/BSD-3-Clause
+     82            *
+     83            ******************************************************************************
+     84            */
+     85          
+     86          /* Includes ------------------------------------------------------------------*/
+     87          #include "stm32f4xx_hal.h"
+     88          
+     89          /** @addtogroup STM32F4xx_HAL_Driver
+     90            * @{
+     91            */
+     92          
+     93          /** @addtogroup EXTI
+     94            * @{
+     95            */
+     96          /** MISRA C:2012 deviation rule has been granted for following rule:
+     97            * Rule-18.1_b - Medium: Array `EXTICR' 1st subscript interval [0,7] may be out
+     98            * of bounds [0,3] in following API :
+     99            * HAL_EXTI_SetConfigLine
+    100            * HAL_EXTI_GetConfigLine
+    101            * HAL_EXTI_ClearConfigLine
+    102            */
+    103          
+    104          #ifdef HAL_EXTI_MODULE_ENABLED
+    105          
+    106          /* Private typedef -----------------------------------------------------------*/
+    107          /* Private defines -----------------------------------------------------------*/
+    108          /** @defgroup EXTI_Private_Constants EXTI Private Constants
+    109            * @{
+    110            */
+    111          
+    112          /**
+    113            * @}
+    114            */
+    115          
+    116          /* Private macros ------------------------------------------------------------*/
+    117          /* Private variables ---------------------------------------------------------*/
+    118          /* Private function prototypes -----------------------------------------------*/
+    119          /* Exported functions --------------------------------------------------------*/
+    120          
+    121          /** @addtogroup EXTI_Exported_Functions
+    122            * @{
+    123            */
+    124          
+    125          /** @addtogroup EXTI_Exported_Functions_Group1
+    126            *  @brief    Configuration functions
+    127            *
+    128          @verbatim
+    129           ===============================================================================
+    130                        ##### Configuration functions #####
+    131           ===============================================================================
+    132          
+    133          @endverbatim
+    134            * @{
+    135            */
+    136          
+    137          /**
+    138            * @brief  Set configuration of a dedicated Exti line.
+    139            * @param  hexti Exti handle.
+    140            * @param  pExtiConfig Pointer on EXTI configuration to be set.
+    141            * @retval HAL Status.
+    142            */
+
+   \                                 In section .text, align 2, keep-with-next
+    143          HAL_StatusTypeDef HAL_EXTI_SetConfigLine(EXTI_HandleTypeDef *hexti, EXTI_ConfigTypeDef *pExtiConfig)
+    144          {
+   \                     HAL_EXTI_SetConfigLine: (+1)
+   \        0x0   0xB5F0             PUSH     {R4-R7,LR}
+    145            uint32_t regval;
+    146            uint32_t linepos;
+    147            uint32_t maskline;
+    148          
+    149            /* Check null pointer */
+    150            if ((hexti == NULL) || (pExtiConfig == NULL))
+   \        0x2   0x2800             CMP      R0,#+0
+   \        0x4   0xBF18             IT       NE
+   \        0x6   0x2900             CMPNE    R1,#+0
+   \        0x8   0xD101             BNE.N    ??HAL_EXTI_SetConfigLine_0
+    151            {
+    152              return HAL_ERROR;
+   \        0xA   0x2001             MOVS     R0,#+1
+   \        0xC   0xBDF0             POP      {R4-R7,PC}
+    153            }
+    154          
+    155            /* Check parameters */
+    156            assert_param(IS_EXTI_LINE(pExtiConfig->Line));
+    157            assert_param(IS_EXTI_MODE(pExtiConfig->Mode));
+    158          
+    159            /* Assign line number to handle */
+    160            hexti->Line = pExtiConfig->Line;
+   \                     ??HAL_EXTI_SetConfigLine_0: (+1)
+   \        0xE   0x680A             LDR      R2,[R1, #+0]
+    161          
+    162            /* Compute line mask */
+    163            linepos = (pExtiConfig->Line & EXTI_PIN_MASK);
+    164            maskline = (1uL << linepos);
+    165          
+    166            /* Configure triggers for configurable lines */
+    167            if ((pExtiConfig->Line & EXTI_CONFIG) != 0x00u)
+   \       0x10   0x....             LDR.N    R3,??DataTable6  ;; 0x40013c00
+   \       0x12   0x6002             STR      R2,[R0, #+0]
+   \       0x14   0x2001             MOVS     R0,#+1
+   \       0x16   0x680D             LDR      R5,[R1, #+0]
+   \       0x18   0xF005 0x041F      AND      R4,R5,#0x1F
+   \       0x1C   0x40A0             LSLS     R0,R0,R4
+   \       0x1E   0x43C2             MVNS     R2,R0
+   \       0x20   0x01AD             LSLS     R5,R5,#+6
+   \       0x22   0xD52A             BPL.N    ??HAL_EXTI_SetConfigLine_1
+    168            {
+    169              assert_param(IS_EXTI_TRIGGER(pExtiConfig->Trigger));
+    170          
+    171              /* Configure rising trigger */
+    172              /* Mask or set line */
+    173              if ((pExtiConfig->Trigger & EXTI_TRIGGER_RISING) != 0x00u)
+   \       0x24   0x7A0E             LDRB     R6,[R1, #+8]
+   \       0x26   0x07F5             LSLS     R5,R6,#+31
+   \       0x28   0xD503             BPL.N    ??HAL_EXTI_SetConfigLine_2
+    174              {
+    175                EXTI->RTSR |= maskline;
+   \       0x2A   0x689E             LDR      R6,[R3, #+8]
+   \       0x2C   0x4306             ORRS     R6,R0,R6
+   \       0x2E   0x609E             STR      R6,[R3, #+8]
+   \       0x30   0xE002             B.N      ??HAL_EXTI_SetConfigLine_3
+    176              }
+    177              else
+    178              {
+    179                EXTI->RTSR &= ~maskline;
+   \                     ??HAL_EXTI_SetConfigLine_2: (+1)
+   \       0x32   0x689D             LDR      R5,[R3, #+8]
+   \       0x34   0x4015             ANDS     R5,R2,R5
+   \       0x36   0x609D             STR      R5,[R3, #+8]
+    180              }
+    181          
+    182              /* Configure falling trigger */
+    183              /* Mask or set line */
+    184              if ((pExtiConfig->Trigger & EXTI_TRIGGER_FALLING) != 0x00u)
+   \                     ??HAL_EXTI_SetConfigLine_3: (+1)
+   \       0x38   0x7A0D             LDRB     R5,[R1, #+8]
+   \       0x3A   0x07AE             LSLS     R6,R5,#+30
+   \       0x3C   0x68DD             LDR      R5,[R3, #+12]
+   \       0x3E   0xBF4C             ITE      MI
+   \       0x40   0x4305             ORRMI    R5,R0,R5
+   \       0x42   0x4015             ANDPL    R5,R2,R5
+    185              {
+    186                EXTI->FTSR |= maskline;
+    187              }
+    188              else
+    189              {
+    190                EXTI->FTSR &= ~maskline;
+   \       0x44   0x60DD             STR      R5,[R3, #+12]
+    191              }
+    192          
+    193          
+    194              /* Configure gpio port selection in case of gpio exti line */
+    195              if ((pExtiConfig->Line & EXTI_GPIO) == EXTI_GPIO)
+   \       0x46   0x680E             LDR      R6,[R1, #+0]
+   \       0x48   0xF006 0x66C0      AND      R6,R6,#0x6000000
+   \       0x4C   0xF1B6 0x6FC0      CMP      R6,#+100663296
+   \       0x50   0xD113             BNE.N    ??HAL_EXTI_SetConfigLine_1
+    196              {
+    197                assert_param(IS_EXTI_GPIO_PORT(pExtiConfig->GPIOSel));
+    198                assert_param(IS_EXTI_GPIO_PIN(linepos));
+    199          
+    200                regval = SYSCFG->EXTICR[linepos >> 2u];
+   \       0x52   0x....             LDR.N    R6,??DataTable6_1  ;; 0x40013808
+   \       0x54   0x08A5             LSRS     R5,R4,#+2
+    201                regval &= ~(SYSCFG_EXTICR1_EXTI0 << (SYSCFG_EXTICR1_EXTI1_Pos * (linepos & 0x03u)));
+    202                regval |= (pExtiConfig->GPIOSel << (SYSCFG_EXTICR1_EXTI1_Pos * (linepos & 0x03u)));
+    203                SYSCFG->EXTICR[linepos >> 2u] = regval;
+   \       0x56   0x00A4             LSLS     R4,R4,#+2
+   \       0x58   0xF856 0x7025      LDR      R7,[R6, R5, LSL #+2]
+   \       0x5C   0xF8D1 0xE00C      LDR      LR,[R1, #+12]
+   \       0x60   0xF004 0x040C      AND      R4,R4,#0xC
+   \       0x64   0xF04F 0x0C0F      MOV      R12,#+15
+   \       0x68   0xFA0C 0xFC04      LSL      R12,R12,R4
+   \       0x6C   0xEA27 0x070C      BIC      R7,R7,R12
+   \       0x70   0xFA0E 0xF404      LSL      R4,LR,R4
+   \       0x74   0x4327             ORRS     R7,R4,R7
+   \       0x76   0xF846 0x7025      STR      R7,[R6, R5, LSL #+2]
+    204              }
+    205            }
+    206          
+    207            /* Configure interrupt mode : read current mode */
+    208            /* Mask or set line */
+    209            if ((pExtiConfig->Mode & EXTI_MODE_INTERRUPT) != 0x00u)
+   \                     ??HAL_EXTI_SetConfigLine_1: (+1)
+   \       0x7A   0x790C             LDRB     R4,[R1, #+4]
+   \       0x7C   0x07E5             LSLS     R5,R4,#+31
+   \       0x7E   0xD503             BPL.N    ??HAL_EXTI_SetConfigLine_4
+    210            {
+    211              EXTI->IMR |= maskline;
+   \       0x80   0x681C             LDR      R4,[R3, #+0]
+   \       0x82   0x4304             ORRS     R4,R0,R4
+   \       0x84   0x601C             STR      R4,[R3, #+0]
+   \       0x86   0xE002             B.N      ??HAL_EXTI_SetConfigLine_5
+    212            }
+    213            else
+    214            {
+    215              EXTI->IMR &= ~maskline;
+   \                     ??HAL_EXTI_SetConfigLine_4: (+1)
+   \       0x88   0x681D             LDR      R5,[R3, #+0]
+   \       0x8A   0x4015             ANDS     R5,R2,R5
+   \       0x8C   0x601D             STR      R5,[R3, #+0]
+    216            }
+    217          
+    218            /* Configure event mode : read current mode */
+    219            /* Mask or set line */
+    220            if ((pExtiConfig->Mode & EXTI_MODE_EVENT) != 0x00u)
+   \                     ??HAL_EXTI_SetConfigLine_5: (+1)
+   \       0x8E   0x7909             LDRB     R1,[R1, #+4]
+   \       0x90   0x078C             LSLS     R4,R1,#+30
+   \       0x92   0xD503             BPL.N    ??HAL_EXTI_SetConfigLine_6
+    221            {
+    222              EXTI->EMR |= maskline;
+   \       0x94   0x6859             LDR      R1,[R3, #+4]
+   \       0x96   0x4308             ORRS     R0,R0,R1
+   \       0x98   0x6058             STR      R0,[R3, #+4]
+   \       0x9A   0xE002             B.N      ??HAL_EXTI_SetConfigLine_7
+    223            }
+    224            else
+    225            {
+    226              EXTI->EMR &= ~maskline;
+   \                     ??HAL_EXTI_SetConfigLine_6: (+1)
+   \       0x9C   0x6858             LDR      R0,[R3, #+4]
+   \       0x9E   0x4002             ANDS     R2,R2,R0
+   \       0xA0   0x605A             STR      R2,[R3, #+4]
+    227            }
+    228          
+    229            return HAL_OK;
+   \                     ??HAL_EXTI_SetConfigLine_7: (+1)
+   \       0xA2   0x2000             MOVS     R0,#+0
+   \       0xA4   0xBDF0             POP      {R4-R7,PC}       ;; return
+    230          }
+    231          
+    232          /**
+    233            * @brief  Get configuration of a dedicated Exti line.
+    234            * @param  hexti Exti handle.
+    235            * @param  pExtiConfig Pointer on structure to store Exti configuration.
+    236            * @retval HAL Status.
+    237            */
+
+   \                                 In section .text, align 2, keep-with-next
+    238          HAL_StatusTypeDef HAL_EXTI_GetConfigLine(EXTI_HandleTypeDef *hexti, EXTI_ConfigTypeDef *pExtiConfig)
+    239          {
+   \                     HAL_EXTI_GetConfigLine: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+    240            uint32_t regval;
+    241            uint32_t linepos;
+    242            uint32_t maskline;
+    243          
+    244            /* Check null pointer */
+    245            if ((hexti == NULL) || (pExtiConfig == NULL))
+   \        0x2   0x2800             CMP      R0,#+0
+   \        0x4   0xBF18             IT       NE
+   \        0x6   0x2900             CMPNE    R1,#+0
+   \        0x8   0xD101             BNE.N    ??HAL_EXTI_GetConfigLine_0
+    246            {
+    247              return HAL_ERROR;
+   \        0xA   0x2001             MOVS     R0,#+1
+   \        0xC   0xBD70             POP      {R4-R6,PC}
+    248            }
+    249          
+    250            /* Check the parameter */
+    251            assert_param(IS_EXTI_LINE(hexti->Line));
+    252          
+    253            /* Store handle line number to configuration structure */
+    254            pExtiConfig->Line = hexti->Line;
+   \                     ??HAL_EXTI_GetConfigLine_0: (+1)
+   \        0xE   0x6802             LDR      R2,[R0, #+0]
+    255          
+    256            /* Compute line mask */
+    257            linepos = (pExtiConfig->Line & EXTI_PIN_MASK);
+    258            maskline = (1uL << linepos);
+    259          
+    260            /* 1] Get core mode : interrupt */
+    261          
+    262            /* Check if selected line is enable */
+    263            if ((EXTI->IMR & maskline) != 0x00u)
+   \       0x10   0x....             LDR.N    R4,??DataTable6  ;; 0x40013c00
+   \       0x12   0x600A             STR      R2,[R1, #+0]
+   \       0x14   0xF002 0x001F      AND      R0,R2,#0x1F
+   \       0x18   0x2301             MOVS     R3,#+1
+   \       0x1A   0x6825             LDR      R5,[R4, #+0]
+   \       0x1C   0x4083             LSLS     R3,R3,R0
+   \       0x1E   0x401D             ANDS     R5,R3,R5
+   \       0x20   0xBF18             IT       NE
+   \       0x22   0x2501             MOVNE    R5,#+1
+   \       0x24   0x604D             STR      R5,[R1, #+4]
+    264            {
+    265              pExtiConfig->Mode = EXTI_MODE_INTERRUPT;
+    266            }
+    267            else
+    268            {
+    269              pExtiConfig->Mode = EXTI_MODE_NONE;
+    270            }
+    271          
+    272            /* Get event mode */
+    273            /* Check if selected line is enable */
+    274            if ((EXTI->EMR & maskline) != 0x00u)
+   \       0x26   0x6866             LDR      R6,[R4, #+4]
+   \       0x28   0x421E             TST      R6,R3
+   \       0x2A   0xBF1C             ITT      NE
+   \       0x2C   0xF045 0x0502      ORRNE    R5,R5,#0x2
+   \       0x30   0x604D             STRNE    R5,[R1, #+4]
+    275            {
+    276              pExtiConfig->Mode |= EXTI_MODE_EVENT;
+    277            }
+    278          
+    279            /* 2] Get trigger for configurable lines : rising */
+    280            if ((pExtiConfig->Line & EXTI_CONFIG) != 0x00u)
+   \       0x32   0x0195             LSLS     R5,R2,#+6
+   \       0x34   0xD520             BPL.N    ??HAL_EXTI_GetConfigLine_1
+    281            {
+    282              /* Check if configuration of selected line is enable */
+    283              if ((EXTI->RTSR & maskline) != 0x00u)
+   \       0x36   0x68A6             LDR      R6,[R4, #+8]
+   \       0x38   0xEA13 0x0506      ANDS     R5,R3,R6
+   \       0x3C   0xBF18             IT       NE
+   \       0x3E   0x2501             MOVNE    R5,#+1
+   \       0x40   0x608D             STR      R5,[R1, #+8]
+    284              {
+    285                pExtiConfig->Trigger = EXTI_TRIGGER_RISING;
+    286              }
+    287              else
+    288              {
+    289                pExtiConfig->Trigger = EXTI_TRIGGER_NONE;
+    290              }
+    291          
+    292              /* Get falling configuration */
+    293              /* Check if configuration of selected line is enable */
+    294              if ((EXTI->FTSR & maskline) != 0x00u)
+    295              {
+    296                pExtiConfig->Trigger |= EXTI_TRIGGER_FALLING;
+    297              }
+    298          
+    299              /* Get Gpio port selection for gpio lines */
+    300              if ((pExtiConfig->Line & EXTI_GPIO) == EXTI_GPIO)
+   \       0x42   0xF002 0x62C0      AND      R2,R2,#0x6000000
+   \       0x46   0x68E4             LDR      R4,[R4, #+12]
+   \       0x48   0x421C             TST      R4,R3
+   \       0x4A   0xBF1C             ITT      NE
+   \       0x4C   0xF045 0x0502      ORRNE    R5,R5,#0x2
+   \       0x50   0x608D             STRNE    R5,[R1, #+8]
+   \       0x52   0xF1B2 0x6FC0      CMP      R2,#+100663296
+   \       0x56   0xD10C             BNE.N    ??HAL_EXTI_GetConfigLine_2
+    301              {
+    302                assert_param(IS_EXTI_GPIO_PIN(linepos));
+    303          
+    304                regval = SYSCFG->EXTICR[linepos >> 2u];
+   \       0x58   0x....             LDR.N    R2,??DataTable6_1  ;; 0x40013808
+   \       0x5A   0x0883             LSRS     R3,R0,#+2
+    305                pExtiConfig->GPIOSel = ((regval << (SYSCFG_EXTICR1_EXTI1_Pos * (3uL - (linepos & 0x03u)))) >> 24);
+   \       0x5C   0xF000 0x0003      AND      R0,R0,#0x3
+   \       0x60   0xF852 0x2023      LDR      R2,[R2, R3, LSL #+2]
+   \       0x64   0xF1C0 0x0003      RSB      R0,R0,#+3
+   \       0x68   0x0080             LSLS     R0,R0,#+2
+   \       0x6A   0xFA02 0xF000      LSL      R0,R2,R0
+   \       0x6E   0x0E00             LSRS     R0,R0,#+24
+   \       0x70   0xE000             B.N      ??HAL_EXTI_GetConfigLine_3
+    306              }
+    307              else
+    308              {
+    309                pExtiConfig->GPIOSel = 0x00u;
+   \                     ??HAL_EXTI_GetConfigLine_2: (+1)
+   \       0x72   0x2000             MOVS     R0,#+0
+   \                     ??HAL_EXTI_GetConfigLine_3: (+1)
+   \       0x74   0x60C8             STR      R0,[R1, #+12]
+   \       0x76   0xE002             B.N      ??HAL_EXTI_GetConfigLine_4
+    310              }
+    311            }
+    312            else
+    313            {
+    314              /* No Trigger selected */
+    315              pExtiConfig->Trigger = EXTI_TRIGGER_NONE;
+   \                     ??HAL_EXTI_GetConfigLine_1: (+1)
+   \       0x78   0x2200             MOVS     R2,#+0
+   \       0x7A   0x608A             STR      R2,[R1, #+8]
+    316              pExtiConfig->GPIOSel = 0x00u;
+   \       0x7C   0x60CA             STR      R2,[R1, #+12]
+    317            }
+    318          
+    319            return HAL_OK;
+   \                     ??HAL_EXTI_GetConfigLine_4: (+1)
+   \       0x7E   0x2000             MOVS     R0,#+0
+   \       0x80   0xBD70             POP      {R4-R6,PC}       ;; return
+    320          }
+    321          
+    322          /**
+    323            * @brief  Clear whole configuration of a dedicated Exti line.
+    324            * @param  hexti Exti handle.
+    325            * @retval HAL Status.
+    326            */
+
+   \                                 In section .text, align 2, keep-with-next
+    327          HAL_StatusTypeDef HAL_EXTI_ClearConfigLine(EXTI_HandleTypeDef *hexti)
+    328          {
+   \                     HAL_EXTI_ClearConfigLine: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+    329            uint32_t regval;
+    330            uint32_t linepos;
+    331            uint32_t maskline;
+    332          
+    333            /* Check null pointer */
+    334            if (hexti == NULL)
+   \        0x2   0xB908             CBNZ.N   R0,??HAL_EXTI_ClearConfigLine_0
+    335            {
+    336              return HAL_ERROR;
+   \        0x4   0x2001             MOVS     R0,#+1
+   \        0x6   0xBD30             POP      {R4,R5,PC}
+    337            }
+    338          
+    339            /* Check the parameter */
+    340            assert_param(IS_EXTI_LINE(hexti->Line));
+    341          
+    342            /* compute line mask */
+    343            linepos = (hexti->Line & EXTI_PIN_MASK);
+   \                     ??HAL_EXTI_ClearConfigLine_0: (+1)
+   \        0x8   0x7801             LDRB     R1,[R0, #+0]
+    344            maskline = (1uL << linepos);
+    345          
+    346            /* 1] Clear interrupt mode */
+    347            EXTI->IMR = (EXTI->IMR & ~maskline);
+   \        0xA   0x....             LDR.N    R3,??DataTable6  ;; 0x40013c00
+   \        0xC   0xF001 0x011F      AND      R1,R1,#0x1F
+   \       0x10   0x2201             MOVS     R2,#+1
+   \       0x12   0x408A             LSLS     R2,R2,R1
+   \       0x14   0x681C             LDR      R4,[R3, #+0]
+   \       0x16   0x43D2             MVNS     R2,R2
+   \       0x18   0x4014             ANDS     R4,R2,R4
+   \       0x1A   0x601C             STR      R4,[R3, #+0]
+    348          
+    349            /* 2] Clear event mode */
+    350            EXTI->EMR = (EXTI->EMR & ~maskline);
+   \       0x1C   0x685D             LDR      R5,[R3, #+4]
+   \       0x1E   0x4015             ANDS     R5,R2,R5
+   \       0x20   0x605D             STR      R5,[R3, #+4]
+    351          
+    352            /* 3] Clear triggers in case of configurable lines */
+    353            if ((hexti->Line & EXTI_CONFIG) != 0x00u)
+   \       0x22   0x6804             LDR      R4,[R0, #+0]
+   \       0x24   0x01A5             LSLS     R5,R4,#+6
+   \       0x26   0xD517             BPL.N    ??HAL_EXTI_ClearConfigLine_1
+    354            {
+    355              EXTI->RTSR = (EXTI->RTSR & ~maskline);
+   \       0x28   0x689C             LDR      R4,[R3, #+8]
+   \       0x2A   0x4014             ANDS     R4,R2,R4
+   \       0x2C   0x609C             STR      R4,[R3, #+8]
+    356              EXTI->FTSR = (EXTI->FTSR & ~maskline);
+   \       0x2E   0x68DD             LDR      R5,[R3, #+12]
+   \       0x30   0x402A             ANDS     R2,R2,R5
+   \       0x32   0x60DA             STR      R2,[R3, #+12]
+    357          
+    358              /* Get Gpio port selection for gpio lines */
+    359              if ((hexti->Line & EXTI_GPIO) == EXTI_GPIO)
+   \       0x34   0x6800             LDR      R0,[R0, #+0]
+   \       0x36   0xF000 0x60C0      AND      R0,R0,#0x6000000
+   \       0x3A   0xF1B0 0x6FC0      CMP      R0,#+100663296
+   \       0x3E   0xD10B             BNE.N    ??HAL_EXTI_ClearConfigLine_1
+    360              {
+    361                assert_param(IS_EXTI_GPIO_PIN(linepos));
+    362          
+    363                regval = SYSCFG->EXTICR[linepos >> 2u];
+   \       0x40   0x....             LDR.N    R2,??DataTable6_1  ;; 0x40013808
+   \       0x42   0x0888             LSRS     R0,R1,#+2
+    364                regval &= ~(SYSCFG_EXTICR1_EXTI0 << (SYSCFG_EXTICR1_EXTI1_Pos * (linepos & 0x03u)));
+    365                SYSCFG->EXTICR[linepos >> 2u] = regval;
+   \       0x44   0x0089             LSLS     R1,R1,#+2
+   \       0x46   0xF852 0x3020      LDR      R3,[R2, R0, LSL #+2]
+   \       0x4A   0x240F             MOVS     R4,#+15
+   \       0x4C   0xF001 0x010C      AND      R1,R1,#0xC
+   \       0x50   0x408C             LSLS     R4,R4,R1
+   \       0x52   0x43A3             BICS     R3,R3,R4
+   \       0x54   0xF842 0x3020      STR      R3,[R2, R0, LSL #+2]
+    366              }
+    367            }
+    368          
+    369            return HAL_OK;
+   \                     ??HAL_EXTI_ClearConfigLine_1: (+1)
+   \       0x58   0x2000             MOVS     R0,#+0
+   \       0x5A   0xBD30             POP      {R4,R5,PC}       ;; return
+    370          }
+    371          
+    372          /**
+    373            * @brief  Register callback for a dedicated Exti line.
+    374            * @param  hexti Exti handle.
+    375            * @param  CallbackID User callback identifier.
+    376            *         This parameter can be one of @arg @ref EXTI_CallbackIDTypeDef values.
+    377            * @param  pPendingCbfn function pointer to be stored as callback.
+    378            * @retval HAL Status.
+    379            */
+
+   \                                 In section .text, align 2, keep-with-next
+    380          HAL_StatusTypeDef HAL_EXTI_RegisterCallback(EXTI_HandleTypeDef *hexti, EXTI_CallbackIDTypeDef CallbackID, void (*pPendingCbfn)(void))
+    381          {
+   \                     HAL_EXTI_RegisterCallback: (+1)
+   \        0x0   0x4603             MOV      R3,R0
+    382            HAL_StatusTypeDef status = HAL_OK;
+   \        0x2   0x2000             MOVS     R0,#+0
+    383          
+    384            switch (CallbackID)
+   \        0x4   0xB909             CBNZ.N   R1,??HAL_EXTI_RegisterCallback_0
+    385            {
+    386              case  HAL_EXTI_COMMON_CB_ID:
+    387                hexti->PendingCallback = pPendingCbfn;
+   \        0x6   0x605A             STR      R2,[R3, #+4]
+    388                break;
+   \        0x8   0x4770             BX       LR
+    389          
+    390              default:
+    391                status = HAL_ERROR;
+   \                     ??HAL_EXTI_RegisterCallback_0: (+1)
+   \        0xA   0x2001             MOVS     R0,#+1
+    392                break;
+    393            }
+    394          
+    395            return status;
+   \        0xC   0x4770             BX       LR               ;; return
+    396          }
+    397          
+    398          /**
+    399            * @brief  Store line number as handle private field.
+    400            * @param  hexti Exti handle.
+    401            * @param  ExtiLine Exti line number.
+    402            *         This parameter can be from 0 to @ref EXTI_LINE_NB.
+    403            * @retval HAL Status.
+    404            */
+
+   \                                 In section .text, align 2, keep-with-next
+    405          HAL_StatusTypeDef HAL_EXTI_GetHandle(EXTI_HandleTypeDef *hexti, uint32_t ExtiLine)
+    406          {
+    407            /* Check the parameters */
+    408            assert_param(IS_EXTI_LINE(ExtiLine));
+    409          
+    410            /* Check null pointer */
+    411            if (hexti == NULL)
+   \                     HAL_EXTI_GetHandle: (+1)
+   \        0x0   0xB908             CBNZ.N   R0,??HAL_EXTI_GetHandle_0
+    412            {
+    413              return HAL_ERROR;
+   \        0x2   0x2001             MOVS     R0,#+1
+   \        0x4   0x4770             BX       LR
+    414            }
+    415            else
+    416            {
+    417              /* Store line number as handle private field */
+    418              hexti->Line = ExtiLine;
+   \                     ??HAL_EXTI_GetHandle_0: (+1)
+   \        0x6   0x6001             STR      R1,[R0, #+0]
+    419          
+    420              return HAL_OK;
+   \        0x8   0x2000             MOVS     R0,#+0
+   \        0xA   0x4770             BX       LR               ;; return
+    421            }
+    422          }
+    423          
+    424          /**
+    425            * @}
+    426            */
+    427          
+    428          /** @addtogroup EXTI_Exported_Functions_Group2
+    429            *  @brief EXTI IO functions.
+    430            *
+    431          @verbatim
+    432           ===============================================================================
+    433                                 ##### IO operation functions #####
+    434           ===============================================================================
+    435          
+    436          @endverbatim
+    437            * @{
+    438            */
+    439          
+    440          /**
+    441            * @brief  Handle EXTI interrupt request.
+    442            * @param  hexti Exti handle.
+    443            * @retval none.
+    444            */
+
+   \                                 In section .text, align 2, keep-with-next
+    445          void HAL_EXTI_IRQHandler(EXTI_HandleTypeDef *hexti)
+    446          {
+    447            uint32_t regval;
+    448            uint32_t maskline;
+    449          
+    450            /* Compute line mask */
+    451            maskline = (1uL << (hexti->Line & EXTI_PIN_MASK));
+   \                     HAL_EXTI_IRQHandler: (+1)
+   \        0x0   0x7801             LDRB     R1,[R0, #+0]
+   \        0x2   0x2201             MOVS     R2,#+1
+   \        0x4   0xF001 0x011F      AND      R1,R1,#0x1F
+   \        0x8   0xFA02 0xF101      LSL      R1,R2,R1
+    452          
+    453            /* Get pending bit  */
+    454            regval = (EXTI->PR & maskline);
+   \        0xC   0x....             LDR.N    R2,??DataTable6_2  ;; 0x40013c14
+   \        0xE   0x6813             LDR      R3,[R2, #+0]
+    455            if (regval != 0x00u)
+   \       0x10   0x420B             TST      R3,R1
+   \       0x12   0xD004             BEQ.N    ??HAL_EXTI_IRQHandler_0
+    456            {
+    457              /* Clear pending bit */
+    458              EXTI->PR = maskline;
+   \       0x14   0x6011             STR      R1,[R2, #+0]
+    459          
+    460              /* Call callback */
+    461              if (hexti->PendingCallback != NULL)
+   \       0x16   0x6840             LDR      R0,[R0, #+4]
+   \       0x18   0x2800             CMP      R0,#+0
+   \       0x1A   0xBF18             IT       NE
+    462              {
+    463                hexti->PendingCallback();
+   \       0x1C   0x4700             BXNE     R0
+    464              }
+    465            }
+    466          }
+   \                     ??HAL_EXTI_IRQHandler_0: (+1)
+   \       0x1E   0x4770             BX       LR               ;; return
+    467          
+    468          /**
+    469            * @brief  Get interrupt pending bit of a dedicated line.
+    470            * @param  hexti Exti handle.
+    471            * @param  Edge Specify which pending edge as to be checked.
+    472            *         This parameter can be one of the following values:
+    473            *           @arg @ref EXTI_TRIGGER_RISING_FALLING
+    474            *         This parameter is kept for compatibility with other series.
+    475            * @retval 1 if interrupt is pending else 0.
+    476            */
+
+   \                                 In section .text, align 2, keep-with-next
+    477          uint32_t HAL_EXTI_GetPending(EXTI_HandleTypeDef *hexti, uint32_t Edge)
+    478          {
+    479            uint32_t regval;
+    480            uint32_t linepos;
+    481            uint32_t maskline;
+    482          
+    483            /* Check parameters */
+    484            assert_param(IS_EXTI_LINE(hexti->Line));
+    485            assert_param(IS_EXTI_CONFIG_LINE(hexti->Line));
+    486            assert_param(IS_EXTI_PENDING_EDGE(Edge));
+    487          
+    488            /* Compute line mask */
+    489            linepos = (hexti->Line & EXTI_PIN_MASK);
+   \                     HAL_EXTI_GetPending: (+1)
+   \        0x0   0x7801             LDRB     R1,[R0, #+0]
+    490            maskline = (1uL << linepos);
+    491          
+    492            /* return 1 if bit is set else 0 */
+    493            regval = ((EXTI->PR & maskline) >> linepos);
+   \        0x2   0x....             LDR.N    R0,??DataTable6_2  ;; 0x40013c14
+   \        0x4   0xF001 0x011F      AND      R1,R1,#0x1F
+   \        0x8   0x6800             LDR      R0,[R0, #+0]
+    494            return regval;
+   \        0xA   0x2201             MOVS     R2,#+1
+   \        0xC   0x408A             LSLS     R2,R2,R1
+   \        0xE   0x4010             ANDS     R0,R2,R0
+   \       0x10   0x40C8             LSRS     R0,R0,R1
+   \       0x12   0x4770             BX       LR               ;; return
+    495          }
+    496          
+    497          /**
+    498            * @brief  Clear interrupt pending bit of a dedicated line.
+    499            * @param  hexti Exti handle.
+    500            * @param  Edge Specify which pending edge as to be clear.
+    501            *         This parameter can be one of the following values:
+    502            *           @arg @ref EXTI_TRIGGER_RISING_FALLING
+    503            *         This parameter is kept for compatibility with other series.
+    504            * @retval None.
+    505            */
+
+   \                                 In section .text, align 2, keep-with-next
+    506          void HAL_EXTI_ClearPending(EXTI_HandleTypeDef *hexti, uint32_t Edge)
+    507          {
+    508            uint32_t maskline;
+    509          
+    510            /* Check parameters */
+    511            assert_param(IS_EXTI_LINE(hexti->Line));
+    512            assert_param(IS_EXTI_CONFIG_LINE(hexti->Line));
+    513            assert_param(IS_EXTI_PENDING_EDGE(Edge));
+    514          
+    515            /* Compute line mask */
+    516            maskline = (1uL << (hexti->Line & EXTI_PIN_MASK));
+    517          
+    518            /* Clear Pending bit */
+    519            EXTI->PR =  maskline;
+   \                     HAL_EXTI_ClearPending: (+1)
+   \        0x0   0x7800             LDRB     R0,[R0, #+0]
+   \        0x2   0x....             LDR.N    R2,??DataTable6_2  ;; 0x40013c14
+   \        0x4   0x....             B.N      ?Subroutine0
+    520          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine0: (+1)
+   \        0x0   0x2101             MOVS     R1,#+1
+   \        0x2   0xF000 0x001F      AND      R0,R0,#0x1F
+   \        0x6   0x4081             LSLS     R1,R1,R0
+   \        0x8   0x6011             STR      R1,[R2, #+0]
+   \        0xA   0x4770             BX       LR               ;; return
+    521          
+    522          /**
+    523            * @brief  Generate a software interrupt for a dedicated line.
+    524            * @param  hexti Exti handle.
+    525            * @retval None.
+    526            */
+
+   \                                 In section .text, align 2, keep-with-next
+    527          void HAL_EXTI_GenerateSWI(EXTI_HandleTypeDef *hexti)
+    528          {
+    529            uint32_t maskline;
+    530          
+    531            /* Check parameters */
+    532            assert_param(IS_EXTI_LINE(hexti->Line));
+    533            assert_param(IS_EXTI_CONFIG_LINE(hexti->Line));
+    534          
+    535            /* Compute line mask */
+    536            maskline = (1uL << (hexti->Line & EXTI_PIN_MASK));
+    537          
+    538            /* Generate Software interrupt */
+    539            EXTI->SWIER = maskline;
+   \                     HAL_EXTI_GenerateSWI: (+1)
+   \        0x0   0x7800             LDRB     R0,[R0, #+0]
+   \        0x2   0x....             LDR.N    R2,??DataTable6_3  ;; 0x40013c10
+   \        0x4                      REQUIRE ?Subroutine0
+   \        0x4                      ;; // Fall through to label ?Subroutine0
+    540          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6:
+   \        0x0   0x4001'3C00        DC32     0x40013c00
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_1:
+   \        0x0   0x4001'3808        DC32     0x40013808
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_2:
+   \        0x0   0x4001'3C14        DC32     0x40013c14
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_3:
+   \        0x0   0x4001'3C10        DC32     0x40013c10
+    541          
+    542          /**
+    543            * @}
+    544            */
+    545          
+    546          /**
+    547            * @}
+    548            */
+    549          
+    550          #endif /* HAL_EXTI_MODULE_ENABLED */
+    551          /**
+    552            * @}
+    553            */
+    554          
+    555          /**
+    556            * @}
+    557            */
+    558          
+    559          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      12   HAL_EXTI_ClearConfigLine
+       0   HAL_EXTI_ClearPending
+       0   HAL_EXTI_GenerateSWI
+      16   HAL_EXTI_GetConfigLine
+       0   HAL_EXTI_GetHandle
+       0   HAL_EXTI_GetPending
+       0   HAL_EXTI_IRQHandler
+         0   -- Indirect call
+       0   HAL_EXTI_RegisterCallback
+      20   HAL_EXTI_SetConfigLine
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable6
+       4  ??DataTable6_1
+       4  ??DataTable6_2
+       4  ??DataTable6_3
+      12  ?Subroutine0
+      92  HAL_EXTI_ClearConfigLine
+       6  HAL_EXTI_ClearPending
+       4  HAL_EXTI_GenerateSWI
+     130  HAL_EXTI_GetConfigLine
+      12  HAL_EXTI_GetHandle
+      20  HAL_EXTI_GetPending
+      32  HAL_EXTI_IRQHandler
+      14  HAL_EXTI_RegisterCallback
+     166  HAL_EXTI_SetConfigLine
+
+ 
+ 504 bytes in section .text
+ 
+ 504 bytes of CODE memory
+
+Errors: none
+Warnings: none

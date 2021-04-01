@@ -1,0 +1,1034 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         19/Mar/2020  10:30:35
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr_ex.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EW9D51.tmp
+#        ("C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr_ex.c"
+#        -D USE_HAL_DRIVER -D STM32F429xx -lC "C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM\HW7\List" -o "C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM\HW7\Obj" --debug --endian=little
+#        --cpu=Cortex-M4 -e --fpu=VFPv4_sp --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.4\arm\inc\c\DLib_Config_Full.h"
+#        -I "C:\Users\mohit\Desktop\Microapps projects\HW7\HW7\EWARM/../Inc\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\" -I
+#        "C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\"
+#        -I "C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM\HW7\List\stm32f4xx_hal_pwr_ex.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps
+#        projects\HW7\HW7\EWARM\HW7\Obj\stm32f4xx_hal_pwr_ex.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\HW7\HW7\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr_ex.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    stm32f4xx_hal_pwr_ex.c
+      4            * @author  MCD Application Team
+      5            * @brief   Extended PWR HAL module driver.
+      6            *          This file provides firmware functions to manage the following 
+      7            *          functionalities of PWR extension peripheral:           
+      8            *           + Peripheral Extended features functions
+      9            *         
+     10            ******************************************************************************
+     11            * @attention
+     12            *
+     13            * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+     14            * All rights reserved.</center></h2>
+     15            *
+     16            * This software component is licensed by ST under BSD 3-Clause license,
+     17            * the "License"; You may not use this file except in compliance with the
+     18            * License. You may obtain a copy of the License at:
+     19            *                        opensource.org/licenses/BSD-3-Clause
+     20            *
+     21            ******************************************************************************
+     22            */ 
+     23          
+     24          /* Includes ------------------------------------------------------------------*/
+     25          #include "stm32f4xx_hal.h"
+     26          
+     27          /** @addtogroup STM32F4xx_HAL_Driver
+     28            * @{
+     29            */
+     30          
+     31          /** @defgroup PWREx PWREx
+     32            * @brief PWR HAL module driver
+     33            * @{
+     34            */
+     35          
+     36          #ifdef HAL_PWR_MODULE_ENABLED
+     37          
+     38          /* Private typedef -----------------------------------------------------------*/
+     39          /* Private define ------------------------------------------------------------*/
+     40          /** @addtogroup PWREx_Private_Constants
+     41            * @{
+     42            */    
+     43          #define PWR_OVERDRIVE_TIMEOUT_VALUE  1000U
+     44          #define PWR_UDERDRIVE_TIMEOUT_VALUE  1000U
+     45          #define PWR_BKPREG_TIMEOUT_VALUE     1000U
+     46          #define PWR_VOSRDY_TIMEOUT_VALUE     1000U
+     47          /**
+     48            * @}
+     49            */
+     50          
+     51             
+     52          /* Private macro -------------------------------------------------------------*/
+     53          /* Private variables ---------------------------------------------------------*/
+     54          /* Private function prototypes -----------------------------------------------*/
+     55          /* Private functions ---------------------------------------------------------*/
+     56          /** @defgroup PWREx_Exported_Functions PWREx Exported Functions
+     57            *  @{
+     58            */
+     59          
+     60          /** @defgroup PWREx_Exported_Functions_Group1 Peripheral Extended features functions 
+     61            *  @brief Peripheral Extended features functions 
+     62            *
+     63          @verbatim   
+     64          
+     65           ===============================================================================
+     66                           ##### Peripheral extended features functions #####
+     67           ===============================================================================
+     68          
+     69              *** Main and Backup Regulators configuration ***
+     70              ================================================
+     71              [..] 
+     72                (+) The backup domain includes 4 Kbytes of backup SRAM accessible only from 
+     73                    the CPU, and address in 32-bit, 16-bit or 8-bit mode. Its content is 
+     74                    retained even in Standby or VBAT mode when the low power backup regulator
+     75                    is enabled. It can be considered as an internal EEPROM when VBAT is 
+     76                    always present. You can use the HAL_PWREx_EnableBkUpReg() function to 
+     77                    enable the low power backup regulator. 
+     78          
+     79                (+) When the backup domain is supplied by VDD (analog switch connected to VDD) 
+     80                    the backup SRAM is powered from VDD which replaces the VBAT power supply to 
+     81                    save battery life.
+     82          
+     83                (+) The backup SRAM is not mass erased by a tamper event. It is read 
+     84                    protected to prevent confidential data, such as cryptographic private 
+     85                    key, from being accessed. The backup SRAM can be erased only through 
+     86                    the Flash interface when a protection level change from level 1 to 
+     87                    level 0 is requested. 
+     88                -@- Refer to the description of Read protection (RDP) in the Flash 
+     89                    programming manual.
+     90          
+     91                (+) The main internal regulator can be configured to have a tradeoff between 
+     92                    performance and power consumption when the device does not operate at 
+     93                    the maximum frequency. This is done through __HAL_PWR_MAINREGULATORMODE_CONFIG() 
+     94                    macro which configure VOS bit in PWR_CR register
+     95                    
+     96                  Refer to the product datasheets for more details.
+     97          
+     98              *** FLASH Power Down configuration ****
+     99              =======================================
+    100              [..] 
+    101                (+) By setting the FPDS bit in the PWR_CR register by using the 
+    102                    HAL_PWREx_EnableFlashPowerDown() function, the Flash memory also enters power 
+    103                    down mode when the device enters Stop mode. When the Flash memory 
+    104                    is in power down mode, an additional startup delay is incurred when 
+    105                    waking up from Stop mode.
+    106                    
+    107                     (+) For STM32F42xxx/43xxx/446xx/469xx/479xx Devices, the scale can be modified only when the PLL 
+    108                     is OFF and the HSI or HSE clock source is selected as system clock. 
+    109                     The new value programmed is active only when the PLL is ON.
+    110                     When the PLL is OFF, the voltage scale 3 is automatically selected. 
+    111                  Refer to the datasheets for more details.
+    112          
+    113              *** Over-Drive and Under-Drive configuration ****
+    114              =================================================
+    115              [..]         
+    116                 (+) For STM32F42xxx/43xxx/446xx/469xx/479xx Devices, in Run mode: the main regulator has
+    117                     2 operating modes available:
+    118                  (++) Normal mode: The CPU and core logic operate at maximum frequency at a given 
+    119                       voltage scaling (scale 1, scale 2 or scale 3)
+    120                  (++) Over-drive mode: This mode allows the CPU and the core logic to operate at a 
+    121                      higher frequency than the normal mode for a given voltage scaling (scale 1,  
+    122                      scale 2 or scale 3). This mode is enabled through HAL_PWREx_EnableOverDrive() function and
+    123                      disabled by HAL_PWREx_DisableOverDrive() function, to enter or exit from Over-drive mode please follow 
+    124                      the sequence described in Reference manual.
+    125                       
+    126                 (+) For STM32F42xxx/43xxx/446xx/469xx/479xx Devices, in Stop mode: the main regulator or low power regulator 
+    127                     supplies a low power voltage to the 1.2V domain, thus preserving the content of registers 
+    128                     and internal SRAM. 2 operating modes are available:
+    129                   (++) Normal mode: the 1.2V domain is preserved in nominal leakage mode. This mode is only 
+    130                        available when the main regulator or the low power regulator is used in Scale 3 or 
+    131                        low voltage mode.
+    132                   (++) Under-drive mode: the 1.2V domain is preserved in reduced leakage mode. This mode is only
+    133                        available when the main regulator or the low power regulator is in low voltage mode.
+    134          
+    135          @endverbatim
+    136            * @{
+    137            */
+    138          
+    139          /**
+    140            * @brief Enables the Backup Regulator.
+    141            * @retval HAL status
+    142            */
+
+   \                                 In section .text, align 2, keep-with-next
+    143          HAL_StatusTypeDef HAL_PWREx_EnableBkUpReg(void)
+    144          {
+   \                     HAL_PWREx_EnableBkUpReg: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    145            uint32_t tickstart = 0U;
+    146          
+    147            *(__IO uint32_t *) CSR_BRE_BB = (uint32_t)ENABLE;
+   \        0x2   0x....             LDR.N    R1,??DataTable7  ;; 0x420e00a4
+   \        0x4   0x2001             MOVS     R0,#+1
+   \        0x6   0x6008             STR      R0,[R1, #+0]
+    148          
+    149            /* Get tick */
+    150            tickstart = HAL_GetTick();
+   \        0x8   0x....'....        BL       HAL_GetTick
+   \        0xC   0x4604             MOV      R4,R0
+    151          
+    152            /* Wait till Backup regulator ready flag is set */  
+    153            while(__HAL_PWR_GET_FLAG(PWR_FLAG_BRR) == RESET)
+   \                     ??HAL_PWREx_EnableBkUpReg_0: (+1)
+   \        0xE   0x....             LDR.N    R0,??DataTable7_1  ;; 0x40007004
+   \       0x10   0x6801             LDR      R1,[R0, #+0]
+   \       0x12   0x070A             LSLS     R2,R1,#+28
+   \       0x14   0xD406             BMI.N    ??HAL_PWREx_EnableBkUpReg_1
+    154            {
+    155              if((HAL_GetTick() - tickstart ) > PWR_BKPREG_TIMEOUT_VALUE)
+   \       0x16   0x....'....        BL       HAL_GetTick
+   \       0x1A   0x....'....        BL       ?Subroutine1
+   \                     ??CrossCallReturnLabel_2: (+1)
+   \       0x1E   0xD3F6             BCC.N    ??HAL_PWREx_EnableBkUpReg_0
+    156              {
+    157                return HAL_TIMEOUT;
+   \       0x20   0x2003             MOVS     R0,#+3
+   \       0x22   0xBD10             POP      {R4,PC}          ;; return
+    158              } 
+    159            }
+    160            return HAL_OK;
+   \                     ??HAL_PWREx_EnableBkUpReg_1: (+1)
+   \       0x24   0x2000             MOVS     R0,#+0
+   \       0x26   0xBD10             POP      {R4,PC}
+    161          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine1: (+1)
+   \        0x0   0x1B00             SUBS     R0,R0,R4
+   \        0x2   0xF240 0x31E9      MOVW     R1,#+1001
+   \        0x6   0x4288             CMP      R0,R1
+   \        0x8   0x4770             BX       LR
+    162          
+    163          /**
+    164            * @brief Disables the Backup Regulator.
+    165            * @retval HAL status
+    166            */
+
+   \                                 In section .text, align 2, keep-with-next
+    167          HAL_StatusTypeDef HAL_PWREx_DisableBkUpReg(void)
+    168          {
+   \                     HAL_PWREx_DisableBkUpReg: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    169            uint32_t tickstart = 0U;
+    170          
+    171            *(__IO uint32_t *) CSR_BRE_BB = (uint32_t)DISABLE;
+   \        0x2   0x....             LDR.N    R1,??DataTable7  ;; 0x420e00a4
+   \        0x4   0x2000             MOVS     R0,#+0
+   \        0x6   0x6008             STR      R0,[R1, #+0]
+    172          
+    173            /* Get tick */
+    174            tickstart = HAL_GetTick();
+   \        0x8   0x....'....        BL       HAL_GetTick
+   \        0xC   0x4604             MOV      R4,R0
+    175          
+    176            /* Wait till Backup regulator ready flag is set */  
+    177            while(__HAL_PWR_GET_FLAG(PWR_FLAG_BRR) != RESET)
+   \                     ??HAL_PWREx_DisableBkUpReg_0: (+1)
+   \        0xE   0x....             LDR.N    R0,??DataTable7_1  ;; 0x40007004
+   \       0x10   0x6801             LDR      R1,[R0, #+0]
+   \       0x12   0x070A             LSLS     R2,R1,#+28
+   \       0x14   0xD506             BPL.N    ??HAL_PWREx_DisableBkUpReg_1
+    178            {
+    179              if((HAL_GetTick() - tickstart ) > PWR_BKPREG_TIMEOUT_VALUE)
+   \       0x16   0x....'....        BL       HAL_GetTick
+   \       0x1A   0x....'....        BL       ?Subroutine1
+   \                     ??CrossCallReturnLabel_3: (+1)
+   \       0x1E   0xD3F6             BCC.N    ??HAL_PWREx_DisableBkUpReg_0
+    180              {
+    181                return HAL_TIMEOUT;
+   \       0x20   0x2003             MOVS     R0,#+3
+   \       0x22   0xBD10             POP      {R4,PC}          ;; return
+    182              } 
+    183            }
+    184            return HAL_OK;
+   \                     ??HAL_PWREx_DisableBkUpReg_1: (+1)
+   \       0x24   0x2000             MOVS     R0,#+0
+   \       0x26   0xBD10             POP      {R4,PC}
+    185          }
+    186          
+    187          /**
+    188            * @brief Enables the Flash Power Down in Stop mode.
+    189            * @retval None
+    190            */
+
+   \                                 In section .text, align 2, keep-with-next
+    191          void HAL_PWREx_EnableFlashPowerDown(void)
+    192          {
+    193            *(__IO uint32_t *) CR_FPDS_BB = (uint32_t)ENABLE;
+   \                     HAL_PWREx_EnableFlashPowerDown: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable7_2  ;; 0x420e0024
+   \        0x2   0x2001             MOVS     R0,#+1
+   \        0x4   0x6008             STR      R0,[R1, #+0]
+    194          }
+   \        0x6   0x4770             BX       LR               ;; return
+    195          
+    196          /**
+    197            * @brief Disables the Flash Power Down in Stop mode.
+    198            * @retval None
+    199            */
+
+   \                                 In section .text, align 2, keep-with-next
+    200          void HAL_PWREx_DisableFlashPowerDown(void)
+    201          {
+    202            *(__IO uint32_t *) CR_FPDS_BB = (uint32_t)DISABLE;
+   \                     HAL_PWREx_DisableFlashPowerDown: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable7_2  ;; 0x420e0024
+   \        0x2   0x2000             MOVS     R0,#+0
+   \        0x4   0x6008             STR      R0,[R1, #+0]
+    203          }
+   \        0x6   0x4770             BX       LR               ;; return
+    204          
+    205          /**
+    206            * @brief Return Voltage Scaling Range.
+    207            * @retval The configured scale for the regulator voltage(VOS bit field).
+    208            *         The returned value can be one of the following:
+    209            *            - @arg PWR_REGULATOR_VOLTAGE_SCALE1: Regulator voltage output Scale 1 mode
+    210            *            - @arg PWR_REGULATOR_VOLTAGE_SCALE2: Regulator voltage output Scale 2 mode
+    211            *            - @arg PWR_REGULATOR_VOLTAGE_SCALE3: Regulator voltage output Scale 3 mode
+    212            */  
+
+   \                                 In section .text, align 2, keep-with-next
+    213          uint32_t HAL_PWREx_GetVoltageRange(void)
+    214          {
+    215            return (PWR->CR & PWR_CR_VOS);
+   \                     HAL_PWREx_GetVoltageRange: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable7_3  ;; 0x40007000
+   \        0x2   0x6800             LDR      R0,[R0, #+0]
+   \        0x4   0xF400 0x4040      AND      R0,R0,#0xC000
+   \        0x8   0x4770             BX       LR               ;; return
+    216          }
+    217          
+    218          #if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx)
+    219          /**
+    220            * @brief Configures the main internal regulator output voltage.
+    221            * @param  VoltageScaling specifies the regulator output voltage to achieve
+    222            *         a tradeoff between performance and power consumption.
+    223            *          This parameter can be one of the following values:
+    224            *            @arg PWR_REGULATOR_VOLTAGE_SCALE1: Regulator voltage output range 1 mode,
+    225            *                                               the maximum value of fHCLK = 168 MHz.
+    226            *            @arg PWR_REGULATOR_VOLTAGE_SCALE2: Regulator voltage output range 2 mode,
+    227            *                                               the maximum value of fHCLK = 144 MHz.
+    228            * @note  When moving from Range 1 to Range 2, the system frequency must be decreased to
+    229            *        a value below 144 MHz before calling HAL_PWREx_ConfigVoltageScaling() API.
+    230            *        When moving from Range 2 to Range 1, the system frequency can be increased to
+    231            *        a value up to 168 MHz after calling HAL_PWREx_ConfigVoltageScaling() API.
+    232            * @retval HAL Status
+    233            */
+    234          HAL_StatusTypeDef HAL_PWREx_ControlVoltageScaling(uint32_t VoltageScaling)
+    235          {
+    236            uint32_t tickstart = 0U;
+    237            
+    238            assert_param(IS_PWR_VOLTAGE_SCALING_RANGE(VoltageScaling));
+    239            
+    240            /* Enable PWR RCC Clock Peripheral */
+    241            __HAL_RCC_PWR_CLK_ENABLE();
+    242            
+    243            /* Set Range */
+    244            __HAL_PWR_VOLTAGESCALING_CONFIG(VoltageScaling);
+    245            
+    246            /* Get Start Tick*/
+    247            tickstart = HAL_GetTick();
+    248            while((__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY) == RESET))
+    249            {
+    250              if((HAL_GetTick() - tickstart ) > PWR_VOSRDY_TIMEOUT_VALUE)
+    251              {
+    252                return HAL_TIMEOUT;
+    253              } 
+    254            }
+    255          
+    256            return HAL_OK;
+    257          }
+    258          
+    259          #elif defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || \
+    260                defined(STM32F401xC) || defined(STM32F401xE) || defined(STM32F410Tx) || defined(STM32F410Cx) || \
+    261                defined(STM32F410Rx) || defined(STM32F411xE) || defined(STM32F446xx) || defined(STM32F469xx) || \
+    262                defined(STM32F479xx) || defined(STM32F412Zx) || defined(STM32F412Vx) || defined(STM32F412Rx) || \
+    263                defined(STM32F412Cx) || defined(STM32F413xx) || defined(STM32F423xx)
+    264          /**
+    265            * @brief Configures the main internal regulator output voltage.
+    266            * @param  VoltageScaling specifies the regulator output voltage to achieve
+    267            *         a tradeoff between performance and power consumption.
+    268            *          This parameter can be one of the following values:
+    269            *            @arg PWR_REGULATOR_VOLTAGE_SCALE1: Regulator voltage output range 1 mode,
+    270            *                                               the maximum value of fHCLK is 168 MHz. It can be extended to
+    271            *                                               180 MHz by activating the over-drive mode.
+    272            *            @arg PWR_REGULATOR_VOLTAGE_SCALE2: Regulator voltage output range 2 mode,
+    273            *                                               the maximum value of fHCLK is 144 MHz. It can be extended to,                
+    274            *                                               168 MHz by activating the over-drive mode.
+    275            *            @arg PWR_REGULATOR_VOLTAGE_SCALE3: Regulator voltage output range 3 mode,
+    276            *                                               the maximum value of fHCLK is 120 MHz.
+    277            * @note To update the system clock frequency(SYSCLK):
+    278            *        - Set the HSI or HSE as system clock frequency using the HAL_RCC_ClockConfig().
+    279            *        - Call the HAL_RCC_OscConfig() to configure the PLL.
+    280            *        - Call HAL_PWREx_ConfigVoltageScaling() API to adjust the voltage scale.
+    281            *        - Set the new system clock frequency using the HAL_RCC_ClockConfig().
+    282            * @note The scale can be modified only when the HSI or HSE clock source is selected 
+    283            *        as system clock source, otherwise the API returns HAL_ERROR.  
+    284            * @note When the PLL is OFF, the voltage scale 3 is automatically selected and the VOS bits
+    285            *       value in the PWR_CR1 register are not taken in account.
+    286            * @note This API forces the PLL state ON to allow the possibility to configure the voltage scale 1 or 2.
+    287            * @note The new voltage scale is active only when the PLL is ON.  
+    288            * @retval HAL Status
+    289            */
+
+   \                                 In section .text, align 2, keep-with-next
+    290          HAL_StatusTypeDef HAL_PWREx_ControlVoltageScaling(uint32_t VoltageScaling)
+    291          {
+   \                     HAL_PWREx_ControlVoltageScaling: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+   \        0x2   0x4605             MOV      R5,R0
+    292            uint32_t tickstart = 0U;
+    293            
+    294            assert_param(IS_PWR_VOLTAGE_SCALING_RANGE(VoltageScaling));
+    295            
+    296            /* Enable PWR RCC Clock Peripheral */
+    297            __HAL_RCC_PWR_CLK_ENABLE();
+   \        0x4   0x2000             MOVS     R0,#+0
+   \        0x6   0x9000             STR      R0,[SP, #+0]
+   \        0x8   0x....             LDR.N    R4,??DataTable7_4  ;; 0x40023800
+   \        0xA   0x6C20             LDR      R0,[R4, #+64]
+   \        0xC   0xF040 0x5080      ORR      R0,R0,#0x10000000
+   \       0x10   0x6420             STR      R0,[R4, #+64]
+   \       0x12   0x6C20             LDR      R0,[R4, #+64]
+   \       0x14   0x....'....        BL       ??Subroutine2_0
+    298            
+    299            /* Check if the PLL is used as system clock or not */
+    300            if(__HAL_RCC_GET_SYSCLK_SOURCE() != RCC_CFGR_SWS_PLL)
+   \                     ??CrossCallReturnLabel_5: (+1)
+   \       0x18   0x68A1             LDR      R1,[R4, #+8]
+   \       0x1A   0xF001 0x010C      AND      R1,R1,#0xC
+   \       0x1E   0x2908             CMP      R1,#+8
+   \       0x20   0xD038             BEQ.N    ??HAL_PWREx_ControlVoltageScaling_0
+    301            {
+    302              /* Disable the main PLL */
+    303              __HAL_RCC_PLL_DISABLE();
+   \       0x22   0x....             LDR.N    R6,??DataTable7_5  ;; 0x42470060
+   \       0x24   0x2000             MOVS     R0,#+0
+   \       0x26   0x6030             STR      R0,[R6, #+0]
+    304              
+    305              /* Get Start Tick */
+    306              tickstart = HAL_GetTick();    
+   \       0x28   0x....'....        BL       HAL_GetTick
+   \       0x2C   0x4607             MOV      R7,R0
+    307              /* Wait till PLL is disabled */  
+    308              while(__HAL_RCC_GET_FLAG(RCC_FLAG_PLLRDY) != RESET)
+   \                     ??HAL_PWREx_ControlVoltageScaling_1: (+1)
+   \       0x2E   0x6821             LDR      R1,[R4, #+0]
+   \       0x30   0x0188             LSLS     R0,R1,#+6
+   \       0x32   0xD506             BPL.N    ??HAL_PWREx_ControlVoltageScaling_2
+    309              {
+    310                if((HAL_GetTick() - tickstart ) > PLL_TIMEOUT_VALUE)
+   \       0x34   0x....'....        BL       HAL_GetTick
+   \       0x38   0x1BC0             SUBS     R0,R0,R7
+   \       0x3A   0x2803             CMP      R0,#+3
+   \       0x3C   0xD3F7             BCC.N    ??HAL_PWREx_ControlVoltageScaling_1
+    311                {
+    312                  return HAL_TIMEOUT;
+    313                }
+    314              }
+    315              
+    316              /* Set Range */
+    317              __HAL_PWR_VOLTAGESCALING_CONFIG(VoltageScaling);
+    318              
+    319              /* Enable the main PLL */
+    320              __HAL_RCC_PLL_ENABLE();
+    321              
+    322              /* Get Start Tick */
+    323              tickstart = HAL_GetTick();
+    324              /* Wait till PLL is ready */  
+    325              while(__HAL_RCC_GET_FLAG(RCC_FLAG_PLLRDY) == RESET)
+    326              {
+    327                if((HAL_GetTick() - tickstart ) > PLL_TIMEOUT_VALUE)
+    328                {
+    329                  return HAL_TIMEOUT;
+    330                } 
+    331              }
+    332              
+    333              /* Get Start Tick */
+    334              tickstart = HAL_GetTick();
+    335              while((__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY) == RESET))
+    336              {
+    337                if((HAL_GetTick() - tickstart ) > PWR_VOSRDY_TIMEOUT_VALUE)
+    338                {
+    339                  return HAL_TIMEOUT;
+   \                     ??HAL_PWREx_ControlVoltageScaling_3: (+1)
+   \       0x3E   0x2003             MOVS     R0,#+3
+   \       0x40   0xBDF2             POP      {R1,R4-R7,PC}
+    340                } 
+   \                     ??HAL_PWREx_ControlVoltageScaling_2: (+1)
+   \       0x42   0x2000             MOVS     R0,#+0
+   \       0x44   0x....             LDR.N    R7,??DataTable7_3  ;; 0x40007000
+   \       0x46   0x9000             STR      R0,[SP, #+0]
+   \       0x48   0x6839             LDR      R1,[R7, #+0]
+   \       0x4A   0xF421 0x4140      BIC      R1,R1,#0xC000
+   \       0x4E   0x430D             ORRS     R5,R5,R1
+   \       0x50   0x603D             STR      R5,[R7, #+0]
+   \       0x52   0x2101             MOVS     R1,#+1
+   \       0x54   0x6838             LDR      R0,[R7, #+0]
+   \       0x56   0xF400 0x4040      AND      R0,R0,#0xC000
+   \       0x5A   0x9000             STR      R0,[SP, #+0]
+   \       0x5C   0x9800             LDR      R0,[SP, #+0]
+   \       0x5E   0x6031             STR      R1,[R6, #+0]
+   \       0x60   0x....'....        BL       HAL_GetTick
+   \       0x64   0x4605             MOV      R5,R0
+   \                     ??HAL_PWREx_ControlVoltageScaling_4: (+1)
+   \       0x66   0x6820             LDR      R0,[R4, #+0]
+   \       0x68   0x0181             LSLS     R1,R0,#+6
+   \       0x6A   0xD405             BMI.N    ??HAL_PWREx_ControlVoltageScaling_5
+   \       0x6C   0x....'....        BL       HAL_GetTick
+   \       0x70   0x1B40             SUBS     R0,R0,R5
+   \       0x72   0x2803             CMP      R0,#+3
+   \       0x74   0xD3F7             BCC.N    ??HAL_PWREx_ControlVoltageScaling_4
+   \       0x76   0xE7E2             B.N      ??HAL_PWREx_ControlVoltageScaling_3
+   \                     ??HAL_PWREx_ControlVoltageScaling_5: (+1)
+   \       0x78   0x....'....        BL       HAL_GetTick
+   \       0x7C   0x4604             MOV      R4,R0
+   \                     ??HAL_PWREx_ControlVoltageScaling_6: (+1)
+   \       0x7E   0x6878             LDR      R0,[R7, #+4]
+   \       0x80   0x0441             LSLS     R1,R0,#+17
+   \       0x82   0xD405             BMI.N    ??HAL_PWREx_ControlVoltageScaling_7
+   \       0x84   0x....'....        BL       HAL_GetTick
+   \       0x88   0x....'....        BL       ?Subroutine1
+    341              }
+    342            }
+   \                     ??CrossCallReturnLabel_4: (+1)
+   \       0x8C   0xD3F7             BCC.N    ??HAL_PWREx_ControlVoltageScaling_6
+   \       0x8E   0xE7D6             B.N      ??HAL_PWREx_ControlVoltageScaling_3
+    343            else
+    344            {
+    345              return HAL_ERROR;
+    346            }
+    347          
+    348            return HAL_OK;
+   \                     ??HAL_PWREx_ControlVoltageScaling_7: (+1)
+   \       0x90   0x2000             MOVS     R0,#+0
+   \       0x92   0xBDF2             POP      {R1,R4-R7,PC}
+   \                     ??HAL_PWREx_ControlVoltageScaling_0: (+1)
+   \       0x94   0x2001             MOVS     R0,#+1
+   \       0x96   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    349          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine2: (+1)
+   \        0x0   0x6800             LDR      R0,[R0, #+0]
+   \                     ??Subroutine2_0: (+1)
+   \        0x2   0xF000 0x5080      AND      R0,R0,#0x10000000
+   \        0x6   0x9000             STR      R0,[SP, #+0]
+   \        0x8   0x9800             LDR      R0,[SP, #+0]
+   \        0xA   0x4770             BX       LR
+    350          #endif /* STM32F405xx || STM32F415xx || STM32F407xx || STM32F417xx */
+    351          
+    352          #if defined(STM32F401xC) || defined(STM32F401xE) || defined(STM32F410Tx) || defined(STM32F410Cx) || defined(STM32F410Rx) ||\
+    353              defined(STM32F411xE) || defined(STM32F412Zx) || defined(STM32F412Vx) || defined(STM32F412Rx) || defined(STM32F412Cx) ||\
+    354              defined(STM32F413xx) || defined(STM32F423xx)
+    355          /**
+    356            * @brief Enables Main Regulator low voltage mode.
+    357            * @note  This mode is only available for STM32F401xx/STM32F410xx/STM32F411xx/STM32F412Zx/STM32F412Rx/STM32F412Vx/STM32F412Cx/
+    358            *        STM32F413xx/STM32F423xx devices.   
+    359            * @retval None
+    360            */
+    361          void HAL_PWREx_EnableMainRegulatorLowVoltage(void)
+    362          {
+    363            *(__IO uint32_t *) CR_MRLVDS_BB = (uint32_t)ENABLE;
+    364          }
+    365          
+    366          /**
+    367            * @brief Disables Main Regulator low voltage mode.
+    368            * @note  This mode is only available for STM32F401xx/STM32F410xx/STM32F411xx/STM32F412Zx/STM32F412Rx/STM32F412Vx/STM32F412Cx/
+    369            *        STM32F413xx/STM32F423xxdevices. 
+    370            * @retval None
+    371            */
+    372          void HAL_PWREx_DisableMainRegulatorLowVoltage(void)
+    373          {
+    374            *(__IO uint32_t *) CR_MRLVDS_BB = (uint32_t)DISABLE;
+    375          }
+    376          
+    377          /**
+    378            * @brief Enables Low Power Regulator low voltage mode.
+    379            * @note  This mode is only available for STM32F401xx/STM32F410xx/STM32F411xx/STM32F412Zx/STM32F412Rx/STM32F412Vx/STM32F412Cx/
+    380            *        STM32F413xx/STM32F423xx devices.   
+    381            * @retval None
+    382            */
+    383          void HAL_PWREx_EnableLowRegulatorLowVoltage(void)
+    384          {
+    385            *(__IO uint32_t *) CR_LPLVDS_BB = (uint32_t)ENABLE;
+    386          }
+    387          
+    388          /**
+    389            * @brief Disables Low Power Regulator low voltage mode.
+    390            * @note  This mode is only available for STM32F401xx/STM32F410xx/STM32F411xx/STM32F412Zx/STM32F412Rx/STM32F412Vx/STM32F412Cx/
+    391            *        STM32F413xx/STM32F423xx  devices.   
+    392            * @retval None
+    393            */
+    394          void HAL_PWREx_DisableLowRegulatorLowVoltage(void)
+    395          {
+    396            *(__IO uint32_t *) CR_LPLVDS_BB = (uint32_t)DISABLE;
+    397          }
+    398          
+    399          #endif /* STM32F401xC || STM32F401xE || STM32F410xx || STM32F411xE || STM32F412Zx || STM32F412Rx || STM32F412Vx || STM32F412Cx ||
+    400                    STM32F413xx || STM32F423xx */
+    401          
+    402          #if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) ||\
+    403              defined(STM32F446xx) || defined(STM32F469xx) || defined(STM32F479xx)
+    404          /**
+    405            * @brief  Activates the Over-Drive mode.
+    406            * @note   This function can be used only for STM32F42xx/STM32F43xx/STM32F446xx/STM32F469xx/STM32F479xx devices.
+    407            *         This mode allows the CPU and the core logic to operate at a higher frequency
+    408            *         than the normal mode for a given voltage scaling (scale 1, scale 2 or scale 3).   
+    409            * @note   It is recommended to enter or exit Over-drive mode when the application is not running 
+    410            *         critical tasks and when the system clock source is either HSI or HSE. 
+    411            *         During the Over-drive switch activation, no peripheral clocks should be enabled.   
+    412            *         The peripheral clocks must be enabled once the Over-drive mode is activated.   
+    413            * @retval HAL status
+    414            */
+
+   \                                 In section .text, align 2, keep-with-next
+    415          HAL_StatusTypeDef HAL_PWREx_EnableOverDrive(void)
+    416          {
+   \                     HAL_PWREx_EnableOverDrive: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+    417            uint32_t tickstart = 0U;
+    418          
+    419            __HAL_RCC_PWR_CLK_ENABLE();
+   \        0x2   0x....'....        BL       ?Subroutine0
+    420            
+    421            /* Enable the Over-drive to extend the clock frequency to 180 Mhz */
+    422            __HAL_PWR_OVERDRIVE_ENABLE();
+   \                     ??CrossCallReturnLabel_0: (+1)
+   \        0x6   0x2101             MOVS     R1,#+1
+   \        0x8   0x....'....        BL       ?Subroutine2
+   \                     ??CrossCallReturnLabel_6: (+1)
+   \        0xC   0x6031             STR      R1,[R6, #+0]
+    423          
+    424            /* Get tick */
+    425            tickstart = HAL_GetTick();
+   \        0xE   0x....'....        BL       HAL_GetTick
+   \       0x12   0x4607             MOV      R7,R0
+    426          
+    427            while(!__HAL_PWR_GET_FLAG(PWR_FLAG_ODRDY))
+   \                     ??HAL_PWREx_EnableOverDrive_0: (+1)
+   \       0x14   0x6828             LDR      R0,[R5, #+0]
+   \       0x16   0x03C1             LSLS     R1,R0,#+15
+   \       0x18   0xD406             BMI.N    ??HAL_PWREx_EnableOverDrive_1
+    428            {
+    429              if((HAL_GetTick() - tickstart) > PWR_OVERDRIVE_TIMEOUT_VALUE)
+   \       0x1A   0x....'....        BL       HAL_GetTick
+   \       0x1E   0x1BC0             SUBS     R0,R0,R7
+   \       0x20   0x42A0             CMP      R0,R4
+   \       0x22   0xD3F7             BCC.N    ??HAL_PWREx_EnableOverDrive_0
+    430              {
+    431                return HAL_TIMEOUT;
+    432              }
+    433            }
+    434            
+    435            /* Enable the Over-drive switch */
+    436            __HAL_PWR_OVERDRIVESWITCHING_ENABLE();
+    437          
+    438            /* Get tick */
+    439            tickstart = HAL_GetTick();
+    440          
+    441            while(!__HAL_PWR_GET_FLAG(PWR_FLAG_ODSWRDY))
+    442            {
+    443              if((HAL_GetTick() - tickstart ) > PWR_OVERDRIVE_TIMEOUT_VALUE)
+    444              {
+    445                return HAL_TIMEOUT;
+   \                     ??HAL_PWREx_EnableOverDrive_2: (+1)
+   \       0x24   0x2003             MOVS     R0,#+3
+   \       0x26   0xBDF2             POP      {R1,R4-R7,PC}
+    446              }
+   \                     ??HAL_PWREx_EnableOverDrive_1: (+1)
+   \       0x28   0x2001             MOVS     R0,#+1
+   \       0x2A   0x6070             STR      R0,[R6, #+4]
+   \       0x2C   0x....'....        BL       HAL_GetTick
+   \       0x30   0x4606             MOV      R6,R0
+   \                     ??HAL_PWREx_EnableOverDrive_3: (+1)
+   \       0x32   0x6828             LDR      R0,[R5, #+0]
+   \       0x34   0x0381             LSLS     R1,R0,#+14
+   \       0x36   0xD405             BMI.N    ??HAL_PWREx_EnableOverDrive_4
+   \       0x38   0x....'....        BL       HAL_GetTick
+   \       0x3C   0x1B80             SUBS     R0,R0,R6
+   \       0x3E   0x42A0             CMP      R0,R4
+   \       0x40   0xD3F7             BCC.N    ??HAL_PWREx_EnableOverDrive_3
+   \       0x42   0xE7EF             B.N      ??HAL_PWREx_EnableOverDrive_2
+    447            } 
+    448            return HAL_OK;
+   \                     ??HAL_PWREx_EnableOverDrive_4: (+1)
+   \       0x44   0x2000             MOVS     R0,#+0
+   \       0x46   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    449          }
+
+   \                                 In section .text, align 2, keep-with-next
+   \                     ?Subroutine0: (+1)
+   \        0x0   0x2000             MOVS     R0,#+0
+   \        0x2   0x9000             STR      R0,[SP, #+0]
+   \        0x4   0xF240 0x34E9      MOVW     R4,#+1001
+   \        0x8   0x....             LDR.N    R0,??DataTable7_6  ;; 0x40023840
+   \        0xA   0x....             LDR.N    R6,??DataTable7_7  ;; 0x420e0040
+   \        0xC   0x6801             LDR      R1,[R0, #+0]
+   \        0xE   0x....             LDR.N    R5,??DataTable7_1  ;; 0x40007004
+   \       0x10   0xF041 0x5180      ORR      R1,R1,#0x10000000
+   \       0x14   0x6001             STR      R1,[R0, #+0]
+   \       0x16   0x4770             BX       LR
+    450          
+    451          /**
+    452            * @brief  Deactivates the Over-Drive mode.
+    453            * @note   This function can be used only for STM32F42xx/STM32F43xx/STM32F446xx/STM32F469xx/STM32F479xx devices.
+    454            *         This mode allows the CPU and the core logic to operate at a higher frequency
+    455            *         than the normal mode for a given voltage scaling (scale 1, scale 2 or scale 3).    
+    456            * @note   It is recommended to enter or exit Over-drive mode when the application is not running 
+    457            *         critical tasks and when the system clock source is either HSI or HSE. 
+    458            *         During the Over-drive switch activation, no peripheral clocks should be enabled.   
+    459            *         The peripheral clocks must be enabled once the Over-drive mode is activated.
+    460            * @retval HAL status
+    461            */
+
+   \                                 In section .text, align 2, keep-with-next
+    462          HAL_StatusTypeDef HAL_PWREx_DisableOverDrive(void)
+    463          {
+   \                     HAL_PWREx_DisableOverDrive: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+    464            uint32_t tickstart = 0U;
+    465            
+    466            __HAL_RCC_PWR_CLK_ENABLE();
+   \        0x2   0x....'....        BL       ?Subroutine0
+    467              
+    468            /* Disable the Over-drive switch */
+    469            __HAL_PWR_OVERDRIVESWITCHING_DISABLE();
+   \                     ??CrossCallReturnLabel_1: (+1)
+   \        0x6   0x2100             MOVS     R1,#+0
+   \        0x8   0x....'....        BL       ?Subroutine2
+   \                     ??CrossCallReturnLabel_7: (+1)
+   \        0xC   0x6071             STR      R1,[R6, #+4]
+    470            
+    471            /* Get tick */
+    472            tickstart = HAL_GetTick();
+   \        0xE   0x....'....        BL       HAL_GetTick
+   \       0x12   0x4607             MOV      R7,R0
+    473           
+    474            while(__HAL_PWR_GET_FLAG(PWR_FLAG_ODSWRDY))
+   \                     ??HAL_PWREx_DisableOverDrive_0: (+1)
+   \       0x14   0x6828             LDR      R0,[R5, #+0]
+   \       0x16   0x0381             LSLS     R1,R0,#+14
+   \       0x18   0xD506             BPL.N    ??HAL_PWREx_DisableOverDrive_1
+    475            {
+    476              if((HAL_GetTick() - tickstart) > PWR_OVERDRIVE_TIMEOUT_VALUE)
+   \       0x1A   0x....'....        BL       HAL_GetTick
+   \       0x1E   0x1BC0             SUBS     R0,R0,R7
+   \       0x20   0x42A0             CMP      R0,R4
+   \       0x22   0xD3F7             BCC.N    ??HAL_PWREx_DisableOverDrive_0
+    477              {
+    478                return HAL_TIMEOUT;
+    479              }
+    480            } 
+    481            
+    482            /* Disable the Over-drive */
+    483            __HAL_PWR_OVERDRIVE_DISABLE();
+    484          
+    485            /* Get tick */
+    486            tickstart = HAL_GetTick();
+    487          
+    488            while(__HAL_PWR_GET_FLAG(PWR_FLAG_ODRDY))
+    489            {
+    490              if((HAL_GetTick() - tickstart) > PWR_OVERDRIVE_TIMEOUT_VALUE)
+    491              {
+    492                return HAL_TIMEOUT;
+   \                     ??HAL_PWREx_DisableOverDrive_2: (+1)
+   \       0x24   0x2003             MOVS     R0,#+3
+   \       0x26   0xBDF2             POP      {R1,R4-R7,PC}
+    493              }
+   \                     ??HAL_PWREx_DisableOverDrive_1: (+1)
+   \       0x28   0x2000             MOVS     R0,#+0
+   \       0x2A   0x6030             STR      R0,[R6, #+0]
+   \       0x2C   0x....'....        BL       HAL_GetTick
+   \       0x30   0x4606             MOV      R6,R0
+   \                     ??HAL_PWREx_DisableOverDrive_3: (+1)
+   \       0x32   0x6829             LDR      R1,[R5, #+0]
+   \       0x34   0x03C8             LSLS     R0,R1,#+15
+   \       0x36   0xD505             BPL.N    ??HAL_PWREx_DisableOverDrive_4
+   \       0x38   0x....'....        BL       HAL_GetTick
+   \       0x3C   0x1B80             SUBS     R0,R0,R6
+   \       0x3E   0x42A0             CMP      R0,R4
+   \       0x40   0xD3F7             BCC.N    ??HAL_PWREx_DisableOverDrive_3
+   \       0x42   0xE7EF             B.N      ??HAL_PWREx_DisableOverDrive_2
+    494            }
+    495            
+    496            return HAL_OK;
+   \                     ??HAL_PWREx_DisableOverDrive_4: (+1)
+   \       0x44   0x2000             MOVS     R0,#+0
+   \       0x46   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    497          }
+    498          
+    499          /**
+    500            * @brief  Enters in Under-Drive STOP mode.
+    501            *  
+    502            * @note   This mode is only available for STM32F42xxx/STM32F43xxx/STM32F446xx/STM32F469xx/STM32F479xx devices.
+    503            * 
+    504            * @note    This mode can be selected only when the Under-Drive is already active 
+    505            *   
+    506            * @note    This mode is enabled only with STOP low power mode.
+    507            *          In this mode, the 1.2V domain is preserved in reduced leakage mode. This 
+    508            *          mode is only available when the main regulator or the low power regulator 
+    509            *          is in low voltage mode
+    510            *        
+    511            * @note   If the Under-drive mode was enabled, it is automatically disabled after 
+    512            *         exiting Stop mode. 
+    513            *         When the voltage regulator operates in Under-drive mode, an additional  
+    514            *         startup delay is induced when waking up from Stop mode.
+    515            *                    
+    516            * @note   In Stop mode, all I/O pins keep the same state as in Run mode.
+    517            *   
+    518            * @note   When exiting Stop mode by issuing an interrupt or a wake-up event, 
+    519            *         the HSI RC oscillator is selected as system clock.
+    520            *           
+    521            * @note   When the voltage regulator operates in low power mode, an additional 
+    522            *         startup delay is incurred when waking up from Stop mode. 
+    523            *         By keeping the internal regulator ON during Stop mode, the consumption 
+    524            *         is higher although the startup time is reduced.
+    525            *     
+    526            * @param  Regulator specifies the regulator state in STOP mode.
+    527            *          This parameter can be one of the following values:
+    528            *            @arg PWR_MAINREGULATOR_UNDERDRIVE_ON:  Main Regulator in under-drive mode 
+    529            *                 and Flash memory in power-down when the device is in Stop under-drive mode
+    530            *            @arg PWR_LOWPOWERREGULATOR_UNDERDRIVE_ON:  Low Power Regulator in under-drive mode 
+    531            *                and Flash memory in power-down when the device is in Stop under-drive mode
+    532            * @param  STOPEntry specifies if STOP mode in entered with WFI or WFE instruction.
+    533            *          This parameter can be one of the following values:
+    534            *            @arg PWR_SLEEPENTRY_WFI: enter STOP mode with WFI instruction
+    535            *            @arg PWR_SLEEPENTRY_WFE: enter STOP mode with WFE instruction
+    536            * @retval None
+    537            */
+
+   \                                 In section .text, align 2, keep-with-next
+    538          HAL_StatusTypeDef HAL_PWREx_EnterUnderDriveSTOPMode(uint32_t Regulator, uint8_t STOPEntry)
+    539          {
+   \                     HAL_PWREx_EnterUnderDriveSTOPMode: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+    540            uint32_t tmpreg1 = 0U;
+    541          
+    542            /* Check the parameters */
+    543            assert_param(IS_PWR_REGULATOR_UNDERDRIVE(Regulator));
+    544            assert_param(IS_PWR_STOP_ENTRY(STOPEntry));
+    545            
+    546            /* Enable Power ctrl clock */
+    547            __HAL_RCC_PWR_CLK_ENABLE();
+   \        0x2   0x2200             MOVS     R2,#+0
+   \        0x4   0x9200             STR      R2,[SP, #+0]
+   \        0x6   0x....             LDR.N    R2,??DataTable7_6  ;; 0x40023840
+   \        0x8   0x6813             LDR      R3,[R2, #+0]
+   \        0xA   0xF043 0x5380      ORR      R3,R3,#0x10000000
+   \        0xE   0x6013             STR      R3,[R2, #+0]
+   \       0x10   0x6812             LDR      R2,[R2, #+0]
+    548            /* Enable the Under-drive Mode ---------------------------------------------*/
+    549            /* Clear Under-drive flag */
+    550            __HAL_PWR_CLEAR_ODRUDR_FLAG();
+   \       0x12   0x....             LDR.N    R3,??DataTable7_3  ;; 0x40007000
+   \       0x14   0xF002 0x5280      AND      R2,R2,#0x10000000
+   \       0x18   0x9200             STR      R2,[SP, #+0]
+   \       0x1A   0x9A00             LDR      R2,[SP, #+0]
+   \       0x1C   0x685C             LDR      R4,[R3, #+4]
+    551            
+    552            /* Enable the Under-drive */ 
+    553            __HAL_PWR_UNDERDRIVE_ENABLE();
+    554          
+    555            /* Select the regulator state in STOP mode ---------------------------------*/
+    556            tmpreg1 = PWR->CR;
+    557            /* Clear PDDS, LPDS, MRLUDS and LPLUDS bits */
+    558            tmpreg1 &= (uint32_t)~(PWR_CR_PDDS | PWR_CR_LPDS | PWR_CR_LPUDS | PWR_CR_MRUDS);
+    559            
+    560            /* Set LPDS, MRLUDS and LPLUDS bits according to PWR_Regulator value */
+    561            tmpreg1 |= Regulator;
+    562            
+    563            /* Store the new value */
+    564            PWR->CR = tmpreg1;
+   \       0x1E   0x....             LDR.N    R2,??DataTable7_8  ;; 0xfffff3fc
+   \       0x20   0xF444 0x2440      ORR      R4,R4,#0xC0000
+   \       0x24   0x605C             STR      R4,[R3, #+4]
+   \       0x26   0x681D             LDR      R5,[R3, #+0]
+   \       0x28   0xF445 0x2540      ORR      R5,R5,#0xC0000
+   \       0x2C   0x601D             STR      R5,[R3, #+0]
+   \       0x2E   0x681C             LDR      R4,[R3, #+0]
+   \       0x30   0x4014             ANDS     R4,R2,R4
+   \       0x32   0x4320             ORRS     R0,R0,R4
+   \       0x34   0x6018             STR      R0,[R3, #+0]
+    565            
+    566            /* Set SLEEPDEEP bit of Cortex System Control Register */
+    567            SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+    568            
+    569            /* Select STOP mode entry --------------------------------------------------*/
+    570            if(STOPEntry == PWR_SLEEPENTRY_WFI)
+   \       0x36   0x2901             CMP      R1,#+1
+   \       0x38   0x....             LDR.N    R0,??DataTable7_9  ;; 0xe000ed10
+   \       0x3A   0x6803             LDR      R3,[R0, #+0]
+   \       0x3C   0xF043 0x0304      ORR      R3,R3,#0x4
+   \       0x40   0x6003             STR      R3,[R0, #+0]
+   \       0x42   0xBF0C             ITE      EQ
+   \       0x44   0xBF30             WFIEQ
+   \       0x46   0xBF20             WFENE
+    571            {   
+    572              /* Request Wait For Interrupt */
+    573              __WFI();
+    574            }
+    575            else
+    576            {
+    577              /* Request Wait For Event */
+    578              __WFE();
+    579            }
+    580            /* Reset SLEEPDEEP bit of Cortex System Control Register */
+    581            SCB->SCR &= (uint32_t)~((uint32_t)SCB_SCR_SLEEPDEEP_Msk);
+   \       0x48   0x6801             LDR      R1,[R0, #+0]
+   \       0x4A   0xF021 0x0104      BIC      R1,R1,#0x4
+   \       0x4E   0x6001             STR      R1,[R0, #+0]
+    582          
+    583            return HAL_OK;  
+   \       0x50   0x2000             MOVS     R0,#+0
+   \       0x52   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    584          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7:
+   \        0x0   0x420E'00A4        DC32     0x420e00a4
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_1:
+   \        0x0   0x4000'7004        DC32     0x40007004
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_2:
+   \        0x0   0x420E'0024        DC32     0x420e0024
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_3:
+   \        0x0   0x4000'7000        DC32     0x40007000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_4:
+   \        0x0   0x4002'3800        DC32     0x40023800
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_5:
+   \        0x0   0x4247'0060        DC32     0x42470060
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_6:
+   \        0x0   0x4002'3840        DC32     0x40023840
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_7:
+   \        0x0   0x420E'0040        DC32     0x420e0040
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_8:
+   \        0x0   0xFFFF'F3FC        DC32     0xfffff3fc
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_9:
+   \        0x0   0xE000'ED10        DC32     0xe000ed10
+    585          
+    586          #endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F446xx || STM32F469xx || STM32F479xx */
+    587          /**
+    588            * @}
+    589            */
+    590          
+    591          /**
+    592            * @}
+    593            */
+    594          
+    595          #endif /* HAL_PWR_MODULE_ENABLED */
+    596          /**
+    597            * @}
+    598            */
+    599          
+    600          /**
+    601            * @}
+    602            */
+    603          
+    604          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      24   HAL_PWREx_ControlVoltageScaling
+        24   -> HAL_GetTick
+       8   HAL_PWREx_DisableBkUpReg
+         8   -> HAL_GetTick
+       0   HAL_PWREx_DisableFlashPowerDown
+      24   HAL_PWREx_DisableOverDrive
+        24   -> HAL_GetTick
+       8   HAL_PWREx_EnableBkUpReg
+         8   -> HAL_GetTick
+       0   HAL_PWREx_EnableFlashPowerDown
+      24   HAL_PWREx_EnableOverDrive
+        24   -> HAL_GetTick
+      16   HAL_PWREx_EnterUnderDriveSTOPMode
+       0   HAL_PWREx_GetVoltageRange
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable7
+       4  ??DataTable7_1
+       4  ??DataTable7_2
+       4  ??DataTable7_3
+       4  ??DataTable7_4
+       4  ??DataTable7_5
+       4  ??DataTable7_6
+       4  ??DataTable7_7
+       4  ??DataTable7_8
+       4  ??DataTable7_9
+      24  ?Subroutine0
+      10  ?Subroutine1
+      12  ?Subroutine2
+     152  HAL_PWREx_ControlVoltageScaling
+      40  HAL_PWREx_DisableBkUpReg
+       8  HAL_PWREx_DisableFlashPowerDown
+      72  HAL_PWREx_DisableOverDrive
+      40  HAL_PWREx_EnableBkUpReg
+       8  HAL_PWREx_EnableFlashPowerDown
+      72  HAL_PWREx_EnableOverDrive
+      84  HAL_PWREx_EnterUnderDriveSTOPMode
+      10  HAL_PWREx_GetVoltageRange
+
+ 
+ 572 bytes in section .text
+ 
+ 572 bytes of CODE memory
+
+Errors: none
+Warnings: none

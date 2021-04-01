@@ -1,0 +1,174 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.42.1.233/W32 for ARM         06/Feb/2020  11:09:35
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode             
+#    Endian            =  little
+#    Source file       =
+#        C:\Users\mohit\Desktop\Microapps projects\HW3\HW
+#        3\Src\stm32f4xx_hal_msp.c
+#    Command line      =
+#        -f C:\Users\mohit\AppData\Local\Temp\EW8A3E.tmp
+#        ("C:\Users\mohit\Desktop\Microapps projects\HW3\HW
+#        3\Src\stm32f4xx_hal_msp.c" -D USE_HAL_DRIVER -D STM32F429xx -lC
+#        "C:\Users\mohit\Desktop\Microapps projects\HW3\HW 3\EWARM\HW 3\List"
+#        -o "C:\Users\mohit\Desktop\Microapps projects\HW3\HW 3\EWARM\HW 3\Obj"
+#        --debug --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.4\arm\inc\c\DLib_Config_Full.h" -I "C:\Users\mohit\Desktop\Microapps
+#        projects\HW3\HW 3\EWARM/../Inc\" -I "C:\Users\mohit\Desktop\Microapps
+#        projects\HW3\HW 3\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc\" -I
+#        "C:\Users\mohit\Desktop\Microapps projects\HW3\HW
+#        3\EWARM/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy\" -I
+#        "C:\Users\mohit\Desktop\Microapps projects\HW3\HW
+#        3\EWARM/../Drivers/CMSIS/Device/ST/STM32F4xx/Include\" -I
+#        "C:\Users\mohit\Desktop\Microapps projects\HW3\HW
+#        3\EWARM/../Drivers/CMSIS/Include\" -Ohz)
+#    Locale            =  C
+#    List file         =
+#        C:\Users\mohit\Desktop\Microapps projects\HW3\HW 3\EWARM\HW
+#        3\List\stm32f4xx_hal_msp.lst
+#    Object file       =
+#        C:\Users\mohit\Desktop\Microapps projects\HW3\HW 3\EWARM\HW
+#        3\Obj\stm32f4xx_hal_msp.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#      __size_limit    =  32768|ARM.EW.LINKER
+#
+###############################################################################
+
+C:\Users\mohit\Desktop\Microapps projects\HW3\HW 3\Src\stm32f4xx_hal_msp.c
+      1          /* USER CODE BEGIN Header */
+      2          /**
+      3            ******************************************************************************
+      4            * File Name          : stm32f4xx_hal_msp.c
+      5            * Description        : This file provides code for the MSP Initialization 
+      6            *                      and de-Initialization codes.
+      7            ******************************************************************************
+      8            * @attention
+      9            *
+     10            * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+     11            * All rights reserved.</center></h2>
+     12            *
+     13            * This software component is licensed by ST under BSD 3-Clause license,
+     14            * the "License"; You may not use this file except in compliance with the
+     15            * License. You may obtain a copy of the License at:
+     16            *                        opensource.org/licenses/BSD-3-Clause
+     17            *
+     18            ******************************************************************************
+     19            */
+     20          /* USER CODE END Header */
+     21          
+     22          /* Includes ------------------------------------------------------------------*/
+     23          #include "main.h"
+     24          /* USER CODE BEGIN Includes */
+     25          
+     26          /* USER CODE END Includes */
+     27          
+     28          /* Private typedef -----------------------------------------------------------*/
+     29          /* USER CODE BEGIN TD */
+     30          
+     31          /* USER CODE END TD */
+     32          
+     33          /* Private define ------------------------------------------------------------*/
+     34          /* USER CODE BEGIN Define */
+     35           
+     36          /* USER CODE END Define */
+     37          
+     38          /* Private macro -------------------------------------------------------------*/
+     39          /* USER CODE BEGIN Macro */
+     40          
+     41          /* USER CODE END Macro */
+     42          
+     43          /* Private variables ---------------------------------------------------------*/
+     44          /* USER CODE BEGIN PV */
+     45          
+     46          /* USER CODE END PV */
+     47          
+     48          /* Private function prototypes -----------------------------------------------*/
+     49          /* USER CODE BEGIN PFP */
+     50          
+     51          /* USER CODE END PFP */
+     52          
+     53          /* External functions --------------------------------------------------------*/
+     54          /* USER CODE BEGIN ExternalFunctions */
+     55          
+     56          /* USER CODE END ExternalFunctions */
+     57          
+     58          /* USER CODE BEGIN 0 */
+     59          
+     60          /* USER CODE END 0 */
+     61          /**
+     62            * Initializes the Global MSP.
+     63            */
+
+   \                                 In section .text, align 4, keep-with-next
+     64          void HAL_MspInit(void)
+     65          {
+   \                     HAL_MspInit: (+1)
+   \        0x0   0xB081             SUB      SP,SP,#+4
+     66            /* USER CODE BEGIN MspInit 0 */
+     67          
+     68            /* USER CODE END MspInit 0 */
+     69          
+     70            __HAL_RCC_SYSCFG_CLK_ENABLE();
+   \        0x2   0x2000             MOVS     R0,#+0
+   \        0x4   0x9000             STR      R0,[SP, #+0]
+     71            __HAL_RCC_PWR_CLK_ENABLE();
+   \        0x6   0x2200             MOVS     R2,#+0
+   \        0x8   0x480A             LDR.N    R0,??HAL_MspInit_0  ;; 0x40023840
+   \        0xA   0x6841             LDR      R1,[R0, #+4]
+   \        0xC   0xF441 0x4180      ORR      R1,R1,#0x4000
+   \       0x10   0x6041             STR      R1,[R0, #+4]
+   \       0x12   0x6841             LDR      R1,[R0, #+4]
+   \       0x14   0xF401 0x4180      AND      R1,R1,#0x4000
+   \       0x18   0x9100             STR      R1,[SP, #+0]
+   \       0x1A   0x9900             LDR      R1,[SP, #+0]
+   \       0x1C   0x9200             STR      R2,[SP, #+0]
+   \       0x1E   0x6803             LDR      R3,[R0, #+0]
+   \       0x20   0xF043 0x5380      ORR      R3,R3,#0x10000000
+   \       0x24   0x6003             STR      R3,[R0, #+0]
+   \       0x26   0x6800             LDR      R0,[R0, #+0]
+   \       0x28   0xF000 0x5080      AND      R0,R0,#0x10000000
+   \       0x2C   0x9000             STR      R0,[SP, #+0]
+   \       0x2E   0x9800             LDR      R0,[SP, #+0]
+     72          
+     73            /* System interrupt init*/
+     74          
+     75            /* USER CODE BEGIN MspInit 1 */
+     76          
+     77            /* USER CODE END MspInit 1 */
+     78          }
+   \       0x30   0xB001             ADD      SP,SP,#+4
+   \       0x32   0x4770             BX       LR               ;; return
+   \                     ??HAL_MspInit_0:
+   \       0x34   0x4002'3840        DC32     0x40023840
+     79          
+     80          /* USER CODE BEGIN 1 */
+     81          
+     82          /* USER CODE END 1 */
+     83          
+     84          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       4   HAL_MspInit
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      56  HAL_MspInit
+
+ 
+ 56 bytes in section .text
+ 
+ 56 bytes of CODE memory
+
+Errors: none
+Warnings: none
